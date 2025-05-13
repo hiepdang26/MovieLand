@@ -1,0 +1,135 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Title -->
+        <EditText
+            android:id="@+id/edtTitle"
+            android:hint="Tên phim"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Overview -->
+        <EditText
+            android:id="@+id/edtOverview"
+            android:hint="Mô tả"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:gravity="top" />
+
+        <!-- Runtime -->
+        <EditText
+            android:id="@+id/edtRuntime"
+            android:hint="Thời lượng (phút)"
+            android:inputType="number"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Release date -->
+        <EditText
+            android:id="@+id/edtReleaseDate"
+            android:hint="Ngày khởi chiếu (YYYY-MM-DD)"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Vote Average -->
+        <EditText
+            android:id="@+id/edtVoteAverage"
+            android:hint="Xếp hạng IMDb"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Genres -->
+        <EditText
+            android:id="@+id/edtGenres"
+            android:hint="Thể loại (cách nhau bởi dấu phẩy)"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Trailer YouTube Key -->
+        <EditText
+            android:id="@+id/edtTrailerKey"
+            android:hint="YouTube trailer key (VD: TD1Htfj785Y)"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_edittext_default"
+            android:padding="20dp"
+            android:textColorHint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Adult -->
+        <CheckBox
+            android:id="@+id/cbAdult"
+            android:text="Phim 18+"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Chọn ảnh poster -->
+        <Button
+            android:id="@+id/btnChoosePoster"
+            android:text="Chọn ảnh poster"
+            android:layout_marginTop="16dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/imgPoster"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Ảnh poster"
+            android:background="@drawable/rounded_edittext_default" />
+
+        <Button
+            android:id="@+id/btnAddMovie"
+            android:text="Thêm phim"
+            android:layout_marginTop="16dp"
+            android:textAllCaps="false"
+            android:background="@drawable/rounded_purple_button"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

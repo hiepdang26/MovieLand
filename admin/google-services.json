@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "194069240450",
+    "project_id": "movieland-980d4",
+    "storage_bucket": "movieland-980d4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194069240450:android:c498c211a0cdfa11b5729b",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTWgw6I2_XWRx3SoHt6hdD84q-MmzBbJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194069240450:android:4760b1c20d22fba8b5729b",
+        "android_client_info": {
+          "package_name": "com.example.movieland"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTWgw6I2_XWRx3SoHt6hdD84q-MmzBbJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

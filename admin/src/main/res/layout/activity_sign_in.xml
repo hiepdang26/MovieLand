@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    android:padding="16dp">
+
+    <!-- Logo header -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="100dp" />
+
+    <!-- Spacer -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Login Form Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Login Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đăng nhập"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Email Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:textColorHint="#020202"
+
+            android:hint="Nhập email..."
+            android:inputType="textEmailAddress"
+            android:textSize="15sp"
+
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Password Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mật khẩu"
+
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:hint="Nhập mật khẩu..."
+            android:inputType="textPassword"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textColorHint="#000000"
+            android:textSize="15sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Login Button -->
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Đăng nhập"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:background="@drawable/rounded_purple_button"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Bottom Links -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quên mật khẩu"
+                android:textColor="#673AB7"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Spacer at the bottom -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+</LinearLayout>

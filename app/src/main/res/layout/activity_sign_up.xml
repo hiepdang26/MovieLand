@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    android:padding="16dp">
+
+    <!-- Header with back button and logo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_ios"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="100dp" />
+
+
+    </LinearLayout>
+    <!-- Registration Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tạo tài khoản"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <!-- Phone Number Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:textColorHint="#020202"
+            android:hint="Nhập số điện thoại của bạn"
+            android:inputType="phone"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+
+            android:layout_marginBottom="16dp" />
+
+        <!-- Email Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:textColorHint="#020202"
+            android:hint="Nhập email của bạn"
+            android:inputType="textEmailAddress"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+
+            android:layout_marginBottom="16dp" />
+
+        <!-- Full Name Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Họ tên"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtFullName"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:textColorHint="#020202"
+            android:hint="Nhập Họ tên của bạn"
+            android:inputType="textPersonName"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+
+            android:layout_marginBottom="16dp" />
+
+        <!-- Password Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mật khẩu"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext_auth"
+            android:textColorHint="#020202"
+            android:hint="Nhập mật khẩu của bạn"
+            android:inputType="textPassword"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+
+            android:layout_marginBottom="16dp" />
+
+        <!-- Date of Birth Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ngày sinh"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:textColorHint="#020202"
+            android:gravity="center_vertical"
+            android:weightSum="2"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:id="@+id/edtDateOfBirth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="__/__/____"
+                android:textColor="@color/black"
+                android:background="@drawable/rounded_edittext_auth"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                />
+
+            <Button
+                android:id="@+id/btnCalendar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/rounded_purple_button"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="Chọn ngày"
+                android:textAllCaps="false"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                android:paddingEnd="16dp"
+                android:textColor="@color/white"
+                android:drawableTint="@color/white"/>
+        </LinearLayout>
+
+        <!-- Register Button -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Tạo tài khoản"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:background="@drawable/rounded_purple_button" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieLoading"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                app:lottie_colorFilter="@color/white"
+                android:visibility="visible"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="false" />
+        </FrameLayout>
+
+
+        <!-- Already have an account -->
+        <TextView
+            android:id="@+id/tvHaveAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đã có tài khoản"
+            android:textStyle="italic"
+            android:textColor="#673AB7"
+            android:textSize="14sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+</ScrollView>
+
+</LinearLayout>

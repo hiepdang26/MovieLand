@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#B8E1DA"> <!-- Màu xám khi nhấn -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#8335FF"/>
+            <corners android:radius="10dp"/> <!-- Tùy chỉnh góc bo tròn -->
+        </shape>
+    </item>
+</ripple>

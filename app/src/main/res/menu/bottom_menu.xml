@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_voucher"
+        android:icon="@drawable/icon_gift"
+        android:title="Khuyến mãi"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/icon_ticket"
+        android:title="Phim"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+    <item
+        android:id="@+id/navigation_personal"
+        android:icon="@drawable/icon_profile"
+        android:title="Cá nhân"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+        />
+
+</menu>
