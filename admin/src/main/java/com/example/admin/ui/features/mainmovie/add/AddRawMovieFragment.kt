@@ -1,5 +1,6 @@
 package com.example.admin.ui.features.mainmovie.add
 
+import android.app.DatePickerDialog
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.fragment.app.viewModels
@@ -18,6 +19,8 @@ import com.example.admin.databinding.FragmentAddRawMovieBinding
 import com.example.admin.ui.bases.BaseFragment
 import com.example.admin.utils.PermissionHelper
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
+
 @AndroidEntryPoint
 class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
 
@@ -28,7 +31,6 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 selectedPosterUri = it
-                // hiển thị ảnh chọn tạm thời
                 binding.imgPoster.setImageURI(it)
             }
         }
@@ -70,6 +72,9 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
     }
 
     private fun setupClickView() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         binding.btnChoosePoster.setOnClickListener {
             if (!PermissionHelper.hasStoragePermission(requireActivity())) {
                 PermissionHelper.requestStoragePermission(requireActivity())
@@ -78,12 +83,14 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
             }
         }
 
+        binding.btnChooseDate.setOnClickListener {
+            showDatePicker()
+        }
         binding.btnAddMovie.setOnClickListener {
             val title = binding.edtTitle.text.toString().trim()
             val overview = binding.edtOverview.text.toString().trim()
             val runtime = binding.edtRuntime.text.toString().toIntOrNull() ?: 0
-            val releaseDate = binding.edtReleaseDate.text.toString().trim()
-            val voteAverage = binding.edtVoteAverage.text.toString().toDoubleOrNull() ?: 0.0
+            val releaseDate = binding.txtReleaseDate.text.toString().trim()
             val genres = binding.edtGenres.text.toString().split(",").map { it.trim() }
             val trailerKey = binding.edtTrailerKey.text.toString().trim()
             val adult = binding.cbAdult.isChecked
@@ -101,7 +108,6 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
                     overview = overview,
                     runtime = runtime,
                     releaseDate = releaseDate,
-                    voteAverage = voteAverage,
                     genres = genres,
                     trailerKey = trailerKey,
                     adult = adult
@@ -109,7 +115,19 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
             )
         }
     }
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val dateString = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
+            binding.txtReleaseDate.text = dateString
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {

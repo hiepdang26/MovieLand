@@ -22,8 +22,9 @@ class ShowMovieAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: FirestoreMovie) {
-            binding.txtTitle.text = movie.title
-
+            binding.txtNameMovie.text = movie.title
+            binding.txtTime.text = movie.title
+            Glide.with(binding.root.context).load(movie.posterPath).into(binding.imageView)
             binding.root.setOnClickListener {
                 onItemClick?.invoke(movie)
             }
@@ -40,4 +41,5 @@ class ShowMovieAdapter(
     }
 
     override fun getItemCount(): Int = movies.size
+
 }

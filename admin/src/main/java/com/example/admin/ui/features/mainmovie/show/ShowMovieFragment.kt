@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.databinding.FragmentShowMovieBinding
 import com.example.admin.ui.bases.BaseFragment
 import com.example.admin.ui.features.mainmovie.add.AddRawMovieFragment
+import com.example.admin.ui.features.mainmovie.edit.EditMovieFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,6 +38,11 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         setupObserver()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).showNavigationBar()
+    }
+
     private fun setupClickView() {
         binding.btnAddMovie.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -51,7 +58,10 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
     }
 
     private fun setupRecyclerView() {
-        movieAdapter = ShowMovieAdapter(emptyList())
+        movieAdapter = ShowMovieAdapter(emptyList()) { movie ->
+            navigateToEditMovie(movie.id.toString())
+        }
+
         binding.rcvMovie.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = movieAdapter
@@ -72,5 +82,18 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
                 }
             }
         }
+    }
+
+    private fun navigateToEditMovie(movieId: String) {
+        val fragment = EditMovieFragment().apply {
+            arguments = Bundle().apply {
+                putString("movieId", movieId)
+            }
+        }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

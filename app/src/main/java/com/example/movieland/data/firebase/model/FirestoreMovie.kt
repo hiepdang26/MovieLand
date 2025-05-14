@@ -10,7 +10,6 @@ data class FirestoreMovie(
     val runtime: Int = 0,
     val releaseDate: String = "",
     val genres: List<String> = emptyList(),
-    val voteAverage: Double = 0.0,
     val adult: Boolean = false,
     val createdAt: Timestamp = Timestamp.now()
 )

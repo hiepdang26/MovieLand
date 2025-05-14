@@ -1,12 +1,9 @@
 package com.example.admin.data.firebase.datasource
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.example.admin.data.firebase.model.FirestoreMovie
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -14,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.util.UUID
 import javax.inject.Inject
 
 class FirebaseMovieDataSource @Inject constructor(
@@ -60,42 +55,35 @@ class FirebaseMovieDataSource @Inject constructor(
             close(e)
         }
     }
-    suspend fun uploadImageToStorage(uri: Uri): String = withContext(Dispatchers.IO) {
-        val context = appContext
 
-        Log.d("FirebaseUpload", "Bắt đầu mở input stream từ uri: $uri")
-
-        val inputStream = context.contentResolver.openInputStream(uri)
-            ?: throw IOException("❌ Không thể mở input stream từ uri: $uri")
-
-        Log.d("FirebaseUpload", "✅ Mở được input stream")
-
-        val storageRef = FirebaseStorage.getInstance().reference
-        val fileName = "posters/${UUID.randomUUID()}.jpg"
-        val posterRef = storageRef.child(fileName)
-
-        Log.d("FirebaseUpload", "Bắt đầu upload lên: $fileName")
-
-        try {
-            val uploadTask = posterRef.putStream(inputStream)
-            uploadTask.await()
-            Log.d("FirebaseUpload", "✅ Upload thành công")
-
-            val downloadUrl = posterRef.downloadUrl.await().toString()
-            Log.d("FirebaseUpload", "✅ Lấy URL thành công: $downloadUrl")
-
-            return@withContext downloadUrl
+    suspend fun getMovieById(movieId: String): Result<FirestoreMovie> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val snapshot = firestore.collection("movies").document(movieId).get().await()
+            val movie = snapshot.toObject(FirestoreMovie::class.java)
+                ?: return@withContext Result.failure(Exception("Không tìm thấy phim với ID: $movieId"))
+            Result.success(movie)
         } catch (e: Exception) {
-            Log.e("FirebaseUpload", "❌ Upload thất bại: ${e.message}", e)
-            throw e
-        } finally {
-            inputStream.close()
-            Log.d("FirebaseUpload", "Đã đóng input stream")
+            Result.failure(e)
         }
     }
 
+    suspend fun updateMovie(movieId: String, updatedData: Map<String, Any>): Result<Unit> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            firestore.collection("movies").document(movieId).update(updatedData).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
-
+    suspend fun deleteMovie(movieId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            firestore.collection("movies").document(movieId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
 }
 

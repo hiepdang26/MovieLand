@@ -87,12 +87,11 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                     id = detail.id,
                     title = detail.title,
                     overview = detail.overview,
-                    posterPath = detail.poster_path,
+                    posterPath = "https://image.tmdb.org/t/p/w500${detail.poster_path}",
                     trailerKey = trailerKey ?: "",
                     runtime = detail.runtime,
                     releaseDate = detail.release_date,
                     genres = detail.genres.map { it.name },
-                    voteAverage = detail.vote_average,
                     adult = detail.adult
                 )
 
