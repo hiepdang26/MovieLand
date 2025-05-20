@@ -3,7 +3,7 @@
     <item
         android:id="@+id/navigation_api"
         android:icon="@drawable/icon_gift"
-        android:title="Api"
+        android:title="Api Phim"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
     <item
@@ -13,9 +13,16 @@
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
     <item
-        android:id="@+id/navigation_personal"
+        android:id="@+id/navigation_region"
         android:icon="@drawable/icon_profile"
-        android:title="Cá nhân"
+        android:title="Khu vực"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+        />
+    <item
+        android:id="@+id/navigation_district"
+        android:icon="@drawable/icon_profile"
+        android:title="Quận"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
         />

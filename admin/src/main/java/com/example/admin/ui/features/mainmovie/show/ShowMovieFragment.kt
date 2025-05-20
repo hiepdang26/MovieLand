@@ -43,7 +43,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         (requireActivity() as MainActivity).showNavigationBar()
     }
 
-    private fun setupClickView() {
+    override fun setupClickView() {
         binding.btnAddMovie.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, AddRawMovieFragment())
@@ -53,7 +53,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
 
     }
 
-    private fun setupInitialData() {
+    override fun setupInitialData() {
         viewModel.fetchMovies()
     }
 
@@ -68,7 +68,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         }
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.movies.collect { movies ->
                 movieAdapter.updateData(movies)

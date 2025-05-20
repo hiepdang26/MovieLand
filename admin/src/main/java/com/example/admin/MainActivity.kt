@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import com.example.admin.databinding.ActivityMainBinding
 import com.example.admin.ui.bases.BaseActivity
 import com.example.admin.ui.features.apimovie.ApiMovieFragment
+import com.example.admin.ui.features.district.show.ShowDistrictFragment
 import com.example.admin.ui.features.mainmovie.show.ShowMovieFragment
+import com.example.admin.ui.features.region.show.ShowRegionFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,6 +49,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }  R.id.navigation_movie -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowMovieFragment) {
                         openFragment(ShowMovieFragment())
+                    }
+                    true
+                }  R.id.navigation_region -> {
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowRegionFragment) {
+                        openFragment(ShowRegionFragment())
                     }
                     true
                 }

@@ -41,6 +41,10 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
         return FragmentAddRawMovieBinding.inflate(inflater, container, false)
     }
 
+    override fun setupInitialData() {
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickView()
@@ -52,7 +56,7 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
         (requireActivity() as MainActivity).hideNavigationBar()
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.uploadResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 Toast.makeText(requireContext(), "🎉 Thêm phim thành công!", Toast.LENGTH_SHORT).show()
@@ -71,7 +75,7 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
         }
     }
 
-    private fun setupClickView() {
+    override fun setupClickView() {
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

@@ -29,6 +29,10 @@ class UpComingFragment : BaseFragment<FragmentUpComingBinding>() {
         return FragmentUpComingBinding.inflate(inflater, container, false)
     }
 
+    override fun setupInitialData() {
+        TODO("Not yet implemented")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getUpComingMovie(accessToken)
@@ -41,7 +45,7 @@ class UpComingFragment : BaseFragment<FragmentUpComingBinding>() {
 
 
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.upComingMovieResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 val movies = it.results ?: emptyList()
@@ -79,5 +83,9 @@ class UpComingFragment : BaseFragment<FragmentUpComingBinding>() {
                 Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun setupClickView() {
+        TODO("Not yet implemented")
     }
 }

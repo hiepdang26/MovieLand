@@ -39,12 +39,15 @@ class NowPlayingFragment : BaseFragment<FragmentNowPlayingBinding>() {
         return binding.root
     }
 
+    override fun setupInitialData() {
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObserver()
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.nowPlayingMovieResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 val movies = it.results ?: emptyList()
@@ -82,5 +85,8 @@ class NowPlayingFragment : BaseFragment<FragmentNowPlayingBinding>() {
                 Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun setupClickView() {
     }
 }

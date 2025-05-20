@@ -41,6 +41,15 @@ class ApiMovieFragment : BaseFragment<FragmentApiMovieBinding>() {
         return binding.root
     }
 
+    override fun setupInitialData() {
+    }
+
+    override fun setupObserver() {
+    }
+
+    override fun setupClickView() {
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

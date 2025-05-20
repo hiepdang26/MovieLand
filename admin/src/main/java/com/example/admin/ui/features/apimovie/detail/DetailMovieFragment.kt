@@ -27,11 +27,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        movieId = arguments?.getInt("movie_id") ?: -1
-        fromFragment = arguments?.getString("from_fragment")
 
-        viewModel.getDetailMovie(accessToken, movieId)
-        viewModel.getTrailerMovie(accessToken, movieId)
     }
 
     private val viewModel: DetailMovieViewModel by viewModels()
@@ -50,8 +46,17 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         return binding.root
     }
 
+    override fun setupInitialData() {
+        movieId = arguments?.getInt("movie_id") ?: -1
+        fromFragment = arguments?.getString("from_fragment")
+
+        viewModel.getDetailMovie(accessToken, movieId)
+        viewModel.getTrailerMovie(accessToken, movieId)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupInitialData()
         binding.progressBar.visibility= View.VISIBLE
         if (fromFragment == "upcoming") {
             binding.btnAddMovie.visibility = View.GONE
@@ -67,7 +72,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         (requireActivity() as MainActivity).hideNavigationBar()
 
     }
-    private fun setupClickView() {
+    override fun setupClickView() {
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -103,7 +108,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.uploadResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 Toast.makeText(requireContext(), "Thêm vào Firestore thành công", Toast.LENGTH_SHORT).show()

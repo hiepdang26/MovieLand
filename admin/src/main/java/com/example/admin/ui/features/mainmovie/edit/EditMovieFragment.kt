@@ -45,6 +45,10 @@ class EditMovieFragment : BaseFragment<FragmentEditMovieBinding>() {
         return FragmentEditMovieBinding.inflate(inflater, container, false)
     }
 
+    override fun setupInitialData() {
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         movieId = arguments?.getString("movieId")
@@ -59,7 +63,7 @@ class EditMovieFragment : BaseFragment<FragmentEditMovieBinding>() {
         (requireActivity() as MainActivity).hideNavigationBar()
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.movieDetail.observe(viewLifecycleOwner) { movie ->
             originalMovie = movie
             binding.edtTitle.setText(movie.title)
@@ -92,7 +96,7 @@ class EditMovieFragment : BaseFragment<FragmentEditMovieBinding>() {
         }
     }
 
-    private fun setupClickView() {
+    override fun setupClickView() {
         binding.btnChooseDate.setOnClickListener {
             showDatePicker()
         }
