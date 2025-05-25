@@ -12,6 +12,8 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id ("kotlin-kapt")           // bắt buộc để generate Hilt code
+
 }
 
 android {

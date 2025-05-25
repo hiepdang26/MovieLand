@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_api"
-        android:icon="@drawable/icon_gift"
+        android:icon="@drawable/icon_api"
         android:title="Api Phim"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
@@ -14,15 +14,15 @@
         app:cnb_backgroundColor="#8335FF" />
     <item
         android:id="@+id/navigation_region"
-        android:icon="@drawable/icon_profile"
+        android:icon="@drawable/icon_gps"
         android:title="Khu vực"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
         />
     <item
-        android:id="@+id/navigation_district"
-        android:icon="@drawable/icon_profile"
-        android:title="Quận"
+        android:id="@+id/navigation_room"
+        android:icon="@drawable/icon_room"
+        android:title="Phòng chiếu"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
         />

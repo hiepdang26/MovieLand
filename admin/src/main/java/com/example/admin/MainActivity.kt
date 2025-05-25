@@ -11,6 +11,8 @@ import com.example.admin.ui.features.apimovie.ApiMovieFragment
 import com.example.admin.ui.features.district.show.ShowDistrictFragment
 import com.example.admin.ui.features.mainmovie.show.ShowMovieFragment
 import com.example.admin.ui.features.region.show.ShowRegionFragment
+import com.example.admin.ui.features.room.choosedistrict.ChooseDistrictFragment
+import com.example.admin.ui.features.room.layoutseat.add.LayoutSeatFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,6 +56,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }  R.id.navigation_region -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowRegionFragment) {
                         openFragment(ShowRegionFragment())
+                    }
+                    true
+                } R.id.navigation_room -> {
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictFragment) {
+                        openFragment(ChooseDistrictFragment())
                     }
                     true
                 }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.admin.BuildConfig
 import com.example.admin.data.api.MovieApi
 import com.example.admin.data.cloudinary.CloudinaryUploader
+import com.example.admin.data.firebase.datasource.FirebaseDistrictDataSource
 import com.example.admin.data.firebase.datasource.FirebaseMovieDataSource
 import com.example.admin.data.repository.network.movie.MovieRepositoryImp
 import com.example.admin.data.repository.network.movie.MovieRepository
@@ -67,6 +68,16 @@ object AppModule {
         @ApplicationContext context: Context
     ): FirebaseMovieDataSource = FirebaseMovieDataSource(firestore, context)
 
+
+    @Provides
+    @Singleton
+    fun provideFirebaseDistrictDataSource(
+        firestore: FirebaseFirestore,
+        @ApplicationContext context: Context
+
+    ): FirebaseDistrictDataSource {
+        return FirebaseDistrictDataSource(firestore, context)
+    }
 
     @Provides
     @Singleton

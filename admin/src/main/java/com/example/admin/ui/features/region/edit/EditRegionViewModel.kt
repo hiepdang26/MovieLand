@@ -21,6 +21,9 @@ class EditRegionViewModel @Inject constructor(
     private val _updateResult = MutableStateFlow<Result<Unit>?>(null)
     val updateResult: StateFlow<Result<Unit>?> = _updateResult
 
+    private val _deleteResult = MutableStateFlow<Result<Unit>?>(null)
+    val deleteResult: StateFlow<Result<Unit>?> = _deleteResult
+
     fun loadRegion(regionId: String) {
         viewModelScope.launch {
             val result = regionDataSource.getRegionById(regionId)
@@ -53,20 +56,25 @@ class EditRegionViewModel @Inject constructor(
         }
     }
 
-    fun resetUpdateResult() {
-        _updateResult.value = null
-    }
-
     fun deleteRegion() {
         val currentRegion = _region.value
         if (currentRegion == null) {
-            _updateResult.value = Result.failure(Exception("Region chưa được load"))
+            _deleteResult.value = Result.failure(Exception("Region chưa được load"))
             return
         }
 
         viewModelScope.launch {
             val result = regionDataSource.deleteRegion(currentRegion.id)
-            _updateResult.value = result
+            _deleteResult.value = result
         }
     }
+
+    fun resetUpdateResult() {
+        _updateResult.value = null
+    }
+
+    fun resetDeleteResult() {
+        _deleteResult.value = null
+    }
 }
+

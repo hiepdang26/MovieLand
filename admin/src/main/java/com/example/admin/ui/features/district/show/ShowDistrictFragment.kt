@@ -85,6 +85,10 @@ class ShowDistrictFragment : BaseFragment<FragmentShowDistrictBinding>() {
         adapter.onItemClick = { district ->
             navigateToEditDistrict(district.regionId, district.id)
         }
+
+        binding.btnBack.setOnClickListener{
+            parentFragmentManager.popBackStack()
+        }
         binding.btnAdd.setOnClickListener {
             val fragment = AddDistrictFragment().apply {
                 arguments = Bundle().apply {

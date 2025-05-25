@@ -90,13 +90,25 @@ class FirebaseRegionDataSource @Inject constructor(
         }
     }
 
-    suspend fun deleteRegion(regionId: String): Result<Unit> = withContext(Dispatchers.IO) {
-        try {
-            firestore.collection("regions").document(regionId).delete().await()
+    suspend fun deleteRegion(regionId: String): Result<Unit> {
+        return try {
+            val districtsSnapshot = firestore.collection("regions")
+                .document(regionId)
+                .collection("districts")
+                .get()
+                .await()
+
+            val batch = firestore.batch()
+            for (doc in districtsSnapshot.documents) {
+                batch.delete(doc.reference)
+            }
+            batch.delete(firestore.collection("regions").document(regionId))
+            batch.commit().await()
+
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("FirebaseRegionDataSource", "Lỗi khi delete region: ${e.message}", e)
             Result.failure(e)
         }
     }
+
 }

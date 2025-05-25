@@ -84,20 +84,15 @@ class EditRegionFragment : BaseFragment<FragmentEditRegionBinding>() {
         }
 
         lifecycleScope.launch {
-            viewModel.updateResult.collectLatest { result ->
+            viewModel.deleteResult.collectLatest { result ->
                 result?.let {
                     if (it.isSuccess) {
-                        Toast.makeText(requireContext(), "Thao tác thành công", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "Xóa thành công", Toast.LENGTH_SHORT).show()
                         parentFragmentManager.popBackStack()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Lỗi: ${it.exceptionOrNull()?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Lỗi: ${it.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
                     }
-                    viewModel.resetUpdateResult()
+                    viewModel.resetDeleteResult()
                 }
             }
         }
@@ -109,15 +104,23 @@ class EditRegionFragment : BaseFragment<FragmentEditRegionBinding>() {
             viewModel.updateRegion(name)
         }
         binding.btnDelete.setOnClickListener {
-            AlertDialog.Builder(requireContext()).setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc muốn xóa vùng này không?")
+            AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xóa")
+                .setMessage(
+                    "Bạn có chắc chắn muốn xóa vùng này không? " +
+                            "Việc này sẽ đồng thời xóa tất cả các quận/huyện thuộc vùng này. " +
+                            "Vui lòng kiểm tra kỹ trước khi xóa."
+                )
                 .setPositiveButton("Xóa") { dialog, _ ->
                     viewModel.deleteRegion()
                     dialog.dismiss()
-                }.setNegativeButton("Hủy") { dialog, _ ->
+                }
+                .setNegativeButton("Hủy") { dialog, _ ->
                     dialog.dismiss()
-                }.show()
+                }
+                .show()
         }
+
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

@@ -87,6 +87,23 @@ class FirebaseDistrictDataSource @Inject constructor(
             Result.failure(e)
         }
     }
+    fun getAllDistricts(): Flow<List<FirestoreDistrict>> = callbackFlow {
+        try {
+            val listener = firestore.collectionGroup("districts")
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        close(error)
+                        return@addSnapshotListener
+                    }
+                    val districts = snapshot?.toObjects(FirestoreDistrict::class.java) ?: emptyList()
+                    trySend(districts).isSuccess
+                }
+            awaitClose { listener.remove() }
+        } catch (e: Exception) {
+            Log.e("FirebaseDistrictDataSource", "Lỗi lấy tất cả districts: ${e.message}", e)
+            close(e)
+        }
+    }
 
 
     suspend fun updateDistrict(regionId: String, districtId: String, updatedData: Map<String, Any>): Result<Unit> = withContext(Dispatchers.IO) {
