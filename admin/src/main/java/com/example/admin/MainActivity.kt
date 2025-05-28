@@ -1,18 +1,14 @@
 package com.example.admin
 
 import android.os.Bundle
-
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-
 import com.example.admin.databinding.ActivityMainBinding
 import com.example.admin.ui.bases.BaseActivity
 import com.example.admin.ui.features.apimovie.ApiMovieFragment
-import com.example.admin.ui.features.district.show.ShowDistrictFragment
 import com.example.admin.ui.features.mainmovie.show.ShowMovieFragment
 import com.example.admin.ui.features.region.show.ShowRegionFragment
 import com.example.admin.ui.features.room.choosedistrict.ChooseDistrictFragment
-import com.example.admin.ui.features.room.layoutseat.add.LayoutSeatFragment
+import com.example.admin.ui.features.showtimes.choosedistrictandroom.district.ChooseDistrictForRoomFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,25 +44,36 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         openFragment(ApiMovieFragment())
                     }
                     true
-                }  R.id.navigation_movie -> {
+                }
+
+                R.id.navigation_movie -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowMovieFragment) {
                         openFragment(ShowMovieFragment())
                     }
                     true
-                }  R.id.navigation_region -> {
+                }
+
+                R.id.navigation_region -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowRegionFragment) {
                         openFragment(ShowRegionFragment())
                     }
                     true
-                } R.id.navigation_room -> {
+                }
+
+                R.id.navigation_room -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictFragment) {
                         openFragment(ChooseDistrictFragment())
                     }
                     true
+
                 }
 
-
-
+                R.id.navigation_showtime -> {
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictForRoomFragment) {
+                        openFragment(ChooseDistrictForRoomFragment())
+                    }
+                    true
+                }
 
 
                 else -> false
@@ -80,7 +87,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragmentContainerView, fragment, tag).commit()
     }
-
 
 
     fun hideNavigationBar() {

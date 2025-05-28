@@ -26,5 +26,12 @@
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
         />
+    <item
+        android:id="@+id/navigation_showtime"
+        android:icon="@drawable/icon_calendar"
+        android:title="Giờ chiếu"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+    />
 
 </menu>

@@ -1,0 +1,92 @@
+package com.example.admin.ui.features.showtimes.choosedistrictandroom.room
+
+import androidx.fragment.app.viewModels
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.admin.databinding.FragmentChooseRoomBinding
+import com.example.admin.ui.bases.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
+import com.example.admin.R
+import com.example.admin.ui.features.room.add.AddRoomFragment
+import com.example.admin.ui.features.room.show.ShowRoomFragment
+import com.example.admin.ui.features.showtimes.show.ShowShowtimeFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class ChooseRoomFragment : BaseFragment<FragmentChooseRoomBinding>() {
+
+    private var districtId: String = ""
+    private lateinit var adapter: ChooseRoomAdapter
+
+    private val viewModel: ChooseRoomViewModel by viewModels()
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): FragmentChooseRoomBinding {
+        return FragmentChooseRoomBinding.inflate(layoutInflater, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        districtId = arguments?.getString("districtId") ?: ""
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupInitialData()
+        setupObserver()
+        setupClickView()
+    }
+
+    override fun setupInitialData() {
+        if (districtId.isNotEmpty()) {
+            viewModel.loadRoomsByDistrictId(districtId)
+        } else {
+            Toast.makeText(requireContext(), "Không có districtId hợp lệ", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun setupObserver() {
+        lifecycleScope.launch {
+            viewModel.rooms.collectLatest { rooms ->
+                adapter = ChooseRoomAdapter(rooms) { room ->
+                    val fragment = ShowShowtimeFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("roomId", room.id)
+                            putString("roomName", room.name)
+                        }
+                    }
+
+                    parentFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, fragment)
+                        .addToBackStack(null).commit()
+
+                }
+                binding.rcvRoom.layoutManager = LinearLayoutManager(requireContext())
+                binding.rcvRoom.adapter = adapter
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.error.collectLatest { errorMsg ->
+                errorMsg?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
+                }
+            }
+        }
+    }
+
+    override fun setupClickView() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
+}
