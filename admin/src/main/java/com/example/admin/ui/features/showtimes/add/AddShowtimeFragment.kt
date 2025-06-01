@@ -1,3 +1,5 @@
+package com.example.admin.ui.features.showtimes.add
+
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -9,9 +11,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.admin.MainActivity
 import com.example.admin.databinding.FragmentAddShowtimeBinding
 import com.example.admin.ui.bases.BaseFragment
-import com.example.admin.ui.features.showtimes.add.AddShowtimeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
@@ -31,6 +33,11 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
     private var selectedStartTime: Date? = null
     private var selectedEndTime: Date? = null
     private var selectedStatus: String = "pending" // mặc định "đang chờ"
+    private var roomId: String = ""
+    private var roomName: String = ""
+    var districtName: String = ""
+    private var movieId: String =  ""
+    private var movieName: String = ""
 
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentAddShowtimeBinding.inflate(inflater, container, false)
@@ -43,8 +50,28 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupInitialData()
+        setupObserver()
+        setupClickView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
+        
+    }
     override fun setupInitialData() {
         setupStatusSpinner()
+        roomId = arguments?.getString("roomId") ?: ""
+        roomName = arguments?.getString("roomName") ?: ""
+        districtName = arguments?.getString("districtName") ?: ""
+        movieId = arguments?.getString("movieId") ?: ""
+        movieName = arguments?.getString("movieName") ?: ""
+
+        binding.txtRoomName.text = roomName
+        binding.txtDistrictName.text = districtName
     }
 
     override fun setupObserver() {
@@ -65,6 +92,8 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
     }
 
     override fun setupClickView() {
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+
         binding.btnSelectDate.setOnClickListener {
             showDatePicker()
         }
@@ -80,9 +109,9 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
         binding.spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedStatus = when (position) {
-                    0 -> "active"   // Đang hoạt động
-                    1 -> "pending"  // Đang chờ (mặc định)
-                    2 -> "cancel"   // Hủy
+                    0 -> "active"
+                    1 -> "pending"
+                    2 -> "cancel"
                     else -> "pending"
                 }
             }
@@ -132,12 +161,9 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
     }
 
     private fun saveShowtime() {
-        // Kiểm tra hợp lệ dữ liệu
-        val roomId = arguments?.getString("roomId") ?: ""
-        val movieId = arguments?.getString("movieId") ?: ""
-        val movieName = arguments?.getString("movieName") ?: ""
 
-        if (roomId.isBlank() || movieId.isBlank()) {
+//        || movieId.isBlank()
+        if (roomId.isBlank() ) {
             Toast.makeText(requireContext(), "Phòng hoặc phim không hợp lệ", Toast.LENGTH_SHORT).show()
             return
         }
@@ -162,14 +188,13 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
             return
         }
 
-        // Tạo đối tượng thời gian đầy đủ có ngày + giờ
         val startTimeFull = mergeDateAndTime(selectedDate!!, selectedStartTime!!)
         val endTimeFull = mergeDateAndTime(selectedDate!!, selectedEndTime!!)
 
         viewModel.addShowtime(
             roomId = roomId,
-            movieId = movieId,
-            movieName = movieName,
+            movieId = "sdsds",
+            movieName = "dsds",
             startTime = startTimeFull,
             endTime = endTimeFull,
             date = selectedDate!!,

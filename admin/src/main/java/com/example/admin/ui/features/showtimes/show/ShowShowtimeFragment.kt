@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.R
 import com.example.admin.data.firebase.model.showtime.FirestoreShowtime
 import com.example.admin.databinding.FragmentShowShowtimeBinding
 import com.example.admin.ui.bases.BaseFragment
+import com.example.admin.ui.features.room.add.AddRoomFragment
+import com.example.admin.ui.features.showtimes.add.AddShowtimeFragment
 import com.example.admin.ui.features.showtimes.show.model.MovieWithShowtimes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +30,14 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentShowShowtimeBinding.inflate(inflater, container, false)
 
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupInitialData()
+        setupObserver()
+        setupClickView()
+    }
     override fun setupInitialData() {
         roomId = arguments?.getString("roomId") ?: ""
         roomName = arguments?.getString("roomName") ?: ""
@@ -38,15 +49,6 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         binding.rcvShowtime.adapter = adapter
 
         binding.txtTitle.text = roomName
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupInitialData()
-
-
-        setupObserver()
-        setupClickView()
     }
 
     override fun setupObserver() {
@@ -67,6 +69,18 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
 
     override fun setupClickView() {
         binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+        binding.btnAdd.setOnClickListener {
+            val fragment = AddShowtimeFragment().apply {
+                arguments = Bundle().apply {
+                    putString("roomId", roomId)
+                    putString("roomName", roomName)
+                    putString("districtName", districtName)
+                }
+            }
+
+            parentFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null).commit()
+        }
     }
 }
 

@@ -16,7 +16,7 @@ class AddShowtimeViewModel @Inject constructor(
     private val showtimeDataSource: FirebaseShowtimeDataSource
 ) : ViewModel() {
 
-    private val _saveResult = MutableStateFlow<Result<String>?>(null)  // Trả về Result<String>
+    private val _saveResult = MutableStateFlow<Result<String>?>(null)
     val saveResult: StateFlow<Result<String>?> = _saveResult
 
     fun addShowtime(
