@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.admin.R
 import com.example.admin.ui.features.showtimes.show.model.MovieWithShowtimes
 
-class MovieWithShowtimesAdapter(private var movies: List<MovieWithShowtimes>) : RecyclerView.Adapter<MovieWithShowtimesAdapter.MovieViewHolder>() {
+class MovieWithShowtimesAdapter(
+    private var movies: List<MovieWithShowtimes>,
+    private val onShowtimeClick: (String) -> Unit
+
+) : RecyclerView.Adapter<MovieWithShowtimesAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,6 +27,7 @@ class MovieWithShowtimesAdapter(private var movies: List<MovieWithShowtimes>) : 
         holder.bind(movies[position])
     }
 
+
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvMovieName = itemView.findViewById<TextView>(R.id.tvMovieName)
         private val rvShowtimes = itemView.findViewById<RecyclerView>(R.id.rvShowtimes)
@@ -31,11 +36,12 @@ class MovieWithShowtimesAdapter(private var movies: List<MovieWithShowtimes>) : 
             tvMovieName.text = movieWithShowtimes.movieName
             rvShowtimes.apply {
                 layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = ShowShowtimeAdapter(movieWithShowtimes.showtimes)
+                adapter = ShowShowtimeAdapter(movieWithShowtimes.showtimes, onShowtimeClick)
                 setRecycledViewPool(RecyclerView.RecycledViewPool())
             }
         }
     }
+
     fun submitList(newMovies: List<MovieWithShowtimes>) {
         movies = newMovies
         notifyDataSetChanged()

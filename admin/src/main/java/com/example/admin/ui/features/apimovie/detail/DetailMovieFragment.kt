@@ -89,7 +89,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                         ?.key
 
                 val firestoreMovie = FirestoreMovie(
-                    id = detail.id,
+                    id = detail.id.toString(),
                     title = detail.title,
                     overview = detail.overview,
                     posterPath = "https://image.tmdb.org/t/p/w500${detail.poster_path}",

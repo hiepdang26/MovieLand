@@ -9,10 +9,15 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class ShowShowtimeAdapter (private val showtimes: List<FirestoreShowtime>) : RecyclerView.Adapter<ShowShowtimeAdapter.ShowtimeViewHolder>() {
+class ShowShowtimeAdapter(
+    private val showtimes: List<FirestoreShowtime>,
+    private val onItemClick: (String) -> Unit // truyền showtimeId khi click
+
+) : RecyclerView.Adapter<ShowShowtimeAdapter.ShowtimeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowtimeViewHolder {
-        val binding = ItemShowtimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemShowtimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ShowtimeViewHolder(binding)
     }
 
@@ -22,7 +27,8 @@ class ShowShowtimeAdapter (private val showtimes: List<FirestoreShowtime>) : Rec
         holder.bind(showtimes[position])
     }
 
-    inner class ShowtimeViewHolder(private val binding: ItemShowtimeBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ShowtimeViewHolder(private val binding: ItemShowtimeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         fun bind(showtime: FirestoreShowtime) {
@@ -31,6 +37,10 @@ class ShowShowtimeAdapter (private val showtimes: List<FirestoreShowtime>) : Rec
             binding.txtTime.text = "$start - $end"
             binding.txtDate.text = showtime.date?.toString() ?: ""
             binding.txtStatus.text = showtime.status
+
+            itemView.setOnClickListener {
+                onItemClick(showtime.id)
+            }
         }
     }
 }

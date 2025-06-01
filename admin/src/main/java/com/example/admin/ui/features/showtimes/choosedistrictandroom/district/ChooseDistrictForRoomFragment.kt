@@ -46,33 +46,33 @@ class ChooseDistrictForRoomFragment : BaseFragment<FragmentChooseDistrictForRoom
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInitialData()
+        setupRecyclerView()
         setupObserver()
     }
 
+
+    private fun setupRecyclerView() {
+        adapter = ChooseDistrictForRoomAdapter(ArrayList()) { district ->
+            val bundle = Bundle().apply { putString("districtId", district.id) }
+            val showRoomFragment = ChooseRoomFragment().apply { arguments = bundle }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, showRoomFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.rcvDistrict.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcvDistrict.adapter = adapter
+    }
     override fun setupInitialData() {
         viewModel.loadDistricts()
     }
 
 
     override fun setupObserver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.districts.collectLatest { list ->
-                adapter = ChooseDistrictForRoomAdapter(list) { district ->
-                    val bundle = Bundle().apply {
-                        putString("districtId", district.id)
-                    }
-                    val showRoomFragment = ChooseRoomFragment().apply {
-                        arguments = bundle
-                    }
-
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, showRoomFragment)
-                        .addToBackStack(null)
-                        .commit()
-                }
-
-                binding.rcvDistrict.layoutManager = LinearLayoutManager(requireContext())
-                binding.rcvDistrict.adapter = adapter
+                adapter.updateData(list)
             }
         }
     }

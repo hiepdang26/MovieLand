@@ -7,8 +7,8 @@ import com.example.admin.databinding.ItemDistrictBinding
 import com.example.admin.data.firebase.model.district.FirestoreDistrict
 
 class ChooseDistrictForRoomAdapter(
-    private val districts: List<FirestoreDistrict>,
-    private val onDistrictClick: (FirestoreDistrict) -> Unit
+private var districts: MutableList<FirestoreDistrict>,
+private val onDistrictClick: (FirestoreDistrict) -> Unit
 ) : RecyclerView.Adapter<ChooseDistrictForRoomAdapter.DistrictViewHolder>() {
 
     inner class DistrictViewHolder(private val binding: ItemDistrictBinding) :
@@ -32,4 +32,11 @@ class ChooseDistrictForRoomAdapter(
     }
 
     override fun getItemCount(): Int = districts.size
+
+    fun updateData(newDistricts: List<FirestoreDistrict>) {
+        districts.clear()
+        districts.addAll(newDistricts)
+        notifyDataSetChanged()
+    }
 }
+

@@ -67,7 +67,6 @@ class ShowRoomFragment : BaseFragment<FragmentShowRoomBinding>() {
         if (districtId.isNotEmpty()) {
             viewModel.loadRoomsByDistrictId(districtId)
         } else {
-            // Xử lý khi không có districtId, ví dụ show toast hoặc popBackStack
         }
     }
 

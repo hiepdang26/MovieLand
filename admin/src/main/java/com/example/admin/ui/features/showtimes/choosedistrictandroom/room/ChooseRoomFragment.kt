@@ -2,6 +2,7 @@ package com.example.admin.ui.features.showtimes.choosedistrictandroom.room
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,11 @@ class ChooseRoomFragment : BaseFragment<FragmentChooseRoomBinding>() {
                         arguments = Bundle().apply {
                             putString("roomId", room.id)
                             putString("roomName", room.name)
+                            putString("districtId", room.districtId)
+                            putString("districtName", room.districtName)
+                            Log.d("ChooseRoomFragment", "setupObserver: ${ room.totalSeats}, ${ room.seatInRow}")
+                            putString("totalSeat", room.totalSeats.toString())
+                            putString("seatInEachRow", room.seatInRow.toString())
                         }
                     }
 

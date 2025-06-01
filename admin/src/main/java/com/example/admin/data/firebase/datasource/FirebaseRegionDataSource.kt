@@ -22,10 +22,9 @@ class FirebaseRegionDataSource @Inject constructor(
     suspend fun uploadRegion(region: FirestoreRegion): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val docRef = if (region.id.isBlank()) {
-                // Tạo mới
-                firestore.collection("regions").document()
+                val newId = "region_" + java.util.UUID.randomUUID().toString()
+                firestore.collection("regions").document(newId)
             } else {
-                // Cập nhật
                 firestore.collection("regions").document(region.id)
             }
             // Nếu tạo mới, gán lại id cho đối tượng trước khi lưu

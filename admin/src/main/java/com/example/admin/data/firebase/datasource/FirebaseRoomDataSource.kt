@@ -20,7 +20,9 @@ class FirebaseRoomDataSource @Inject constructor(
     suspend fun addRoom(room: FirestoreRoom): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val docRef = if (room.id.isBlank()) {
-                firestore.collection(collectionName).document()
+                // Tạo ID mới với tiền tố "room_"
+                val newId = "room_" + java.util.UUID.randomUUID().toString()
+                firestore.collection(collectionName).document(newId)
             } else {
                 firestore.collection(collectionName).document(room.id)
             }

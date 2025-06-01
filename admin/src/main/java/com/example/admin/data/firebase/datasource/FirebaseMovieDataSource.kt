@@ -21,15 +21,26 @@ class FirebaseMovieDataSource @Inject constructor(
 
     suspend fun uploadMovie(movie: FirestoreMovie): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            firestore.collection("movies")
-                .document(movie.id.toString())
-                .set(movie)
-                .await()
+            val docRef = if (movie.id.isBlank()) {
+                val newId = "movie_" + java.util.UUID.randomUUID().toString()
+                firestore.collection("movies").document(newId)
+            } else {
+                firestore.collection("movies").document(movie.id)
+            }
+
+            val movieToSave = if (movie.id.isBlank()) {
+                movie.copy(id = docRef.id)
+            } else {
+                movie
+            }
+
+            docRef.set(movieToSave).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
     fun getAllMovies(): Flow<List<FirestoreMovie>> = callbackFlow {
         try {

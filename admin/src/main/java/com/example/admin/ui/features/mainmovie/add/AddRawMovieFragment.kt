@@ -107,7 +107,7 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
             viewModel.uploadPosterAndMovie(
                 uri = selectedPosterUri!!,
                 movie = FirestoreMovie(
-                    id = (System.currentTimeMillis() / 1000).toInt(),
+                    id = (System.currentTimeMillis() / 1000).toString(),
                     title = title,
                     overview = overview,
                     runtime = runtime,

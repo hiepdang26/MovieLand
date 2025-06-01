@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
 
     private val viewModel: ShowMovieViewModel by viewModels()
-    private lateinit var movieAdapter: ShowMovieAdapter // tự tạo adapter riêng
+    private lateinit var movieAdapter: ShowMovieAdapter
 
     override fun getViewBinding(
         inflater: LayoutInflater,

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.admin.data.firebase.model.showtime.FirestoreShowtime
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 
 class FirebaseShowtimeDataSource @Inject constructor(
@@ -58,7 +59,7 @@ class FirebaseShowtimeDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateShowtime(showtimeId: String, updatedData: Map<String, Any>): Result<Unit> {
+    suspend fun updateShowtime(showtimeId: String, updatedData: Map<String, Any?>): Result<Unit> {
         return try {
             firestore.collection(collectionName)
                 .document(showtimeId)
@@ -73,13 +74,15 @@ class FirebaseShowtimeDataSource @Inject constructor(
 
     suspend fun addShowtime(newShowtime: FirestoreShowtime): Result<String> {
         return try {
-            val docRef = firestore.collection(collectionName)
-                .add(newShowtime)
-                .await()
-            Result.success(docRef.id)
+            val newId = "showtime_" + UUID.randomUUID().toString()
+            val docRef = firestore.collection(collectionName).document(newId)
+            docRef.set(newShowtime.copy(id = newId)).await()
+
+            Result.success(newId)
         } catch (e: Exception) {
             Log.e("FirebaseShowtimeDS", "Lỗi thêm mới showtime: ${e.message}", e)
             Result.failure(e)
         }
     }
+
 }

@@ -25,11 +25,18 @@ class FirebaseDistrictDataSource @Inject constructor(
     suspend fun uploadDistrict(regionId: String, district: FirestoreDistrict): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val docRef = if (district.id.isBlank()) {
-                districtsCollection(regionId).document()
+                val newId = "district_" + java.util.UUID.randomUUID().toString()
+                districtsCollection(regionId).document(newId)
             } else {
                 districtsCollection(regionId).document(district.id)
             }
-            val districtToSave = if (district.id.isBlank()) district.copy(id = docRef.id) else district
+
+            val districtToSave = if (district.id.isBlank()) {
+                district.copy(id = docRef.id)
+            } else {
+                district
+            }
+
             docRef.set(districtToSave).await()
             Result.success(Unit)
         } catch (e: Exception) {
@@ -37,6 +44,7 @@ class FirebaseDistrictDataSource @Inject constructor(
             Result.failure(e)
         }
     }
+
 
     fun getDistricts(regionId: String): Flow<List<FirestoreDistrict>> = callbackFlow {
         try {
