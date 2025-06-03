@@ -75,6 +75,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     true
                 }
 
+                R.id.navigation_ticket -> {
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictForRoomFragment) {
+                        openFragment(ChooseDistrictForRoomFragment())
+                    }
+                    true
+                }
+
 
                 else -> false
             }

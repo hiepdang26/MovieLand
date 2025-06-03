@@ -34,4 +34,13 @@
         app:cnb_backgroundColor="#8335FF" />
     />
 
+    <item
+        android:id="@+id/navigation_ticket"
+        android:icon="@drawable/icon_ticket"
+
+        android:title="Giờ chiếu"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
+    />
+
 </menu>
