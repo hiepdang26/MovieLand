@@ -9,6 +9,7 @@ import com.example.admin.ui.features.mainmovie.show.ShowMovieFragment
 import com.example.admin.ui.features.region.show.ShowRegionFragment
 import com.example.admin.ui.features.room.choosedistrict.ChooseDistrictFragment
 import com.example.admin.ui.features.showtimes.choosedistrictandroom.district.ChooseDistrictForRoomFragment
+import com.example.admin.ui.features.ticket.choosedistricandroomandshowtime.district.ChooseDistrictForTicketFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -76,8 +77,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
 
                 R.id.navigation_ticket -> {
-                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictForRoomFragment) {
-                        openFragment(ChooseDistrictForRoomFragment())
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictForTicketFragment) {
+                        openFragment(ChooseDistrictForTicketFragment())
                     }
                     true
                 }

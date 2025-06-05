@@ -23,7 +23,6 @@ data class FirestoreTicket(
     val startTime: Date? = null,
     val endTime: Date? = null,
 
-    val row: Int = 0,
 
 
 )
