@@ -9,7 +9,8 @@ import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.ItemComboBinding
 
 class ComboAdapter(
-    private val combos: List<FirestoreCombo>
+    private val combos: List<FirestoreCombo>,
+    private val onItemClick: (FirestoreCombo) -> Unit
 ) : RecyclerView.Adapter<ComboAdapter.ComboViewHolder>() {
 
     inner class ComboViewHolder(val binding: ItemComboBinding) : RecyclerView.ViewHolder(binding.root)
@@ -28,6 +29,10 @@ class ComboAdapter(
             Glide.with(imgProduct.context)
                 .load(combo.imageUrl)
                 .into(imgProduct)
+
+            root.setOnClickListener {
+                onItemClick(combo)
+            }
         }
     }
 

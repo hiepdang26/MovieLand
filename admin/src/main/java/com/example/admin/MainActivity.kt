@@ -11,6 +11,7 @@ import com.example.admin.ui.features.region.show.ShowRegionFragment
 import com.example.admin.ui.features.room.choosedistrict.ChooseDistrictFragment
 import com.example.admin.ui.features.showtimes.choosedistrictandroom.district.ChooseDistrictForRoomFragment
 import com.example.admin.ui.features.ticket.choosedistricandroomandshowtime.district.ChooseDistrictForTicketFragment
+import com.example.admin.ui.features.voucher.show.ShowVoucherFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,8 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         chipNavigationBar.setOnItemSelectedListener { itemId ->
             when (itemId) {
                 R.id.navigation_api -> {
-                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ApiMovieFragment) {
-                        openFragment(ApiMovieFragment())
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowVoucherFragment) {
+                        openFragment(ShowVoucherFragment())
                     }
                     true
                 }

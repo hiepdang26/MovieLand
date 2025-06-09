@@ -1,13 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.features.voucher.add.AddVoucherFragment">
+    android:background="@android:color/black">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-</FrameLayout>
+        <!-- Tiêu đề -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <!-- Nút back -->
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rounded_background_circle_icon"
+                android:padding="10dp"
+                android:src="@drawable/icon_back_ios"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- Tiêu đề -->
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm Voucher"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Mã voucher -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Mã voucher"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/edtCode"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="Nhập mã voucher"
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Mô tả -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Mô tả"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:gravity="top"
+
+            android:hint="Nhập mô tả voucher"
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Loại giảm giá -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Loại giảm giá"
+            android:textColor="@color/white" />
+
+        <Spinner
+            android:id="@+id/spinnerDiscountType"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext_default"
+
+            android:padding="10dp" />
+
+        <!-- Phần trăm giảm -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Phần trăm giảm (%)"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/edtDiscountPercent"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="VD: 10"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"
+
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Số tiền giảm (VNĐ)" />
+
+        <EditText
+            android:id="@+id/edtDiscountAmount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="VD: 30000"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="10dp"
+
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Mức giảm tối đa -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Mức giảm tối đa (áp dụng cho %)" />
+
+        <EditText
+            android:id="@+id/edtMaxDiscount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="VD: 50000"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="10dp"
+
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Giá vé tối thiểu -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Giá vé tối thiểu để áp dụng" />
+
+        <EditText
+            android:id="@+id/edtMinTicketValue"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="VD: 100000"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="10dp"
+
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Giới hạn lượt sử dụng -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Giới hạn lượt sử dụng" />
+
+        <EditText
+            android:id="@+id/edtUsageLimit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="VD: 100"
+            android:inputType="number"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"
+
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Trạng thái -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Trạng thái" />
+
+        <CheckBox
+            android:id="@+id/chkActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Đang hoạt động"
+            android:textColor="@android:color/white" />
+
+        <!-- Nút tạo -->
+        <Button
+            android:id="@+id/btnSaveVoucher"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/rounded_purple_button"
+            android:text="Tạo voucher"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

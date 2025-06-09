@@ -12,9 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.R
+import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.FragmentShowCombosBinding
 import com.example.admin.ui.bases.BaseFragment
 import com.example.admin.ui.features.combo.add.AddCombosFragment
+import com.example.admin.ui.features.combo.edit.EditCombosFragment
 import com.example.admin.ui.features.region.add.AddRegionFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -47,19 +49,14 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
 
     private fun setupRecyclerView() {
         binding.rcvDistrict.layoutManager = LinearLayoutManager(requireContext())
-        comboAdapter = ComboAdapter(emptyList())
+        comboAdapter = ComboAdapter(emptyList()) { combo -> openEditComboFragment(combo) }
         binding.rcvDistrict.adapter = comboAdapter
     }
 
     override fun setupObserver() {
-        // Quan sát danh sách quận
         lifecycleScope.launch {
             viewModel.districts.collectLatest { districts ->
                 Log.d("ShowCombosFragment", "✅ Số lượng districts: ${districts.size}")
-                districts.forEach {
-                    Log.d("ShowCombosFragment", "➡️ District: id=${it.id}, name=${it.name}")
-                }
-
                 if (districts.isEmpty()) {
                     Toast.makeText(requireContext(), "⚠️ Không có district nào", Toast.LENGTH_SHORT).show()
                 }
@@ -73,21 +70,21 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
                     districtNames
                 )
                 binding.spinnerDistrict.adapter = spinnerAdapter
-
-                Log.d("ShowCombosFragment", "🎯 Spinner set với ${districtNames.size} items")
             }
         }
 
-        // Combo
+        // Quan sát danh sách combo
         lifecycleScope.launch {
             viewModel.combos.collectLatest { combos ->
                 Log.d("ShowCombosFragment", "✅ Combo count: ${combos.size}")
-                comboAdapter = ComboAdapter(combos)
+                comboAdapter = ComboAdapter(combos) { combo ->
+                    openEditComboFragment(combo)
+                }
                 binding.rcvDistrict.adapter = comboAdapter
             }
         }
 
-        // Lỗi
+        // Quan sát lỗi
         lifecycleScope.launch {
             viewModel.error.collectLatest { errorMsg ->
                 errorMsg?.let {
@@ -98,8 +95,6 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
             }
         }
     }
-
-
 
     override fun setupClickView() {
         binding.spinnerDistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -137,7 +132,24 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
         }
     }
 
+    private fun openEditComboFragment(combo: FirestoreCombo) {
+        val editFragment = EditCombosFragment().apply {
+            arguments = Bundle().apply {
+                putString("comboId", combo.id)
+                putString("comboName", combo.name)
+                putString("comboImage", combo.imageUrl)
+                putDouble("comboPrice", combo.price)
+                putString("districtId", selectedDistrictId)
+                putString("districtName", selectedDistrictName)
+            }
+        }
 
-    override fun setupInitialData() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, editFragment)
+            .addToBackStack(null)
+            .commit()
     }
+
+    override fun setupInitialData() {}
 }
+
