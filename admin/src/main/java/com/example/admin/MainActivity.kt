@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import com.example.admin.databinding.ActivityMainBinding
 import com.example.admin.ui.bases.BaseActivity
 import com.example.admin.ui.features.apimovie.ApiMovieFragment
+import com.example.admin.ui.features.combo.show.ShowCombosFragment
 import com.example.admin.ui.features.mainmovie.show.ShowMovieFragment
 import com.example.admin.ui.features.region.show.ShowRegionFragment
 import com.example.admin.ui.features.room.choosedistrict.ChooseDistrictFragment
@@ -79,6 +80,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 R.id.navigation_ticket -> {
                     if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ChooseDistrictForTicketFragment) {
                         openFragment(ChooseDistrictForTicketFragment())
+                    }
+                    true
+                }
+                R.id.navigation_popcorn -> {
+                    if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ShowCombosFragment) {
+                        openFragment(ShowCombosFragment())
                     }
                     true
                 }

@@ -60,7 +60,10 @@ class CloudinaryUploader(
             return@withContext Result.success(imageUrl)
 
         } catch (e: Exception) {
+            Log.e("CloudinaryUploader", "❌ Exception: ${e.message}", e)
+
             Result.failure(e)
         }
+
     }
 }

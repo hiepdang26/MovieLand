@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="80dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Product Image Container -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:cardCornerRadius="10dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+              />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Product Info Container -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="[B]Cup Deadpool"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txt_online_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá online:"
+                android:textColor="#B0B0B0"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="199.000 đ"
+                android:textColor="#FF6B35"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

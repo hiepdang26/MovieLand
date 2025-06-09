@@ -34,14 +34,11 @@ class ChooseShowtimeForTicketViewModel @Inject constructor(
 
                 if (showtimeList.isEmpty()) {
                     _error.value = "Không có suất chiếu nào trong phòng này."
-                    android.util.Log.d("ShowtimeViewModel", "❌ Không có showtime nào cho roomId: $roomId")
                 } else {
                     _showtimes.value = showtimeList
-                    android.util.Log.d("ShowtimeViewModel", "✅ Tải ${showtimeList.size} showtimes cho roomId: $roomId")
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-                android.util.Log.e("ShowtimeViewModel", "🔥 Lỗi khi load showtimes", e)
             }
         }
     }

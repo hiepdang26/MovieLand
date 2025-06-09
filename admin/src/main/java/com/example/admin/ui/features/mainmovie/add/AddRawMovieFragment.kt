@@ -67,7 +67,6 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
 
         viewModel.uploadedPosterUrl.observe(viewLifecycleOwner) { url ->
             if (!url.isNullOrEmpty()) {
-                // Hiển thị ảnh từ Cloudinary
                 Glide.with(requireContext())
                     .load(url)
                     .into(binding.imgPoster)

@@ -16,4 +16,8 @@
         <item>Đang chờ</item>
         <item>Đã kết thúc</item>
     </string-array>
+    <string-array name="combo_status_array">
+        <item>Hiện</item>
+        <item>Ẩn</item>
+    </string-array>
 </resources>

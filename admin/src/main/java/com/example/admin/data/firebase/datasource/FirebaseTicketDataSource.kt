@@ -26,7 +26,8 @@ class FirebaseTicketDataSource @Inject constructor(
                 .collection("tickets")
 
             tickets.forEach { ticket ->
-                val docRef = ticketRef.document(ticket.seatLabel)
+                val paddedId = padSeatLabel(ticket.seatLabel)
+                val docRef = ticketRef.document(paddedId)
                 batch.set(docRef, ticket, SetOptions.merge())
             }
 
@@ -37,6 +38,14 @@ class FirebaseTicketDataSource @Inject constructor(
         }
     }
 
+    private fun padSeatLabel(label: String): String {
+        val regex = Regex("([A-Z]+)(\\d+)")
+        val match = regex.find(label)
+        return if (match != null) {
+            val (rowLetter, colNumber) = match.destructured
+            "${rowLetter}${colNumber.padStart(2, '0')}" // A1 -> A01
+        } else label
+    }
     /**
      * Xoá toàn bộ vé trong một suất chiếu.
      */
