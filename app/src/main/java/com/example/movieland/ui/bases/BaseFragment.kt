@@ -1,4 +1,4 @@
-package com.example.movieland.ui.bases
+package com.example.admin.ui.bases
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,5 +27,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         _binding = null
     }
 
+    abstract fun setupInitialData()
+    abstract fun setupObserver()
+    abstract fun setupClickView()
 
 }

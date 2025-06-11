@@ -1,4 +1,4 @@
-package com.example.movieland.ui.bases
+package com.example.admin.ui.bases
 
 
 import android.os.Bundle

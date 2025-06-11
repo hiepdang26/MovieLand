@@ -2,9 +2,9 @@ package com.example.movieland.ui.features.auth.forgot
 
 import android.os.Bundle
 import com.example.movieland.databinding.ActivityForgotPasswordBinding
-import com.example.movieland.ui.bases.BaseActivity
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.example.admin.ui.bases.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

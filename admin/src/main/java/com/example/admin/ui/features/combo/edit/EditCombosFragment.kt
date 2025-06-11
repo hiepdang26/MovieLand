@@ -142,7 +142,6 @@ class EditCombosFragment : BaseFragment<FragmentEditCombosBinding>() {
                 lifecycleScope.launch {
                     var imageUrl = currentImageUrl
 
-                    // Nếu có ảnh mới được chọn thì upload lên
                     selectedImageUri?.let { uri ->
                         val uploadResult = viewModel.uploadImageToCloudinary(uri)
                         if (uploadResult.isFailure) {

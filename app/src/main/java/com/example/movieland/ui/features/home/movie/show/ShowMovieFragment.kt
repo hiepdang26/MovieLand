@@ -2,22 +2,18 @@ package com.example.movieland.ui.features.home.movie.show
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.ui.bases.BaseFragment
 import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.databinding.FragmentShowMovieBinding
-import com.example.movieland.ui.bases.BaseFragment
 import com.example.movieland.ui.features.home.movie.detail.DetailMovieFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
@@ -45,11 +41,11 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         (requireActivity() as MainActivity).showNavigationBar()
     }
 
-    private fun setupClickView() {
+    override fun setupClickView() {
 
     }
 
-    private fun setupInitialData() {
+    override fun setupInitialData() {
         viewModel.fetchMovies()
     }
 
@@ -64,7 +60,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         }
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.movies.collect { movies ->
                 movieAdapter.updateData(movies)

@@ -2,11 +2,11 @@ package com.example.movieland
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.admin.ui.bases.BaseActivity
 import com.example.movieland.databinding.ActivityMainBinding
-import com.example.movieland.ui.bases.BaseActivity
 import com.example.movieland.ui.features.home.movie.show.ShowMovieFragment
 import com.example.movieland.ui.features.personal.main.ShowPersonalFragment
-import com.example.movieland.ui.features.voucher.ShowVoucherFragment
+import com.example.movieland.ui.features.voucher.show.ShowVoucherFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 

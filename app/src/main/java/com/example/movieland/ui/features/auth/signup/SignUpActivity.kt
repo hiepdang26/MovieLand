@@ -5,8 +5,8 @@ import android.app.DatePickerDialog
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.example.admin.ui.bases.BaseActivity
 import com.example.movieland.databinding.ActivitySignUpBinding
-import com.example.movieland.ui.bases.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 

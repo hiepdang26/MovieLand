@@ -5,8 +5,8 @@ import com.example.movieland.databinding.ActivitySignInBinding
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.example.admin.ui.bases.BaseActivity
 import com.example.movieland.MainActivity
-import com.example.movieland.ui.bases.BaseActivity
 import com.example.movieland.ui.features.auth.forgot.ForgotPasswordActivity
 import com.example.movieland.ui.features.auth.signup.SignUpActivity
 import dagger.hilt.android.AndroidEntryPoint

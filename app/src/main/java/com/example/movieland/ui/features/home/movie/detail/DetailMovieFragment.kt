@@ -3,16 +3,13 @@ package com.example.movieland.ui.features.home.movie.detail
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.example.admin.ui.bases.BaseFragment
 import com.example.movieland.MainActivity
-import com.example.movieland.data.firebase.model.FirestoreMovie
 import com.example.movieland.databinding.FragmentDetailMovieBinding
-import com.example.movieland.ui.bases.BaseFragment
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +38,9 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         return binding.root
     }
 
+    override fun setupInitialData() {
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.progressBar.visibility= View.VISIBLE
@@ -58,7 +58,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         (requireActivity() as MainActivity).hideNavigationBar()
 
     }
-    private fun setupClickView() {
+    override fun setupClickView() {
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -66,7 +66,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         }
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         viewModel.movieDetail.observe(viewLifecycleOwner) { detail ->
             binding.progressBar.visibility= View.GONE
 
