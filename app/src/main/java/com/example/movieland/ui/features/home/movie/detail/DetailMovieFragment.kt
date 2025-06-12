@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.admin.ui.bases.BaseFragment
 import com.example.movieland.MainActivity
+import com.example.movieland.R
 import com.example.movieland.databinding.FragmentDetailMovieBinding
+import com.example.movieland.ui.features.home.regionanddistrict.ChooseRegionAndDistrictFragment
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +65,16 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             parentFragmentManager.popBackStack()
         }
         binding.btnAddMovie.setOnClickListener {
+            val fragment = ChooseRegionAndDistrictFragment().apply {
+                arguments = Bundle().apply {
+                    putString("movieId", movieId)
+                }
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
