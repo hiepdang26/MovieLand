@@ -66,6 +66,9 @@ android {
 }
 
 dependencies {
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
+
+
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 
     // AndroidX UI

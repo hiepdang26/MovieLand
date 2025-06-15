@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FF000000" /> <!-- Màu đen cho ghế được chọn -->
+    <corners android:radius="6dp" />
+    <stroke
+        android:width="1dp"
+        android:color="#FFFFFFFF" /> <!-- viền trắng -->
+</shape>

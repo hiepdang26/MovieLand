@@ -1,4 +1,6 @@
-package com.example.admin.ui.features.room.layoutseat.model
+package com.example.movieland.ui.features.home.roomandseat.model
+
+import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 
 data class Seat(
     val row: Int,
@@ -6,7 +8,8 @@ data class Seat(
     val label: String,
     var type: SeatType = SeatType.NORMAL,
     var isSelected: Boolean = false,
-    val isDummy: Boolean = false
+    val isDummy: Boolean = false,
+    var ticket: FirestoreTicket? = null  // thêm dòng này
 
 ) {
     enum class SeatType {

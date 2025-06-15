@@ -21,10 +21,13 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
     private var regionAdapter: RegionAdapter? = null
     private var districtAdapter: DistrictAdapter? = null
     private var movieId: String = ""
+    private var movieName: String = ""
     private var selectedDistrictId: String = ""
+    private var selectedDistrictName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieId = arguments?.getString("movieId").toString()
+        movieName = arguments?.getString("movieName").toString()
     }
 
     override fun getViewBinding(
@@ -55,6 +58,7 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
         }
         districtAdapter = DistrictAdapter { district ->
             selectedDistrictId = district.id
+            selectedDistrictName = district.name
         }
 
 
@@ -89,10 +93,13 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
     override fun setupClickView() {
         binding.btnContinue.setOnClickListener {
             val districtId = selectedDistrictId ?: return@setOnClickListener
+            val districtName = selectedDistrictName ?: return@setOnClickListener
 
             val bundle = Bundle().apply {
                 putString("districtId", districtId)
+                putString("districtName", districtName)
                 putString("movieId", movieId)
+                putString("movieName", movieName)
             }
 
             val fragment = ShowShowtimeFragment()

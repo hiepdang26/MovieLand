@@ -1,41 +1,49 @@
 package com.example.movieland.ui.features.home.showtime
 
+import android.app.AlertDialog
+import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import com.example.admin.ui.bases.BaseFragment
 import com.example.movieland.databinding.FragmentShowShowtimeBinding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.movieland.R
+import com.example.movieland.data.firebase.model.showtime.FirestoreShowtime
+import com.example.movieland.ui.features.home.roomandseat.ChooseSeatFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDate
+import java.time.ZoneId
 
 @AndroidEntryPoint
 class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
 
-    companion object {
-        fun newInstance() = ShowShowtimeFragment()
-    }
-
     private val viewModel: ShowShowtimeViewModel by viewModels()
 
     private var districtId: String = ""
+    private var districtName: String = ""
     private var movieId: String = ""
+    private var movieName: String = ""
 
     private lateinit var showtimeAdapter: ShowtimeAdapter
+    private lateinit var dateAdapter: DateAdapter
+    private lateinit var listDate: List<LocalDate>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             districtId = it.getString("districtId").orEmpty()
+            districtName = it.getString("districtName").orEmpty()
             movieId = it.getString("movieId").orEmpty()
+            movieName = it.getString("movieName").orEmpty()
         }
-        android.util.Log.d("ShowtimeLog", "movieId: ${movieId}, districtId : ${districtId}")
-
     }
 
     override fun getViewBinding(
@@ -54,33 +62,61 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupView()
         setupInitialData()
         setupObserver()
         setupClickView()
     }
 
-    override fun setupInitialData() {
-        showtimeAdapter = ShowtimeAdapter()
+    private fun setupView() {
+        binding.txtNameDistrict.text = districtName
+        binding.txtNameMovie.text = movieName
 
-        binding.recyclerShowtime.apply {
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun setupInitialData() {
+        listDate = generateDates()
+
+        dateAdapter = DateAdapter(listDate) { selectedDate ->
+            viewModel.filterShowtimesByDate(selectedDate)
+        }
+
+        binding.rcvDate.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = dateAdapter
+        }
+
+        showtimeAdapter = ShowtimeAdapter { showtime ->
+            showConfirmDialog(showtime)
+        }
+
+        binding.rcvShowTime.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = showtimeAdapter
         }
 
         viewModel.loadShowtimes(districtId, movieId)
+        viewModel.filterShowtimesByDate(listDate.first())
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun setupObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.showtimes.collectLatest { showtimes ->
-                showtimeAdapter.submitList(showtimes)
-                // LOG TO CHECK
-                showtimes.forEach {
-                    android.util.Log.d("ShowtimeLog", "Showtime: id=${it.id}, movie=${it.movieName}, room=${it.roomName}, time=${it.startTime}")
+                if (showtimes.isNotEmpty()) {
+                    viewModel.filterShowtimesByDate(listDate.first())
                 }
-                android.util.Log.d("ShowtimeLog", "Tổng số showtime: ${showtimes.size}")
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.filteredShowtimes.collectLatest { showtimes ->
+                showtimeAdapter.submitList(showtimes)
             }
         }
 
@@ -91,8 +127,42 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         }
     }
 
-
     override fun setupClickView() {
-
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun generateDates(): List<LocalDate> {
+        val today = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"))
+        return List(7) { index -> today.plusDays(index.toLong()) }
+    }
+
+    private fun showConfirmDialog(showtime: FirestoreShowtime) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Xác nhận")
+            .setMessage("Bạn có chắc chắn muốn chọn xuất chiếu lúc ${showtime.startTime}?")
+            .setPositiveButton("Đồng ý") { _, _ ->
+                goToChooseSeatFragment(showtime)
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
+    }
+    private fun goToChooseSeatFragment(showtime: FirestoreShowtime) {
+        val bundle = Bundle().apply {
+            putString("roomId", showtime.roomId)
+            putString("showtimeId", showtime.id)
+            putString("date", showtime.date.toString())
+        }
+
+        val fragment = ChooseSeatFragment().apply {
+            arguments = bundle
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }

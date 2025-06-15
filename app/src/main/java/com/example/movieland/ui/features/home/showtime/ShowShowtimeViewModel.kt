@@ -1,6 +1,8 @@
 package com.example.movieland.ui.features.home.showtime
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieland.data.firebase.datasource.FirebaseShowtimeDataSource
@@ -9,6 +11,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,4 +39,19 @@ class ShowShowtimeViewModel @Inject constructor(
             }
         }
     }
+
+    private val _filteredShowtimes = MutableStateFlow<List<FirestoreShowtime>>(emptyList())
+    val filteredShowtimes: StateFlow<List<FirestoreShowtime>> = _filteredShowtimes
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun filterShowtimesByDate(date: LocalDate) {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+        val filtered = _showtimes.value.filter { showtime ->
+            showtime.date?.toInstant()?.atZone(ZoneId.of("Asia/Ho_Chi_Minh"))?.toLocalDate() == date
+        }
+
+        _filteredShowtimes.value = filtered
+    }
+
 }

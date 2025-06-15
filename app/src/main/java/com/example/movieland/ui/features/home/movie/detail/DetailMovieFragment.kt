@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     private var movieId: String? = null
+    private var movieName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +69,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             val fragment = ChooseRegionAndDistrictFragment().apply {
                 arguments = Bundle().apply {
                     putString("movieId", movieId)
+                    putString("movieName", movieName)
                 }
             }
 
@@ -83,7 +85,8 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             binding.progressBar.visibility= View.GONE
 
             detail?.let {
-                binding.txtTitle.text = it.title
+                movieName = it.title
+                binding.txtTitle.text = movieName
                 binding.txtOverReview.text = it.overview
                 binding.txtReleaseDate.text = it.releaseDate
                 binding.txtTime.text = "${it.runtime} phút"

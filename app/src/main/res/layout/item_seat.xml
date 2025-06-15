@@ -1,0 +1,13 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtSeatLabel"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:gravity="center"
+    android:textColor="@android:color/white"
+    android:textSize="14sp"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="false"
+    android:background="?attr/selectableItemBackground"
+    />

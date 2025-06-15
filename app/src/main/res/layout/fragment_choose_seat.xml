@@ -1,0 +1,43 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- Giả lập ánh sáng màn hình -->
+    <ImageView
+        android:id="@+id/screenGlow"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:src="@drawable/bg_screen_glow"
+        android:scaleType="fitXY"
+        android:layout_gravity="top" />
+
+    <!-- Zoomable seat layout -->
+    <com.otaliastudios.zoom.ZoomLayout
+        android:id="@+id/zoomLayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="50dp"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSeats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:scrollbars="none" />
+    </com.otaliastudios.zoom.ZoomLayout>
+
+    <!-- Nút "Tiếp tục" ở góc dưới bên phải -->
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tiếp tục"
+        android:textAllCaps="false"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_purple_button"
+        android:textColor="@android:color/white" />
+
+</FrameLayout>
