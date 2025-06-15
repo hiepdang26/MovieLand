@@ -9,6 +9,7 @@ import com.example.admin.ui.bases.BaseActivity
 import com.example.movieland.MainActivity
 import com.example.movieland.ui.features.auth.forgot.ForgotPasswordActivity
 import com.example.movieland.ui.features.auth.signup.SignUpActivity
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +23,13 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         _binding = getViewBinding()
         setContentView(binding.root)
 

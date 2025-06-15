@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.data.firebase.model.voucher.FirestoreVoucher
 import com.example.admin.databinding.FragmentEditVoucherBinding
@@ -65,6 +66,10 @@ class ShowVoucherFragment : BaseFragment<FragmentShowVoucherBinding>() {
         setupObserver()
         setupClickView()
         setupInitialData()
+    }
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).showNavigationBar()
     }
     override fun setupClickView() {
         binding.btnAdd.setOnClickListener {

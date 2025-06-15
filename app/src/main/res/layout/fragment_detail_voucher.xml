@@ -47,17 +47,18 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="15dp"
                     android:padding="10dp"
+                    android:background="@drawable/rounded_background_circle_icon"
                     android:src="@drawable/icon_back_ios"
-                    android:tint="@color/white" />
+                    android:tint="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
-                    android:text="Chi tiết Mã giảm giá"
+                    android:text="Chi tiết"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
             </FrameLayout>
@@ -265,18 +266,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
-            <!-- Agree button -->
-            <Button
-                android:id="@+id/btn_agree"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/rounded_purple_button"
-                android:text="Đồng ý"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+
 
         </LinearLayout>
 

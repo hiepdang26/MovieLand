@@ -42,17 +42,6 @@ class ApiMovieFragment : BaseFragment<FragmentApiMovieBinding>() {
     }
 
     override fun setupInitialData() {
-    }
-
-    override fun setupObserver() {
-    }
-
-    override fun setupClickView() {
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         val fragments = listOf(
             NowPlayingFragment(),
             UpComingFragment()
@@ -72,9 +61,22 @@ class ApiMovieFragment : BaseFragment<FragmentApiMovieBinding>() {
         }.attach()
     }
 
+    override fun setupObserver() {
+    }
+
+    override fun setupClickView() {
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupInitialData()
+        setupClickView()
+    }
+
     override fun onResume() {
         super.onResume()
-        (requireActivity() as MainActivity).showNavigationBar()
-
+        (requireActivity() as MainActivity).hideNavigationBar()
     }
 }

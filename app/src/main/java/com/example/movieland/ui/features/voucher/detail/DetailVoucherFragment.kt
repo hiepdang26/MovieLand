@@ -102,7 +102,7 @@ class DetailVoucherFragment : BaseFragment<FragmentDetailVoucherBinding>() {
     }
 
     fun Date.formatFullDate(): String {
-        val sdf = SimpleDateFormat("dd 'Th'MM yyyy HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return sdf.format(this)
     }
 

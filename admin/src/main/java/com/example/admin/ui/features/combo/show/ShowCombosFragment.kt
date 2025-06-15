@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.FragmentShowCombosBinding
@@ -151,5 +152,9 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
     }
 
     override fun setupInitialData() {}
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).showNavigationBar()
+    }
 }
 

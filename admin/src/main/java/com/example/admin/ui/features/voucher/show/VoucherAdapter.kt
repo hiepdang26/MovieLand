@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.admin.data.firebase.model.voucher.FirestoreVoucher
 import com.example.admin.databinding.ItemVoucherBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class VoucherAdapter(
     private val vouchers: List<FirestoreVoucher>,
@@ -23,15 +26,20 @@ class VoucherAdapter(
 
     override fun onBindViewHolder(holder: VoucherViewHolder, position: Int) {
         val voucher = vouchers[position]
+
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale("vi", "VN"))
+        dateFormat.timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh")
+
+        val startDateStr = voucher.startDate?.let { dateFormat.format(it) } ?: ""
+        val endDateStr = voucher.endDate?.let { dateFormat.format(it) } ?: ""
+
         holder.binding.apply {
             txtCode.text = voucher.code
-            txtDescription.text = voucher.description
             txtDiscount.text = when (voucher.discountType) {
                 FirestoreVoucher.VoucherType.PERCENTAGE -> "Giảm ${voucher.discountPercent?.toInt()}%"
                 FirestoreVoucher.VoucherType.FIXED -> "Giảm ${voucher.discountAmount?.toInt()}đ"
             }
-            txtValidTime.text = "Từ ${voucher.startDate} đến ${voucher.endDate}"
-            txtStatus.text = if (voucher.isActive) "Đang hoạt động" else "Ngưng hoạt động"
+            txtValidTime.text = "Từ $startDateStr đến $endDateStr"
 
             root.setOnClickListener {
                 onItemClick(voucher)

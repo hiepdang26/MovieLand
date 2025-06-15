@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.data.firebase.model.showtime.FirestoreShowtime
 import com.example.admin.databinding.FragmentShowShowtimeBinding
@@ -44,6 +45,11 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         setupInitialData()
         setupObserver()
         setupClickView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).showNavigationBar()
     }
     override fun setupInitialData() {
         roomId = arguments?.getString("roomId") ?: ""

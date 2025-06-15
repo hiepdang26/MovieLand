@@ -35,7 +35,7 @@
                 android:id="@+id/txt_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thêm phòng chiếu"
+                android:text="Chỉnh sửa phòng chiếu"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
@@ -142,7 +142,7 @@
         <!-- Nút chỉnh sửa layout ghế -->
         <Button
             android:id="@+id/btnEditLayout"
-            android:text="Thêm bố cục ghế"
+            android:text="Chỉnh sửa bố cục ghế"
             android:layout_marginTop="20dp"
             android:textAllCaps="false"
             android:background="@drawable/rounded_purple_button"

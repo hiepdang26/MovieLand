@@ -22,7 +22,7 @@ class DateAdapter(
     inner class DateViewHolder(val binding: ItemDateBinding) : RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(date: LocalDate, isSelected: Boolean) {
-            binding.txtDate.text = date.format(DateTimeFormatter.ofPattern("dd/MM"))
+            binding.txtDate.text = date.format(DateTimeFormatter.ofPattern("dd"))
             binding.txtDay.text = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
 
             binding.root.setBackgroundResource(

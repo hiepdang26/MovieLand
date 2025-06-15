@@ -1,24 +1,63 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <!-- Giả lập ánh sáng màn hình -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_background_circle_icon"
+        android:elevation="2dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_back_ios"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_name_movie"
+        android:layout_width="0dp"
+        android:layout_marginEnd="20dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_back"
+        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+
     <ImageView
         android:id="@+id/screenGlow"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:src="@drawable/bg_screen_glow"
+        android:layout_height="30dp"
+        android:layout_gravity="top"
+        android:layout_marginTop="20dp"
         android:scaleType="fitXY"
-        android:layout_gravity="top" />
+        android:src="@drawable/bg_screen_glow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back" />
 
     <!-- Zoomable seat layout -->
     <com.otaliastudios.zoom.ZoomLayout
         android:id="@+id/zoomLayout"
         android:layout_width="match_parent"
-        android:layout_marginTop="50dp"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/screenGlow">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewSeats"
@@ -28,16 +67,17 @@
             android:scrollbars="none" />
     </com.otaliastudios.zoom.ZoomLayout>
 
-    <!-- Nút "Tiếp tục" ở góc dưới bên phải -->
     <Button
         android:id="@+id/btnContinue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tiếp tục"
-        android:textAllCaps="false"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_purple_button"
-        android:textColor="@android:color/white" />
+        android:text="Tiếp tục"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

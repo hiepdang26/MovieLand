@@ -22,7 +22,9 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
-            android:text="Xem quận"
+            android:text="Xem quận, khu vực, thành phố,..."
+            android:drawableEnd="@drawable/icon_right_arrow"
+            android:drawableTint="?attr/colorPrimary"
             android:textColor="?attr/colorPrimary"
             android:textSize="18sp" />
 
@@ -38,7 +40,9 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
-            android:text="Chi tiết"
+            android:drawableEnd="@drawable/icon_right_arrow"
+            android:drawableTint="?attr/colorPrimary"
+            android:text="Xem chi tiết"
             android:textColor="?attr/colorPrimary"
             android:textSize="18sp" />
 

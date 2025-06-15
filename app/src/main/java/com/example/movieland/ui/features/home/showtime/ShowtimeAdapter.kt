@@ -40,10 +40,8 @@ class ShowtimeAdapter(
             val start = showtime.startTime?.let { dateFormat.format(it) } ?: "--:--"
             val end = showtime.endTime?.let { dateFormat.format(it) } ?: "--:--"
             binding.txtTime.text = "$start - $end"
-            binding.txtDate.text = showtime.date?.toString() ?: ""
-            binding.txtStatus.text = showtime.status
-
-            binding.txtDate.text = showtime.startTime?.toString()
+            binding.txtSeat.text = "${showtime.availableSeats}/${showtime.totalSeat} ghế"
+            binding.txtNameScreen.text = showtime.roomName
             binding.root.setOnClickListener {
                 onShowtimeClick(showtime)
             }

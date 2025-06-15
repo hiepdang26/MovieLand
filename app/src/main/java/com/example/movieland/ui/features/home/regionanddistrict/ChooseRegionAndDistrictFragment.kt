@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -91,23 +92,28 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
     }
 
     override fun setupClickView() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         binding.btnContinue.setOnClickListener {
-            val districtId = selectedDistrictId ?: return@setOnClickListener
-            val districtName = selectedDistrictName ?: return@setOnClickListener
+            if (selectedDistrictId.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng chọn khu vực trước khi tiếp tục", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             val bundle = Bundle().apply {
-                putString("districtId", districtId)
-                putString("districtName", districtName)
+                putString("districtId", selectedDistrictId)
+                putString("districtName", selectedDistrictName)
                 putString("movieId", movieId)
                 putString("movieName", movieName)
             }
-
             val fragment = ShowShowtimeFragment()
             fragment.arguments = bundle
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, fragment)
-                .addToBackStack(null).commit()
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

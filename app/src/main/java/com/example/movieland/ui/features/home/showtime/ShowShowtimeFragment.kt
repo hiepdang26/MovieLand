@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import com.example.admin.ui.bases.BaseFragment
 import com.example.movieland.databinding.FragmentShowShowtimeBinding
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movieland.R
 import com.example.movieland.data.firebase.model.showtime.FirestoreShowtime
@@ -31,7 +32,9 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
     private var movieId: String = ""
     private var movieName: String = ""
 
-    private lateinit var showtimeAdapter: ShowtimeAdapter
+    private lateinit var showtimeAdapter2D: ShowtimeAdapter
+    private lateinit var showtimeAdapter3D: ShowtimeAdapter
+
     private lateinit var dateAdapter: DateAdapter
     private lateinit var listDate: List<LocalDate>
 
@@ -90,13 +93,22 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
             adapter = dateAdapter
         }
 
-        showtimeAdapter = ShowtimeAdapter { showtime ->
+        showtimeAdapter2D = ShowtimeAdapter { showtime ->
             showConfirmDialog(showtime)
         }
 
-        binding.rcvShowTime.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = showtimeAdapter
+        showtimeAdapter3D = ShowtimeAdapter { showtime ->
+            showConfirmDialog(showtime)
+        }
+
+        binding.rcvShowtime2d.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = showtimeAdapter2D
+        }
+
+        binding.rcvShowtime3d.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = showtimeAdapter3D
         }
 
         viewModel.loadShowtimes(districtId, movieId)
@@ -115,8 +127,28 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.filteredShowtimes.collectLatest { showtimes ->
-                showtimeAdapter.submitList(showtimes)
+            viewModel.showtimes2D.collectLatest { list2D ->
+                showtimeAdapter2D.submitList(list2D)
+                if (list2D.isEmpty()) {
+                    binding.rcvShowtime2d.visibility = View.GONE
+                    binding.txtAlert2d.visibility = View.VISIBLE
+                } else {
+                    binding.rcvShowtime2d.visibility = View.VISIBLE
+                    binding.txtAlert2d.visibility = View.GONE
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.showtimes3D.collectLatest { list3D ->
+                showtimeAdapter3D.submitList(list3D)
+                if (list3D.isEmpty()) {
+                    binding.rcvShowtime3d.visibility = View.GONE
+                    binding.txtAlert3d.visibility = View.VISIBLE
+                } else {
+                    binding.rcvShowtime3d.visibility = View.VISIBLE
+                    binding.txtAlert3d.visibility = View.GONE
+                }
             }
         }
 
@@ -153,6 +185,7 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         val bundle = Bundle().apply {
             putString("roomId", showtime.roomId)
             putString("showtimeId", showtime.id)
+            putString("movieName", showtime.movieName)
             putString("date", showtime.date.toString())
         }
 

@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.admin.MainActivity
 import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.FragmentEditCombosBinding
 import com.example.admin.ui.bases.BaseFragment
@@ -42,7 +43,10 @@ class EditCombosFragment : BaseFragment<FragmentEditCombosBinding>() {
     ): FragmentEditCombosBinding {
         return FragmentEditCombosBinding.inflate(inflater, container, false)
     }
-
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         comboId = arguments?.getString("comboId")

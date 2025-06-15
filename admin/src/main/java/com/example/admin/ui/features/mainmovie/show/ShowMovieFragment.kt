@@ -1,5 +1,6 @@
 package com.example.admin.ui.features.mainmovie.show
 
+import android.app.AlertDialog
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.databinding.FragmentShowMovieBinding
 import com.example.admin.ui.bases.BaseFragment
+import com.example.admin.ui.features.apimovie.ApiMovieFragment
 import com.example.admin.ui.features.mainmovie.add.AddRawMovieFragment
 import com.example.admin.ui.features.mainmovie.edit.EditMovieFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,10 +47,23 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
 
     override fun setupClickView() {
         binding.btnAddMovie.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, AddRawMovieFragment())
-                .addToBackStack(null)
-                .commit()
+            binding.btnAddMovie.setOnClickListener {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Chọn cách thêm phim")
+                    .setItems(arrayOf("Thêm thủ công", "Thêm từ API")) { dialog, which ->
+                        when (which) {
+                            0 -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, AddRawMovieFragment())
+                                .addToBackStack(null)
+                                .commit()
+                            1 -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, ApiMovieFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                    .show()
+            }
         }
 
     }

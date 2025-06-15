@@ -27,6 +27,12 @@ class ShowShowtimeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _showtimes2D = MutableStateFlow<List<FirestoreShowtime>>(emptyList())
+    val showtimes2D: StateFlow<List<FirestoreShowtime>> = _showtimes2D
+
+    private val _showtimes3D = MutableStateFlow<List<FirestoreShowtime>>(emptyList())
+    val showtimes3D: StateFlow<List<FirestoreShowtime>> = _showtimes3D
+
     fun loadShowtimes(districtId: String, movieId: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -45,13 +51,15 @@ class ShowShowtimeViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun filterShowtimesByDate(date: LocalDate) {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-
         val filtered = _showtimes.value.filter { showtime ->
             showtime.date?.toInstant()?.atZone(ZoneId.of("Asia/Ho_Chi_Minh"))?.toLocalDate() == date
         }
 
-        _filteredShowtimes.value = filtered
+        _filteredShowtimes.value = filtered // nếu vẫn cần list chung
+
+        // Phân loại 2D và 3D
+        _showtimes2D.value = filtered.filter { it.screenType.equals("2D", ignoreCase = true) }
+        _showtimes3D.value = filtered.filter { it.screenType.equals("3D", ignoreCase = true) }
     }
 
 }

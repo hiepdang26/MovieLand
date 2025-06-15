@@ -3,6 +3,7 @@ package com.example.movieland.ui.features.home.regionanddistrict
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movieland.R
 import com.example.movieland.data.firebase.model.region.FirestoreRegion
 import com.example.movieland.databinding.ItemRegionBinding
 
@@ -11,6 +12,7 @@ class RegionAdapter(
 ) : RecyclerView.Adapter<RegionAdapter.RegionViewHolder>() {
 
     private var regionList = listOf<FirestoreRegion>()
+    private var selectedPosition = RecyclerView.NO_POSITION  // vị trí được chọn
 
     fun submitList(data: List<FirestoreRegion>) {
         regionList = data
@@ -26,15 +28,31 @@ class RegionAdapter(
 
     override fun onBindViewHolder(holder: RegionViewHolder, position: Int) {
         val item = regionList[position]
-        holder.bind(item)
+        holder.bind(item, position == selectedPosition)
     }
 
     inner class RegionViewHolder(private val binding: ItemRegionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(region: FirestoreRegion) {
+        fun bind(region: FirestoreRegion, isSelected: Boolean) {
             binding.txtRegionName.text = region.name
-            binding.root.setOnClickListener { onItemClick(region) }
+
+            // Cập nhật UI khi được chọn hoặc không
+            if (isSelected) {
+                binding.root.setBackgroundResource(R.drawable.bg_item_selected) // drawable viền và màu nền
+            } else {
+                binding.root.setBackgroundResource(R.drawable.bg_item_default) // background mặc định
+            }
+
+            binding.root.setOnClickListener {
+                // Cập nhật vị trí chọn mới
+                val previousPosition = selectedPosition
+                selectedPosition = adapterPosition
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+
+                onItemClick(region)
+            }
         }
     }
 }

@@ -1,57 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="4dp"
-    android:padding="12dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@drawable/card_background"
-        android:padding="10dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txtCode"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="Mã voucher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#6F19D2"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/txtDescription"
-            android:text="Mô tả"
-            android:textColor="@color/white"
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="Brand Logo"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_ticket" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/txtDiscount"
-            android:text="Giảm giá"
-            android:textColor="@color/white"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#2F2F2F"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txtCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtValidTime"
-            android:text="Hiệu lực"
-            android:textColor="@color/white"
+            <!-- Giá trị giảm giá -->
+            <TextView
+                android:id="@+id/txtDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <!-- Thời gian còn lại -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txtStatus"
-            android:text="Trạng thái"
-            android:textColor="@color/white"
+                <TextView
+                    android:id="@+id/txtValidTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
+
+
+
 </androidx.cardview.widget.CardView>

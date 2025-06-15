@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.admin.MainActivity
 import com.example.admin.ui.features.auth.restore.RestorePasswordActivity
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +22,13 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         _binding = getViewBinding()
         setContentView(binding.root)
 
@@ -55,6 +63,5 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
                 Toast.makeText(this, "Đăng nhập thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 }

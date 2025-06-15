@@ -42,7 +42,6 @@ class AddRawMovieFragment : BaseFragment<FragmentAddRawMovieBinding>() {
     }
 
     override fun setupInitialData() {
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

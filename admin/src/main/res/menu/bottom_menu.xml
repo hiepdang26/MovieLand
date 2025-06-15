@@ -1,14 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/navigation_api"
-        android:icon="@drawable/icon_api"
-        android:title="Api Phim"
-        app:cnb_iconColor="#FFFFFF"
-        app:cnb_backgroundColor="#8335FF" />
+
     <item
         android:id="@+id/navigation_movie"
-        android:icon="@drawable/icon_ticket"
+        android:icon="@drawable/icon_movie_clip"
         android:title="Phim"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
@@ -46,10 +41,14 @@
     <item
         android:id="@+id/navigation_popcorn"
         android:icon="@drawable/icon_popcorn"
-
         android:title="Combo"
         app:cnb_iconColor="#FFFFFF"
         app:cnb_backgroundColor="#8335FF" />
     />
-
+    <item
+        android:id="@+id/navigation_api"
+        android:icon="@drawable/icon_gift"
+        android:title="Voucher"
+        app:cnb_iconColor="#FFFFFF"
+        app:cnb_backgroundColor="#8335FF" />
 </menu>

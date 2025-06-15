@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.example.admin.MainActivity
 import com.example.admin.R
 import com.example.admin.data.firebase.model.voucher.FirestoreVoucher
 import com.example.admin.databinding.FragmentAddVoucherBinding
@@ -35,7 +36,10 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
         setupClickView()
         setupObserver()
     }
-
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
+    }
     override fun setupClickView() {
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()

@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.admin.MainActivity
 import com.example.admin.data.firebase.model.voucher.FirestoreVoucher
 import com.example.admin.databinding.FragmentEditVoucherBinding
 import com.example.admin.ui.bases.BaseFragment
@@ -38,7 +39,10 @@ class EditVoucherFragment : BaseFragment<FragmentEditVoucherBinding>() {
         setupObserver()
         setupClickView()
     }
-
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
+    }
     private fun setupSpinners() {
         val discountTypes = listOf("Phần trăm", "Cố định")
         val discountTypeAdapter = ArrayAdapter(

@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="160dp"
         android:layout_height="120dp"
         android:layout_margin="8dp"
         android:background="@drawable/card_background"
@@ -13,6 +13,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/txt_name_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SCreen1"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+             />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/txt_time"
@@ -20,31 +34,17 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:letterSpacing="0.1"
-            android:text=""
-            android:textColor="#FFFFFF"
             android:textSize="14sp"
+            android:text="20:00 - 20:00"
+            android:textColor="#FF6B35"
             android:textStyle="bold" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-
         <TextView
-            android:id="@+id/txt_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
-        <TextView
-            android:id="@+id/txt_status"
+            android:id="@+id/txt_seat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text=""
-            android:textColor="#FF6B35"
+            android:text="140/200"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
 
