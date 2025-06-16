@@ -1,0 +1,158 @@
+package com.example.movieland.ui.features.home.combo
+
+import android.app.AlertDialog
+import androidx.fragment.app.viewModels
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.R
+import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
+import com.example.movieland.databinding.FragmentChooseComboBinding
+import com.example.movieland.ui.features.home.payment.PaymentFragment
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
+    private var selectedSeatCount: Int = 0
+    private var totalPrice: Double = 0.0
+    private var districtId: String = ""
+    private var selectedTickets: ArrayList<FirestoreTicket>? = null
+
+    private val viewModel: ChooseComboViewModel by viewModels()
+    private lateinit var adapter: ComboAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentChooseComboBinding {
+        return FragmentChooseComboBinding.inflate(inflater, container, false)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = getViewBinding(inflater, container)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupInitialData()
+        setupObserver()
+        setupClickView()
+    }
+
+    override fun setupInitialData() {
+        arguments?.let {
+            selectedSeatCount = it.getInt("selectedSeatCount", 0)
+            totalPrice = it.getDouble("totalPrice", 0.0)
+            districtId = it.getString("districtId", "")
+            selectedTickets = it.getParcelableArrayList("selectedTickets")
+        }
+
+        Log.d("ChooseComboFragment", "selectedTickets: ${selectedTickets?.map { "${it.price},${it.seatLabel} "}}")
+        binding.rcvCombo.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter = ComboAdapter(emptyList(),
+            onIncrease = { combo ->
+                viewModel.increaseCount(combo.id)
+                updateTotalPrice()
+            },
+            onDecrease = { combo ->
+                viewModel.decreaseCount(combo.id)
+                updateTotalPrice()
+            }
+        )
+
+        binding.rcvCombo.adapter = adapter
+
+        viewModel.loadCombos(districtId)
+
+        binding.txtTotalPrice.text = "Tổng tiền: ${formatPrice(totalPrice)} đ"
+    }
+
+    override fun setupObserver() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.comboList.collect { combos ->
+                adapter.submitList(combos)
+                updateTotalPrice()
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.comboCounts.collect { counts ->
+                adapter.updateCounts(counts)
+                updateTotalPrice()
+            }
+        }
+    }
+
+    override fun setupClickView() {
+        binding.btnPay.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận thanh toán")
+                .setMessage("Bạn có chắc chắn muốn thanh toán không?")
+                .setPositiveButton("Đồng ý") { dialog, _ ->
+                    dialog.dismiss()
+
+                    val bundle = Bundle().apply {
+                        putInt("selectedSeatCount", selectedSeatCount)
+                        putDouble("totalPrice", calculateTotalPrice())
+                        putSerializable("comboCounts", HashMap(viewModel.comboCounts.value))
+                    }
+
+                    val paymentFragment = PaymentFragment()
+                    paymentFragment.arguments = bundle
+
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, paymentFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+                .setNegativeButton("Hủy") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+
+    private fun calculateTotalPrice(): Double {
+        val combos = viewModel.comboList.value
+        val counts = viewModel.comboCounts.value
+
+        val totalComboPrice = combos.sumOf { combo ->
+            val count = counts[combo.id] ?: 0
+            combo.price * count
+        }
+        return totalPrice + totalComboPrice
+    }
+    private fun formatPrice(price: Double): String {
+        return String.format("%,.0f", price)
+    }
+
+    private fun updateTotalPrice() {
+        val combos = viewModel.comboList.value
+        val counts = viewModel.comboCounts.value
+
+        val totalComboPrice = combos.sumOf { combo ->
+            val count = counts[combo.id] ?: 0
+            combo.price * count
+        }
+
+        val total = totalPrice + totalComboPrice
+
+        binding.txtTotalPrice.text = "${formatPrice(total)} đ"
+    }
+
+}

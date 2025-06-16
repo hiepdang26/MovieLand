@@ -1,7 +1,10 @@
 package com.example.movieland.data.firebase.model.ticket
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
+@Parcelize
 data class FirestoreTicket(
     val ticketId: String = "",
     val seatLabel: String = "",
@@ -22,7 +25,4 @@ data class FirestoreTicket(
     val movieId: String = "",
     val startTime: Date? = null,
     val endTime: Date? = null,
-
-
-
-)
+): Parcelable

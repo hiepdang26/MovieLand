@@ -185,6 +185,8 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
         val bundle = Bundle().apply {
             putString("roomId", showtime.roomId)
             putString("showtimeId", showtime.id)
+            putString("districtId", showtime.districtId)
+            putString("showtimePrice", showtime.price.toString())
             putString("movieName", showtime.movieName)
             putString("date", showtime.date.toString())
         }

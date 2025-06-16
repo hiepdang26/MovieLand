@@ -10,9 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.R
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.databinding.BottomSheetSelectedSeatsBinding
 import com.example.movieland.databinding.FragmentChooseSeatBinding
+import com.example.movieland.ui.features.home.combo.ChooseComboFragment
 import com.example.movieland.ui.features.home.roomandseat.model.Seat
 import com.example.movieland.ui.features.home.roomandseat.model.SeatLayout
 import com.google.gson.Gson
@@ -24,6 +26,9 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
     private var roomId: String = ""
     private var showtimeId: String = ""
     private var movieName: String = ""
+    private var districtId: String = ""
+    private var showtimePrice: Double = 0.0
+
     private lateinit var seatLayout: SeatLayout
     private lateinit var seatAdapter: SeatAdapter
     private val viewModel: ChooseSeatViewModel by viewModels()
@@ -54,6 +59,12 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
                 seat.isSelected = !seat.isSelected
                 if (seat.isSelected) {
                     selectedSeats.add(seat)
+                    val ticket = seat.ticket
+                    ticket?.let {
+                        Toast.makeText(requireContext(),
+                            "Chọn ghế ${seat.label}, giá vé: ${it.price}, loại: ${it.type}",
+                            Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     selectedSeats.remove(seat)
                 }
@@ -75,9 +86,10 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         roomId = arguments?.getString("roomId") ?: return
         showtimeId = arguments?.getString("showtimeId") ?: return
         movieName = arguments?.getString("movieName") ?: return
+        districtId = arguments?.getString("districtId") ?: return
+        showtimePrice = arguments?.getString("showtimePrice")?.toDoubleOrNull() ?: 0.0
         binding.txtNameMovie.text = movieName
         viewModel.loadRoomDetail(roomId)
-
     }
 
 
@@ -127,10 +139,31 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         val seatLabels = selectedSeats.joinToString(", ") { it.label }
         dialogBinding.tvSelectedSeats.text = "Ghế đã chọn: $seatLabels"
 
-        val totalPrice = selectedSeats.sumOf { it.ticket?.price ?: 0.0 }
+        val totalPrice = selectedSeats.sumOf { (it.ticket?.price ?: 0.0) + showtimePrice }
         dialogBinding.tvTotalPrice.text = "Tổng tiền: $totalPrice đ"
 
         dialogBinding.btnContinue.setOnClickListener {
+            val ticketsSelected = ArrayList(selectedSeats.mapNotNull { it.ticket })
+            Log.d("ChooseSeatFragment", "ticketsSelected: $ticketsSelected.")
+
+            val bundle = Bundle().apply {
+                putInt("selectedSeatCount", selectedSeats.size)
+                putDouble("totalPrice", totalPrice)
+                putString("districtId", districtId)
+                putParcelableArrayList("selectedTickets", ticketsSelected)
+
+            }
+
+            val fragment = ChooseComboFragment().apply {
+                arguments = bundle
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit()
+
+            dialog.dismiss()
         }
 
         dialog.show()
