@@ -1,0 +1,6 @@
+<!-- res/drawable/bg_voucher_selected.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@android:color/transparent"/>
+    <stroke android:width="3dp" android:color="#9500FF"/>
+    <corners android:radius="8dp"/>
+</shape>

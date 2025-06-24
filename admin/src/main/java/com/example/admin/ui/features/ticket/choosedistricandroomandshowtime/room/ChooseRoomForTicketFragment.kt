@@ -40,14 +40,6 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
         return FragmentChooseRoomForTicketBinding.inflate(inflater, container, false)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding =  getViewBinding(inflater, container)
-        return binding.root
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         districtId = arguments?.getString("districtId") ?: ""
@@ -55,6 +47,25 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 1. Khởi tạo adapter với danh sách rỗng
+        adapter = ChooseRoomForTicketAdapter(emptyList()) { room ->
+            val fragment = ChooseShowtimeForTicketFragment().apply {
+                arguments = Bundle().apply {
+                    putString("roomId", room.id)
+                    putString("districtId", room.districtId)
+                }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // 2. Gán layout manager và adapter cho RecyclerView
+        binding.rcvRoom.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcvRoom.adapter = adapter
+
         setupInitialData()
         setupObserver()
         setupClickView()
@@ -71,20 +82,8 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
     override fun setupObserver() {
         lifecycleScope.launch {
             viewModel.rooms.collectLatest { rooms ->
-                adapter = ChooseRoomForTicketAdapter(rooms) { room ->
-                    val fragment = ChooseShowtimeForTicketFragment().apply {
-                        arguments = Bundle().apply {
-                            putString("roomId", room.id)
-                            putString("districtId", room.districtId)
-                        }
-                    }
-
-                    parentFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, fragment)
-                        .addToBackStack(null).commit()
-
-                }
-                binding.rcvRoom.layoutManager = LinearLayoutManager(requireContext())
-                binding.rcvRoom.adapter = adapter
+                // 3. Cập nhật dữ liệu cho adapter, không tạo adapter mới
+                adapter.submitList(rooms)
             }
         }
 

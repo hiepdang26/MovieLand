@@ -59,14 +59,18 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
                 seat.isSelected = !seat.isSelected
                 if (seat.isSelected) {
                     selectedSeats.add(seat)
+                    Log.d("ChooseSeatFragment", "Chọn ghế: ${seat.label}, hàng: ${seat.row}, vị trí: ${seat.position}")
+                    val seatCountInRow = selectedSeats.count { it.row == seat.row }
+                    Log.d("ChooseSeatFragment", "Số ghế đã chọn trong hàng ${seat.row}: $seatCountInRow")
                     val ticket = seat.ticket
                     ticket?.let {
-                        Toast.makeText(requireContext(),
-                            "Chọn ghế ${seat.label}, giá vé: ${it.price}, loại: ${it.type}",
-                            Toast.LENGTH_SHORT).show()
+
                     }
                 } else {
                     selectedSeats.remove(seat)
+                    Log.d("ChooseSeatFragment", "Bỏ chọn ghế: ${seat.label}, hàng: ${seat.row}, vị trí: ${seat.position}")
+                    val seatCountInRow = selectedSeats.count { it.row == seat.row }
+                    Log.d("ChooseSeatFragment", "Số ghế đã chọn trong hàng ${seat.row}: $seatCountInRow")
                 }
                 seatAdapter.notifyItemChanged(position)
             }
@@ -110,6 +114,8 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         binding.btnContinue.setOnClickListener {
             if (selectedSeats.isEmpty()) {
                 Toast.makeText(requireContext(), "Vui lòng chọn ghế trước khi tiếp tục", Toast.LENGTH_SHORT).show()
+            } else if (hasInvalidGap(selectedSeats, seatLayout.seats)) {
+                // có gap không hợp lệ, nên không tiếp tục
             } else {
                 showSelectedSeatsDialog()
             }
@@ -125,11 +131,13 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
 
         seatLayout.seats.forEach { seat ->
             seat.ticket = tickets.find { it.seatLabel == seat.label }
+            seat.position = seat.column - 1
         }
+
         seatAdapter.updateSeats(seatLayout.seats)
-        (binding.recyclerViewSeats.layoutManager as? GridLayoutManager)?.spanCount =
-            seatLayout.columns
+        (binding.recyclerViewSeats.layoutManager as? GridLayoutManager)?.spanCount = seatLayout.columns
     }
+
 
     private fun showSelectedSeatsDialog() {
         val dialogBinding = BottomSheetSelectedSeatsBinding.inflate(layoutInflater)
@@ -150,6 +158,7 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
                 putInt("selectedSeatCount", selectedSeats.size)
                 putDouble("totalPrice", totalPrice)
                 putString("districtId", districtId)
+                putString("showtimeId", showtimeId)
                 putParcelableArrayList("selectedTickets", ticketsSelected)
 
             }
@@ -168,4 +177,28 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
 
         dialog.show()
     }
+    private fun hasInvalidGap(selectedSeats: List<Seat>, allSeats: List<Seat>): Boolean {
+        val seatsByRow = allSeats.groupBy { it.row }
+
+        for ((row, seatsInRow) in seatsByRow) {
+            val selectedPositions = selectedSeats.filter { it.row == row }.map { it.position }.sorted()
+
+            if (selectedPositions.isEmpty()) continue
+
+            val minSelectedPos = selectedPositions.first()
+            val maxSelectedPos = selectedPositions.last()
+
+            // Kiểm tra khoảng trống giữa min và max vị trí ghế được chọn
+            for (pos in minSelectedPos..maxSelectedPos) {
+                if (pos !in selectedPositions) {
+                    Toast.makeText(requireContext(),
+                        "Không được bỏ trống ghế ở hàng $row vị trí $pos",
+                        Toast.LENGTH_LONG).show()
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 }

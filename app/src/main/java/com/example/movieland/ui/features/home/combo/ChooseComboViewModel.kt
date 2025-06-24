@@ -18,7 +18,6 @@ class ChooseComboViewModel @Inject constructor(
     private val _comboList = MutableStateFlow<List<FirestoreCombo>>(emptyList())
     val comboList: StateFlow<List<FirestoreCombo>> = _comboList
 
-    // Map comboId -> count
     private val _comboCounts = MutableStateFlow<Map<String, Int>>(emptyMap())
     val comboCounts: StateFlow<Map<String, Int>> = _comboCounts
 
@@ -27,7 +26,7 @@ class ChooseComboViewModel @Inject constructor(
             val result = firebaseComboDataSource.loadCombosByDistrict(districtId)
             result.onSuccess { combos ->
                 _comboList.value = combos
-                _comboCounts.value = combos.associate { it.id to 0 } // khởi tạo count 0
+                _comboCounts.value = combos.associate { it.id to 0 }
             }
         }
     }

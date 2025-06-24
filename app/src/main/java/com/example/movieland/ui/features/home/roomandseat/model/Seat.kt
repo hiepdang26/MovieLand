@@ -3,7 +3,8 @@ package com.example.movieland.ui.features.home.roomandseat.model
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 
 data class Seat(
-    val row: Int,
+    var row: Int,
+    var position: Int,   // ví dụ vị trí trong hàng: 1,2,3...
     val column: Int,
     val label: String,
     var type: SeatType = SeatType.NORMAL,

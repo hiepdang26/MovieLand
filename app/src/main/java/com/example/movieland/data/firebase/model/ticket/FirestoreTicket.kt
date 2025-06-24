@@ -15,10 +15,10 @@ data class FirestoreTicket(
     val userId: String? = null,
 
     val regionName: String = "",
-    val districtName: String = "",        // Quận 1
-    val roomName: String = "",            // Room 3
-    val screenType: String = "",          // 2D / 3D / IMAX
-    val screenCategory: String = "",      // Early, Regular, Late
+    val districtName: String = "",
+    val roomName: String = "",
+    val screenType: String = "",
+    val screenCategory: String = "",
 
     val movieName: String = "",
     val showtimeId: String = "",

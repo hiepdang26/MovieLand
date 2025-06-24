@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.MainActivity
 import com.example.admin.R
@@ -52,7 +53,7 @@ class ShowRoomFragment : BaseFragment<FragmentShowRoomBinding>() {
                 .addToBackStack(null).commit()
         }
 
-        binding.rcvRoom.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcvRoom.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcvRoom.adapter = adapter
 
         setupInitialData()

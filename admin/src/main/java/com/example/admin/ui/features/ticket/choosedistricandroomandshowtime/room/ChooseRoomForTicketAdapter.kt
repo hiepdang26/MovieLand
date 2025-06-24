@@ -7,7 +7,7 @@ import com.example.admin.data.firebase.model.room.FirestoreRoom
 import com.example.admin.databinding.ItemRoomBinding
 
 class ChooseRoomForTicketAdapter(
-    private val rooms: List<FirestoreRoom>,
+    private var rooms: List<FirestoreRoom>,
     private val onRoomClick: (FirestoreRoom) -> Unit
 ) : RecyclerView.Adapter<ChooseRoomForTicketAdapter.RoomViewHolder>() {
 
@@ -20,6 +20,10 @@ class ChooseRoomForTicketAdapter(
                 onRoomClick(room)
             }
         }
+    }
+    fun submitList(newRooms: List<FirestoreRoom>) {
+        rooms = newRooms
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
