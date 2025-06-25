@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
+import android.widget.Toast
 import com.example.movieland.R
 import com.example.movieland.ui.features.home.roomandseat.model.Seat
 import com.example.movieland.ui.features.home.roomandseat.model.Seat.SeatType
+import com.google.firebase.auth.FirebaseAuth
 
 class SeatAdapter(
     private var seats: List<Seat>,
@@ -42,24 +44,40 @@ class SeatAdapter(
         fun bind(seat: Seat, onClick: () -> Unit) {
             txtSeatLabel.text = seat.label
 
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            val isLocked = seat.ticket?.status == "locked"
+            val isLockedByCurrentUser = isLocked && seat.ticket?.userId == currentUserId
+            val isSelectedLocally = seat.isSelected // dùng biến này để show UI tạm thời
+
             when (seat.type) {
                 SeatType.NORMAL -> {
                     itemView.setBackgroundResource(
-                        if (seat.isSelected) R.drawable.bg_seat_selected
-                        else R.drawable.bg_seat_normal_selected
+                        when {
+                            isSelectedLocally -> R.drawable.bg_seat_selected // bạn vừa chọn
+                            isLocked && !isLockedByCurrentUser -> R.drawable.bg_seat_locked // người khác chọn
+                            else -> R.drawable.bg_seat_normal_selected // bình thường
+                        }
                     )
                 }
                 SeatType.VIP -> {
                     itemView.setBackgroundResource(
-                        if (seat.isSelected) R.drawable.bg_seat_selected
-                        else R.drawable.bg_seat_vip
+                        when {
+                            isSelectedLocally -> R.drawable.bg_seat_selected
+                            isLocked && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
+                            else -> R.drawable.bg_seat_vip
+                        }
                     )
                 }
             }
 
+
             itemView.setOnClickListener {
-                Log.d("SeatAdapter", "Seat clicked: ${seat.label}")
-                onClick()
+                if (isLocked && !isLockedByCurrentUser) {
+                    Log.d("SeatAdapter", "Ghế ${seat.label} đang được chọn bởi người khác")
+                    Toast.makeText(itemView.context, "Ghế này đã được chọn bởi người khác", Toast.LENGTH_SHORT).show()
+                } else {
+                    onClick()
+                }
             }
         }
 

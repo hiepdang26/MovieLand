@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.ui.bases.BaseFragment
@@ -15,6 +16,7 @@ import com.example.movieland.R
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.databinding.FragmentChooseComboBinding
 import com.example.movieland.ui.features.home.payment.PaymentFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +29,7 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
 
     private val viewModel: ChooseComboViewModel by viewModels()
     private lateinit var adapter: ComboAdapter
+    private var isProceedToPayment = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,12 +98,22 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
     }
 
     override fun setupClickView() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    handleBack()
+                }
+            })
+
+        binding.btnBack.setOnClickListener {
+            handleBack()
+        }
         binding.btnPay.setOnClickListener {
             AlertDialog.Builder(requireContext()).setTitle("Xác nhận thanh toán")
                 .setMessage("Bạn có chắc chắn muốn thanh toán không?")
                 .setPositiveButton("Đồng ý") { dialog, _ ->
                     dialog.dismiss()
-
+                    isProceedToPayment = true
                     val selectedCombos = getSelectedCombos()
 
                     val bundle = Bundle().apply {
@@ -175,4 +188,29 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
         return selected
     }
 
+    private fun handleBack() {
+        if (!isProceedToPayment) {
+            selectedTickets?.forEach { ticket ->
+                viewModel.updateTicketStatus(
+                    showtimeId = showtimeId,
+                    ticketId = ticket.ticketId,
+                    status = "available",
+                    userId = null
+                )
+            }
+        }
+        parentFragmentManager.popBackStack()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        selectedTickets?.forEach { ticket ->
+            viewModel.updateTicketStatus(
+                showtimeId = showtimeId,
+                ticketId = ticket.ticketId,
+                status = "available",
+                userId = FirebaseAuth.getInstance().currentUser?.uid
+            )
+        }
+    }
 }

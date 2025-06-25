@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
 import com.example.movieland.databinding.FragmentPaymentBinding
 import com.example.movieland.ui.features.home.combo.ComboSelected
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -26,6 +29,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
     private var baseTotalPrice: Double = 0.0
     private var discountedPrice: Double = 0.0
     private var selectedVoucher: FirestoreVoucher? = null
+
+    private var selectedTickets: ArrayList<FirestoreTicket>? = null
+    private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    private var isPaymentCompleted = false
 
     private lateinit var voucherAdapter: VoucherSelectedAdapter
 
@@ -43,11 +50,12 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
     }
 
     override fun setupInitialData() {
+
         selectedCombos = arguments?.getParcelableArrayList("selectedCombos")
         showtimeId = arguments?.getString("showtimeId") ?: ""
         baseTotalPrice = arguments?.getDouble("totalPrice") ?: 0.0
+        selectedTickets = arguments?.getParcelableArrayList("selectedTickets")
         Log.d("PaymentFragment", "showtimeId = $showtimeId")
-
 
         selectedCombos?.forEach {
             Log.d("PaymentFragment", "comboId: ${it.comboId} ${it.quantity}  ")
@@ -61,6 +69,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInitialData()
+        lockSelectedTickets()
         setupComboRecyclerView()
         setupVoucherRecyclerView()
         setupClickView()
@@ -74,6 +83,11 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
         binding.rcvVoucher.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = voucherAdapter
+        }
+    }
+    private fun lockSelectedTickets() {
+        selectedTickets?.forEach { ticket ->
+            viewModel.updateTicketStatus(ticket.ticketId, "locked", currentUserId)
         }
     }
 
@@ -151,9 +165,32 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
 
     override fun setupClickView() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            handleBackPress()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    handleBackPress()
+                }
+            }
+        )
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isPaymentCompleted) {
+            selectedTickets?.forEach { ticket ->
+                viewModel.updateTicketStatus(
+                    showtimeId = showtimeId,
+                    ticketId = ticket.ticketId,
+                    status = "available",
+                    userId = FirebaseAuth.getInstance().currentUser?.uid
+                )
+            }
         }
     }
+    private fun handleBackPress() {
 
+        parentFragmentManager.popBackStack()
+    }
 
 }
