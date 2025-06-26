@@ -1,5 +1,6 @@
 package com.example.movieland.ui.features.home.regionanddistrict
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +51,7 @@ class RegionAdapter(
                 selectedPosition = adapterPosition
                 notifyItemChanged(previousPosition)
                 notifyItemChanged(selectedPosition)
+                Log.d("RegionAdapter", "Bạn vừa chọn region: id=${region.id}, name=${region.name}")
 
                 onItemClick(region)
             }

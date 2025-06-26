@@ -41,6 +41,9 @@ android {
             buildConfigField(
                 "String", "BASE_URL", localProperties.getProperty("BASE_URL")
             )
+            buildConfigField(
+                "String", "CLIENT_ID_PAYPAL", localProperties.getProperty("CLIENT_ID_PAYPAL")
+            )
         }
         debug {
             buildConfigField(
@@ -48,6 +51,9 @@ android {
             )
             buildConfigField(
                 "String", "ACCESS_TOKEN", localProperties.getProperty("ACCESS_TOKEN")
+            )
+            buildConfigField(
+                "String", "CLIENT_ID_PAYPAL", localProperties.getProperty("CLIENT_ID_PAYPAL")
             )
         }
     }
@@ -68,8 +74,9 @@ android {
 }
 
 dependencies {
-    implementation("com.otaliastudios:zoomlayout:1.9.0")
+    implementation ("com.google.android.gms:play-services-wallet:19.3.0") // Google Pay
 
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
 
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 

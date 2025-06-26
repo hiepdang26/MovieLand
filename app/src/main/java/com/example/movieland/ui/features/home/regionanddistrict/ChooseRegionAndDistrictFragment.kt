@@ -86,6 +86,8 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
         lifecycleScope.launchWhenStarted {
             viewModel.districts.collect {
                 Log.d("ChooseFragment", "Districts size: ${it.size}")
+                selectedDistrictId = ""
+                selectedDistrictName = ""
                 districtAdapter?.submitList(it)
             }
         }

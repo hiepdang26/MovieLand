@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
-    private val accessToken: String = BuildConfig.ACCESS_TOKEN
+    private val accessToken: String = "BuildConfig.ACCESS_TOKEN"
     private var movieId: Int = -1
     private var fromFragment: String? = null
 

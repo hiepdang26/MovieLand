@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_back_ios"
             android:background="@android:color/transparent"
-            android:tint="@android:color/white" />
+           />
 
         <ImageView
             android:layout_width="match_parent"
@@ -188,8 +188,49 @@
                 android:textColor="@color/white"
                 android:drawableTint="@color/white"/>
         </LinearLayout>
+        <!-- Date of Birth Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Giới tính"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
 
-        <!-- Register Button -->
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:weightSum="2">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nam"
+                    android:textColor="@color/white"
+                    android:buttonTint="#FFFFFF"/>
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nữ"
+                    android:textColor="@color/white"
+                    android:buttonTint="#FFFFFF"/>
+            </RadioGroup>
+        </LinearLayout>
+
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -217,7 +258,6 @@
         </FrameLayout>
 
 
-        <!-- Already have an account -->
         <TextView
             android:id="@+id/tvHaveAccount"
             android:layout_width="match_parent"

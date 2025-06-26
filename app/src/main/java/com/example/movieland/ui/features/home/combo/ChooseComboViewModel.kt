@@ -52,36 +52,30 @@ class ChooseComboViewModel @Inject constructor(
         }
     }
 
-    fun updateTicketStatus(
-        showtimeId: String,
-        ticketId: String,
-        status: String,
-        userId: String? = null
-    ) {
-        val docRef = firestore
-            .collection("showtimes")
-            .document(showtimeId)
-            .collection("tickets")
-            .document(ticketId)
+    fun resetTicketIfLockedByCurrentUser(showtimeId: String, ticketId: String, userId: String?) {
+        if (userId == null) return
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("showtimes").document(showtimeId).collection("tickets").document(ticketId)
 
-        val updateMap = mutableMapOf<String, Any>(
-            "status" to status
-        )
-
-        if (userId != null) {
-            updateMap["userId"] = userId
-            updateMap["bookingTime"] = FieldValue.serverTimestamp()
-        } else {
-            updateMap["userId"] = FieldValue.delete()
-            updateMap["bookingTime"] = FieldValue.delete()
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+            val status = snapshot.getString("status")
+            val currentUser = snapshot.getString("userId")
+            if (status == "locked" && currentUser == userId) {
+                Log.d("ChooseComboViewModel", "ticketId=$ticketId status=$status currentUser=$currentUser (expected=$userId)")
+                transaction.update(docRef, mapOf(
+                    "status" to "available",
+                    "userId" to null,
+                    "bookingTime" to null
+                ))
+            }else {
+                Log.d("ChooseComboViewModel", "Không thoả điều kiện reset: status=$status, currentUser=$currentUser, expected=$userId")
+            }
+            null
+        }.addOnSuccessListener {
+            Log.d("ChooseComboViewModel", "Đã reset vé $ticketId nếu phù hợp")
+        }.addOnFailureListener { e ->
+            Log.e("ChooseComboViewModel", "Lỗi khi reset vé $ticketId: ${e.message}")
         }
-
-        docRef.update(updateMap)
-            .addOnSuccessListener {
-                Log.d("ChooseComboViewModel", "Updated ticket $ticketId to $status")
-            }
-            .addOnFailureListener { e ->
-                Log.e("ChooseComboViewModel", "Failed to update ticket $ticketId", e)
-            }
     }
 }

@@ -45,17 +45,17 @@ class SeatAdapter(
             txtSeatLabel.text = seat.label
 
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-            val isLocked = seat.ticket?.status == "locked"
-            val isLockedByCurrentUser = isLocked && seat.ticket?.userId == currentUserId
-            val isSelectedLocally = seat.isSelected // dùng biến này để show UI tạm thời
+            val isLockedOrBooking = seat.ticket?.status == "locked" || seat.ticket?.status == "booking"
+            val isLockedByCurrentUser = isLockedOrBooking && seat.ticket?.userId == currentUserId
+            val isSelectedLocally = seat.isSelected
 
             when (seat.type) {
                 SeatType.NORMAL -> {
                     itemView.setBackgroundResource(
                         when {
-                            isSelectedLocally -> R.drawable.bg_seat_selected // bạn vừa chọn
-                            isLocked && !isLockedByCurrentUser -> R.drawable.bg_seat_locked // người khác chọn
-                            else -> R.drawable.bg_seat_normal_selected // bình thường
+                            isSelectedLocally -> R.drawable.bg_seat_selected
+                            isLockedOrBooking && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
+                            else -> R.drawable.bg_seat_normal_selected
                         }
                     )
                 }
@@ -63,18 +63,17 @@ class SeatAdapter(
                     itemView.setBackgroundResource(
                         when {
                             isSelectedLocally -> R.drawable.bg_seat_selected
-                            isLocked && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
+                            isLockedOrBooking && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
                             else -> R.drawable.bg_seat_vip
                         }
                     )
                 }
             }
 
-
             itemView.setOnClickListener {
-                if (isLocked && !isLockedByCurrentUser) {
-                    Log.d("SeatAdapter", "Ghế ${seat.label} đang được chọn bởi người khác")
-                    Toast.makeText(itemView.context, "Ghế này đã được chọn bởi người khác", Toast.LENGTH_SHORT).show()
+                if (isLockedOrBooking && !isLockedByCurrentUser) {
+                    Log.d("SeatAdapter", "Ghế ${seat.label} đang được chọn hoặc thanh toán bởi người khác")
+                    Toast.makeText(itemView.context, "Ghế này đã được chọn hoặc đang thanh toán bởi người khác", Toast.LENGTH_SHORT).show()
                 } else {
                     onClick()
                 }

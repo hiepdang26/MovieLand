@@ -9,6 +9,7 @@ import com.example.movieland.data.firebase.model.region.FirestoreRegion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class ChooseRegionAndDistrictViewModel @Inject constructor(
 
     private val _selectedRegionId = MutableStateFlow<String?>(null)
 
+
     init {
         viewModelScope.launch {
             regionDataSource.getAllRegions().collect {
@@ -34,14 +36,14 @@ class ChooseRegionAndDistrictViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _selectedRegionId.collect { regionId ->
+            _selectedRegionId.flatMapLatest { regionId ->
                 if (regionId != null) {
-                    districtDataSource.getDistricts(regionId).collect {
-                        _districts.value = it
-                    }
+                    districtDataSource.getDistricts(regionId)
                 } else {
-                    _districts.value = emptyList()
+                    kotlinx.coroutines.flow.flowOf(emptyList())
                 }
+            }.collect { districts ->
+                _districts.value = districts
             }
         }
     }

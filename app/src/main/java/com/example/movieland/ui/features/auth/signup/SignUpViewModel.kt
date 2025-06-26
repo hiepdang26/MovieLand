@@ -24,10 +24,11 @@ class SignUpViewModel @Inject constructor(
         password: String,
         name: String,
         phone: String,
-        birthdate: String
+        birthdate: String,
+        gender: String
     ) {
         viewModelScope.launch {
-            val result = authDataSource.registerUser(email, password, name, phone, birthdate)
+            val result = authDataSource.registerUser(email, password, name, phone, birthdate, gender)
             _signUpResult.value = result
         }
     }

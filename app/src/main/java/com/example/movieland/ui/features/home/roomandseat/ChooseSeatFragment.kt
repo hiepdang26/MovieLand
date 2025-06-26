@@ -62,7 +62,6 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
                     return@SeatAdapter
                 }
 
-                // CHỈ CẬP NHẬT UI LOCAL, KHÔNG UPDATE FIRESTORE
                 seat.isSelected = !seat.isSelected
                 if (seat.isSelected) {
                     selectedSeats.add(seat)
@@ -120,14 +119,11 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
                     seat.ticket = matchedTicket
                     val isLockedByUser = matchedTicket?.status == "locked" && matchedTicket.userId == currentUserId
                     seat.isSelected = isLockedByUser
-
-                    // Đảm bảo selectedSeats được cập nhật đúng
                     if (isLockedByUser && seat !in selectedSeats) {
                         selectedSeats.add(seat)
                     } else if (!isLockedByUser && seat in selectedSeats) {
                         selectedSeats.remove(seat)
                     }
-
                     seat
                 }
 

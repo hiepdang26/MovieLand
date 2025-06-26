@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NowPlayingFragment : BaseFragment<FragmentNowPlayingBinding>() {
-    private val accessToken: String = BuildConfig.ACCESS_TOKEN
+    private val accessToken: String = "BuildConfig.ACCESS_TOKEN"
     private lateinit var nowPlayingMovieAdapter: NowPlayingMovieAdapter
     private val viewModel: NowPlayingViewModel by viewModels()
     override fun getViewBinding(

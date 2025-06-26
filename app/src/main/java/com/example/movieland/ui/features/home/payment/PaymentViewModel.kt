@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieland.data.firebase.datasource.FirebaseShowtimeDataSource
 import com.example.movieland.data.firebase.datasource.FirebaseVoucherDataSource
 import com.example.movieland.data.firebase.model.showtime.FirestoreShowtime
+import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,15 +54,9 @@ class PaymentViewModel @Inject constructor(
     }
 
     fun updateTicketStatus(
-        showtimeId: String,
-        ticketId: String,
-        status: String,
-        userId: String? = null
+        showtimeId: String, ticketId: String, status: String, userId: String? = null
     ) {
-        val docRef = firestore
-            .collection("showtimes")
-            .document(showtimeId)
-            .collection("tickets")
+        val docRef = firestore.collection("showtimes").document(showtimeId).collection("tickets")
             .document(ticketId)
 
         val updateMap = mutableMapOf<String, Any>(
@@ -74,12 +71,113 @@ class PaymentViewModel @Inject constructor(
             updateMap["bookingTime"] = FieldValue.delete()
         }
 
-        docRef.update(updateMap)
-            .addOnSuccessListener {
+        docRef.update(updateMap).addOnSuccessListener {
                 Log.d("PaymentViewModel", "Updated ticket $ticketId to $status")
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 Log.e("PaymentViewModel", "Failed to update ticket $ticketId", e)
             }
     }
+    fun resetTicketIfLockedByCurrentUser(showtimeId: String, ticketId: String, userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.runTransaction { transaction ->
+            val docRef = db.collection("showtimes").document(showtimeId).collection("tickets")
+                .document(ticketId)
+            val snapshot = transaction.get(docRef)
+            val status = snapshot.getString("status")
+            val currentUser = snapshot.getString("userId")
+            if (status == "locked" && currentUser == userId) {
+                transaction.update(docRef, mapOf(
+                    "status" to "available",
+                    "userId" to null,
+                    "bookingTime" to null
+                ))
+            }
+            null
+        }.addOnSuccessListener {
+            Log.d("resetTicket", "Reset vé $ticketId thành công hoặc không cần reset.")
+        }.addOnFailureListener { e ->
+            Log.e("resetTicket", "Lỗi khi reset vé $ticketId: ${e.message}")
+        }
+    }
+    fun setTicketsBooking(
+        showtimeId: String,
+        tickets: List<FirestoreTicket>,
+        userId: String,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        db.runTransaction { transaction ->
+            val docRefs = tickets.map { ticket ->
+                db.collection("showtimes").document(showtimeId).collection("tickets")
+                    .document(ticket.ticketId)
+            }
+            val snapshots = docRefs.map { transaction.get(it) }
+
+            snapshots.forEachIndexed { i, snapshot ->
+                val ticket = tickets[i]
+                if (!snapshot.exists()) {
+                    throw Exception("Ghế ${ticket.seatLabel} không tồn tại trên Firestore!")
+                }
+                val status = snapshot.getString("status")
+                val ticketUserId = snapshot.getString("userId")
+                if (status != "locked" || ticketUserId != userId) {
+                    throw Exception("Ghế ${ticket.seatLabel} đã bị người khác đặt hoặc thay đổi trạng thái!")
+                }
+            }
+
+            docRefs.forEach {
+                transaction.update(it, mapOf("status" to "booking", "userId" to userId))
+            }
+        }.addOnSuccessListener {
+            callback(true, null)
+        }.addOnFailureListener { e ->
+            callback(false, e.message)
+        }
+    }
+
+
+    fun resetBookingToLocked(
+        showtimeId: String,
+        tickets: List<FirestoreTicket>,
+        userId: String,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        db.runTransaction { transaction ->
+            val snapshotList = tickets.map { ticket ->
+                val docRef = db.collection("showtimes").document(showtimeId).collection("tickets")
+                    .document(ticket.ticketId)
+                val snapshot = transaction.get(docRef)
+                ticket to snapshot
+            }
+            snapshotList.forEach { (ticket, snapshot) ->
+                val status = snapshot.getString("status")
+                val ticketUserId = snapshot.getString("userId")
+                if (status == "booking" && ticketUserId == userId) {
+                    transaction.update(
+                        snapshot.reference, mapOf(
+                            "status" to "locked",
+                            "userId" to userId,
+                            "bookingTime" to FieldValue.serverTimestamp()
+                        )
+                    )
+                } else {
+                    Log.d(
+                        "ResetBooking",
+                        ">> Không reset ticket ${ticket.ticketId} (status=$status, userId=$ticketUserId)"
+                    )
+                }
+            }
+        }.addOnSuccessListener {
+            Log.d("ResetBooking", "Reset booking to locked SUCCESS")
+            onComplete(true, null)
+        }.addOnFailureListener { e ->
+            Log.e("ResetBooking", "Reset booking to locked FAIL: ${e.message}")
+            onComplete(false, e.message)
+        }
+    }
+
+
+
+
 }

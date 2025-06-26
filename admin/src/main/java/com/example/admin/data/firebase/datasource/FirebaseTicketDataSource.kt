@@ -12,9 +12,6 @@ class FirebaseTicketDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
 ) {
 
-    /**
-     * Tạo toàn bộ vé cho một suất chiếu từ danh sách FirestoreTicket.
-     */
     suspend fun generateTicketsForShowtime(
         showtimeId: String,
         tickets: List<FirestoreTicket>,
@@ -26,9 +23,10 @@ class FirebaseTicketDataSource @Inject constructor(
                 .collection("tickets")
 
             tickets.forEach { ticket ->
-                val paddedId = padSeatLabel(ticket.seatLabel)
-                val docRef = ticketRef.document(paddedId)
-                batch.set(docRef, ticket, SetOptions.merge())
+                val docId = "tickets_${ticket.seatLabel}_${ticket.ticketId}"
+                val ticketWithDocId = ticket.copy(ticketId = docId)
+                val docRef = ticketRef.document(docId)
+                batch.set(docRef, ticketWithDocId, SetOptions.merge())
             }
 
             batch.commit().await()
@@ -38,17 +36,6 @@ class FirebaseTicketDataSource @Inject constructor(
         }
     }
 
-    private fun padSeatLabel(label: String): String {
-        val regex = Regex("([A-Z]+)(\\d+)")
-        val match = regex.find(label)
-        return if (match != null) {
-            val (rowLetter, colNumber) = match.destructured
-            "${rowLetter}${colNumber.padStart(2, '0')}" // A1 -> A01
-        } else label
-    }
-    /**
-     * Xoá toàn bộ vé trong một suất chiếu.
-     */
     suspend fun deleteAllTickets(showtimeId: String): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             val ticketSnapshot = firestore.collection("showtimes")
@@ -88,19 +75,19 @@ class FirebaseTicketDataSource @Inject constructor(
             }
         }
 
-    /**
-     * Cập nhật 1 vé theo seatLabel với dữ liệu cụ thể (giá, trạng thái, v.v.)
-     */
+
     suspend fun updateTicket(
         showtimeId: String,
         seatLabel: String,
+        ticketId: String,
         data: Map<String, Any?>,
     ): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
+            val docId = "tickets_${seatLabel}_${ticketId}"
             val ticketRef = firestore.collection("showtimes")
                 .document(showtimeId)
                 .collection("tickets")
-                .document(seatLabel)
+                .document(docId)
 
             ticketRef.update(data).await()
             Result.success(Unit)
@@ -109,21 +96,4 @@ class FirebaseTicketDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Đặt lại vé về trạng thái "available" (dùng cho huỷ/thu hồi)
-     */
-    suspend fun resetTicketStatus(
-        showtimeId: String,
-        seatLabel: String,
-    ): Result<Unit> {
-        return updateTicket(
-            showtimeId,
-            seatLabel,
-            mapOf(
-                "status" to "available",
-                "userId" to null,
-                "bookingTime" to null
-            )
-        )
-    }
 }

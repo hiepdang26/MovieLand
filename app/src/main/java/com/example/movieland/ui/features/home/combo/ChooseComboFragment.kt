@@ -120,7 +120,7 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
                         putInt("selectedSeatCount", selectedSeatCount)
                         putString("showtimeId", showtimeId)
                         putDouble("totalPrice", calculateTotalPrice())
-
+                        putParcelableArrayList("selectedTickets", selectedTickets)
                         putParcelableArrayList("selectedCombos", selectedCombos)
                     }
                     Log.d("PaymentFragment", "selectedCombos: $selectedCombos")
@@ -187,15 +187,17 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
         }
         return selected
     }
-
+    override fun onResume() {
+        super.onResume()
+        isProceedToPayment = false
+    }
     private fun handleBack() {
         if (!isProceedToPayment) {
             selectedTickets?.forEach { ticket ->
-                viewModel.updateTicketStatus(
+                viewModel.resetTicketIfLockedByCurrentUser(
                     showtimeId = showtimeId,
                     ticketId = ticket.ticketId,
-                    status = "available",
-                    userId = null
+                    userId = FirebaseAuth.getInstance().currentUser?.uid
                 )
             }
         }
@@ -204,13 +206,14 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        selectedTickets?.forEach { ticket ->
-            viewModel.updateTicketStatus(
-                showtimeId = showtimeId,
-                ticketId = ticket.ticketId,
-                status = "available",
-                userId = FirebaseAuth.getInstance().currentUser?.uid
-            )
+        if (!isProceedToPayment) {
+            selectedTickets?.forEach { ticket ->
+                viewModel.resetTicketIfLockedByCurrentUser(
+                    showtimeId = showtimeId,
+                    ticketId = ticket.ticketId,
+                    userId = FirebaseAuth.getInstance().currentUser?.uid
+                )
+            }
         }
     }
 }

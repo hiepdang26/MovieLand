@@ -17,7 +17,8 @@ class FirebaseAuthDataSource @Inject constructor(
         password: String,
         name: String,
         phone: String,
-        birthdate: String
+        birthdate: String,
+        gender: String
     ): Result<FirebaseUser> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
@@ -28,6 +29,7 @@ class FirebaseAuthDataSource @Inject constructor(
                 "name" to name,
                 "phone" to phone,
                 "birthdate" to birthdate,
+                "gender" to gender,
                 "role" to "user"
             )
 
@@ -64,11 +66,14 @@ class FirebaseAuthDataSource @Inject constructor(
         }
     }
 
-    fun getCurrentUser(): FirebaseUser? = auth.currentUser
-
-    // Đăng xuất
-    fun logout() {
-        auth.signOut()
+    suspend fun getCurrentUserData(): Map<String, Any>? {
+        val user = auth.currentUser ?: return null
+        return try {
+            val snapshot = firestore.collection("users").document(user.uid).get().await()
+            snapshot.data
+        } catch (e: Exception) {
+            null
+        }
     }
 
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.admin.ui.bases.BaseActivity
+import com.example.movieland.R
 import com.example.movieland.databinding.ActivitySignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -42,14 +43,19 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
             val name = binding.edtFullName.text.toString().trim()
             val phone = binding.edtPhone.text.toString().trim()
             val birthdate = binding.edtDateOfBirth.text.toString().trim()
-
+            val selectedGenderId = binding.rgGender.checkedRadioButtonId
+            val gender = when (selectedGenderId) {
+                R.id.rbMale -> "Nam"
+                R.id.rbFemale -> "Nữ"
+                else -> ""
+            }
             if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phone.isEmpty() || birthdate.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             showLoading(true)
-            viewModel.signUp(email, password, name, phone, birthdate)
+            viewModel.signUp(email, password, name, phone, birthdate, gender)
 
         }
     }

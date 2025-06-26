@@ -40,7 +40,7 @@
             android:padding="10dp"
 
             android:src="@drawable/icon_back_ios"
-            android:tint="@android:color/black" />
+            app:tint="@android:color/black" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.example.movieland.ui.features.home.regionanddistrict
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,12 +12,15 @@ class DistrictAdapter(
     private val onItemClick: (FirestoreDistrict) -> Unit,
 ) : RecyclerView.Adapter<DistrictAdapter.DistrictViewHolder>() {
 
-    private var districtList = listOf<FirestoreDistrict>()
+    private var districtList = mutableListOf<FirestoreDistrict>()
     private var selectedPosition = RecyclerView.NO_POSITION
 
     fun submitList(data: List<FirestoreDistrict>) {
-        districtList = data
-        selectedPosition = RecyclerView.NO_POSITION // reset chọn khi cập nhật dữ liệu mới
+    Log.d("DistrictAdapter", "submitList size=${data.size} -- data=${data.joinToString { it.name }}")
+
+        districtList.clear()
+        districtList.addAll(data)
+        selectedPosition = RecyclerView.NO_POSITION
         notifyDataSetChanged()
     }
 
