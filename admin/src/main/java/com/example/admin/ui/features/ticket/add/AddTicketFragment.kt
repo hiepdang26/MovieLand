@@ -21,8 +21,7 @@ class AddTicketFragment : BaseFragment<FragmentAddTicketBinding>() {
     private var showtimeId = ""
 
     override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?
     ): FragmentAddTicketBinding {
         return FragmentAddTicketBinding.inflate(inflater, container, false)
     }
@@ -45,11 +44,35 @@ class AddTicketFragment : BaseFragment<FragmentAddTicketBinding>() {
     override fun setupClickView() {
         binding.btnGenerateTicket.setOnClickListener {
             if (showtimeId.isNotEmpty() && roomId.isNotEmpty()) {
-                viewModel.generateTickets(showtimeId, roomId)
+
+                val normalPrice = binding.edtNormalPrice.text.toString().toDoubleOrNull()
+                val vipPrice = binding.edtVipSeat.text.toString().toDoubleOrNull()
+
+                if (normalPrice == null || vipPrice == null) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập giá vé hợp lệ cho cả hai loại!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if (normalPrice <= 0 || vipPrice <= 0) {
+                    Toast.makeText(requireContext(), "Giá vé phải lớn hơn 0!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if (vipPrice < normalPrice) {
+                    Toast.makeText(requireContext(), "Giá vé VIP phải lớn hơn hoặc bằng giá vé thường!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                viewModel.generateTickets(showtimeId, roomId, normalPrice, vipPrice)
             } else {
-                Toast.makeText(requireContext(), "Thiếu roomId hoặc showtimeId", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Thiếu roomId hoặc showtimeId", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
 
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -60,7 +83,8 @@ class AddTicketFragment : BaseFragment<FragmentAddTicketBinding>() {
         lifecycleScope.launch {
             viewModel.success.collectLatest { success ->
                 if (success) {
-                    Toast.makeText(requireContext(), "Tạo vé thành công!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Tạo vé thành công!", Toast.LENGTH_SHORT)
+                        .show()
                     parentFragmentManager.popBackStack()
                 }
             }

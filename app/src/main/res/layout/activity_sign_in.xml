@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -10,7 +9,6 @@
     android:background="@android:color/black"
     android:padding="16dp">
 
-    <!-- Logo header -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -18,19 +16,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="100dp" />
 
-    <!-- Spacer -->
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
-    <!-- Login Form Container -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Login Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +33,6 @@
             android:gravity="center"
             android:layout_marginBottom="32dp" />
 
-        <!-- Email Field -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +59,6 @@
             android:paddingEnd="16dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Password Field -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,21 +83,33 @@
             android:textSize="15sp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/btnLogin"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Đăng nhập"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:background="@drawable/rounded_purple_button"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            />
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="16dp">
 
-        <!-- Bottom Links -->
+            <Button
+                android:id="@+id/btn_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Đăng nhập"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:background="@drawable/rounded_purple_button" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                app:lottie_colorFilter="@color/white"
+                android:visibility="visible"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true" />
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,7 +140,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Spacer at the bottom -->
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"

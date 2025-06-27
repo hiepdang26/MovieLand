@@ -12,6 +12,8 @@ data class FirestoreTicket(
     val price: Double = 0.0,
     val status: String = "available",
     val bookingTime: Date? = null,
+    val bookingId: String = "",
+
     val userId: String? = null,
 
     val regionName: String = "",

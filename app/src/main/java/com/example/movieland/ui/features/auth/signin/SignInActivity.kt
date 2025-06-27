@@ -3,6 +3,7 @@ package com.example.movieland.ui.features.auth.signin
 import android.os.Bundle
 import com.example.movieland.databinding.ActivitySignInBinding
 import android.content.Intent
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.admin.ui.bases.BaseActivity
@@ -38,7 +39,9 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
     }
 
     private fun setupListeners() {
-        binding.btnLogin.setOnClickListener {
+        binding.btnSignIn.setOnClickListener {
+            binding.btnSignIn.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
             val email = binding.edtEmail.text.toString().trim()
             val password = binding.edtPassword.text.toString().trim()
 
@@ -60,13 +63,24 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
 
     private fun observeViewModel() {
         viewModel.loginResult.observe(this) { result ->
+            binding.btnSignIn.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
             result.onSuccess {
                 Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
-            }.onFailure {
-                Toast.makeText(this, "Đăng nhập thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+            }.onFailure { e ->
+                val message = e.message ?: ""
+                if (message.contains("The supplied auth credential is incorrect", ignoreCase = true) ||
+                    message.contains("The password is invalid", ignoreCase = true) ||
+                    message.contains("There is no user record", ignoreCase = true)
+                ) {
+                    Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Đăng nhập thất bại: $message", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
 }

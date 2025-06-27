@@ -33,7 +33,12 @@ class AddTicketViewModel @Inject constructor(
         _error.value = null
     }
 
-    fun generateTickets(showtimeId: String, roomId: String) {
+    fun generateTickets(
+        showtimeId: String,
+        roomId: String,
+        normalPrice: Double,
+        vipPrice: Double
+    ) {
         viewModelScope.launch {
             try {
                 val roomSnap = firestore.collection("rooms").document(roomId).get().await()
@@ -49,11 +54,17 @@ class AddTicketViewModel @Inject constructor(
 
                 val layoutData = parseLayoutJson(room.layoutJson)
                 val tickets = layoutData.map { seat ->
+                    val seatPrice = when (seat.type.uppercase()) {
+                        "NORMAL" -> normalPrice
+                        "VIP" -> vipPrice
+                        else -> normalPrice
+                    }
+
                     FirestoreTicket(
                         ticketId = UUID.randomUUID().toString(),
                         seatLabel = seat.label,
                         type = seat.type,
-                        price = showtime.price,
+                        price = seatPrice,
                         status = "available",
                         bookingTime = null,
                         userId = null,
@@ -80,6 +91,7 @@ class AddTicketViewModel @Inject constructor(
             }
         }
     }
+
 
 
     private fun parseLayoutJson(json: String): List<Seat> {

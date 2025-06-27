@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -177,6 +178,35 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
+    fun setTicketsBooked(
+        showtimeId: String,
+        tickets: List<FirestoreTicket>,
+        userId: String,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        val bookingId = UUID.randomUUID().toString()
+
+        db.runTransaction { transaction ->
+            tickets.forEach { ticket ->
+                val docRef = db.collection("showtimes").document(showtimeId)
+                    .collection("tickets").document(ticket.ticketId)
+                transaction.update(
+                    docRef, mapOf(
+                        "status" to "booked",
+                        "userId" to userId,
+                        "bookingTime" to FieldValue.serverTimestamp(),
+                        "bookingId" to bookingId
+
+                    )
+                )
+            }
+        }.addOnSuccessListener {
+            callback(true, null)
+        }.addOnFailureListener { e ->
+            callback(false, e.message)
+        }
+    }
 
 
 

@@ -36,6 +36,9 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        binding.tvHaveAccount.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         binding.btnRegister.setOnClickListener {
             val email = binding.edtEmail.text.toString().trim()

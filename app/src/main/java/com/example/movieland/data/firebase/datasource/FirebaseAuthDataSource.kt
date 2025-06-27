@@ -1,5 +1,6 @@
 package com.example.movieland.data.firebase.datasource
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,6 +76,56 @@ class FirebaseAuthDataSource @Inject constructor(
             null
         }
     }
+    suspend fun updateCurrentUser(
+        name: String,
+        gender: String,
+        birthdate: String,
+        phone: String
+
+    ): Result<Boolean> {
+        val user = auth.currentUser ?: return Result.failure(Exception("User is null"))
+        return try {
+            val updateData = mapOf(
+                "name" to name,
+                "gender" to gender,
+                "birthdate" to birthdate,
+                "phone" to phone
+            )
+            firestore.collection("users").document(user.uid).update(updateData).await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteCurrentUserWithReauth(email: String, password: String): Result<Unit> {
+        val user = auth.currentUser ?: return Result.failure(Exception("User not logged in"))
+        return try {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            user.reauthenticate(credential).await()
+
+            firestore.collection("users").document(user.uid).delete().await()
+            user.delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    suspend fun changePassword(email: String, oldPassword: String, newPassword: String): Result<Unit> {
+        val user = auth.currentUser ?: return Result.failure(Exception("User not logged in"))
+        return try {
+            // 1. Re-authenticate
+            val credential = EmailAuthProvider.getCredential(email, oldPassword)
+            user.reauthenticate(credential).await()
+
+            // 2. Update password
+            user.updatePassword(newPassword).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
 
 }

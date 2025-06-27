@@ -13,7 +13,6 @@ data class FirestoreVoucher(
     val maxDiscount: Double? = null,
 
     val minTicketValue: Double = 0.0,
-    val applicableWeekdays: List<Int> = emptyList(),
     val usageLimit: Int = 1,
     val usedCount: Int = 0,
 

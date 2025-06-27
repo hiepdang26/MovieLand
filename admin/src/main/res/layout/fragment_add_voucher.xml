@@ -11,13 +11,11 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Tiêu đề -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
-            <!-- Nút back -->
             <ImageView
                 android:id="@+id/btn_back"
                 android:layout_width="40dp"
@@ -30,7 +28,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- Tiêu đề -->
             <TextView
                 android:id="@+id/txt_title"
                 android:layout_width="wrap_content"
@@ -46,7 +43,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Mã voucher -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,13 +56,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            
             android:background="@drawable/rounded_edittext_default"
             android:hint="Nhập mã voucher"
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:textColorHint="#6F6F6F" />
 
-        <!-- Mô tả -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,9 +82,8 @@
             android:hint="Nhập mô tả voucher"
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:textColorHint="#6F6F6F" />
 
-        <!-- Loại giảm giá -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,75 +97,88 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+
             android:background="@drawable/rounded_edittext_default"
 
             android:padding="10dp" />
 
-        <!-- Phần trăm giảm -->
-        <TextView
+        <!-- Phần trăm giảm (Chỉ hiển thị khi là Phần trăm) -->
+        <LinearLayout
+            android:id="@+id/layoutDiscountPercent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:text="Phần trăm giảm (%)"
-            android:textColor="@color/white" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edtDiscountPercent"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:text="Phần trăm giảm (%)"
+                android:textColor="@color/white" />
 
-            android:background="@drawable/rounded_edittext_default"
-            android:hint="VD: 10"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:layout_marginTop="10dp"
+            <EditText
+                android:id="@+id/edtDiscountPercent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_edittext_default"
+                android:hint="VD: 10"
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#6F6F6F" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:text="Mức giảm tối đa (áp dụng cho %)" />
 
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            <EditText
+                android:id="@+id/edtMaxDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_edittext_default"
+                android:hint="VD: 50000"
+                android:inputType="numberDecimal"
+                android:layout_marginTop="10dp"
 
-        <TextView
+                android:padding="12dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#6F6F6F" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutDiscountAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:text="Số tiền giảm (VNĐ)" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edtDiscountAmount"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_edittext_default"
-            android:hint="VD: 30000"
-            android:inputType="numberDecimal"
-            android:layout_marginTop="10dp"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:text="Số tiền giảm (VNĐ)" />
 
-            android:padding="12dp"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            <EditText
+                android:id="@+id/edtDiscountAmount"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_edittext_default"
+                android:hint="VD: 30000"
+                android:inputType="numberDecimal"
+                android:layout_marginTop="10dp"
+                android:padding="12dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#6F6F6F" />
+        </LinearLayout>
 
-        <!-- Mức giảm tối đa -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:text="Mức giảm tối đa (áp dụng cho %)" />
 
-        <EditText
-            android:id="@+id/edtMaxDiscount"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_edittext_default"
-            android:hint="VD: 50000"
-            android:inputType="numberDecimal"
-            android:layout_marginTop="10dp"
 
-            android:padding="12dp"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
 
         <!-- Giá vé tối thiểu -->
         <TextView
@@ -192,7 +200,7 @@
 
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:textColorHint="#6F6F6F" />
 
         <!-- Giới hạn lượt sử dụng -->
         <TextView
@@ -214,8 +222,27 @@
             android:layout_marginTop="10dp"
 
             android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:textColorHint="#6F6F6F" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ngày hết hạn"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"/>
 
+        <TextView
+            android:id="@+id/edtEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext_default"
+            android:hint="Chọn ngày hết hạn"
+            android:paddingHorizontal="20dp"
+            android:gravity="center_vertical"
+            android:focusable="false"
+            android:clickable="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="#6F6F6F"
+            android:layout_marginTop="10dp"/>
         <!-- Trạng thái -->
         <TextView
             android:layout_width="match_parent"

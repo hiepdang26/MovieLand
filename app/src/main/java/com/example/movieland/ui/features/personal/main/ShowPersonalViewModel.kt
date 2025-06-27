@@ -1,5 +1,6 @@
 package com.example.movieland.ui.features.personal.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +20,24 @@ class ShowPersonalViewModel @Inject constructor(
 
     fun loadCurrentUser() {
         viewModelScope.launch {
-            val data = authDataSource.getCurrentUserData()
-            _userData.value = data
+            try {
+                val data = authDataSource.getCurrentUserData()
+                _userData.value = data
+            } catch (e: Exception) {
+                Log.e("PersonalInfoViewModel", "Lỗi loadCurrentUser: ${e.message}", e)
+            }
         }
     }
+
+    private val _changePasswordResult = MutableLiveData<Result<Unit>>()
+    val changePasswordResult: LiveData<Result<Unit>> = _changePasswordResult
+
+    fun changePassword(email: String, oldPassword: String, newPassword: String) {
+        viewModelScope.launch {
+            val result = authDataSource.changePassword(email, oldPassword, newPassword)
+            _changePasswordResult.value = result
+        }
+    }
+
+
 }

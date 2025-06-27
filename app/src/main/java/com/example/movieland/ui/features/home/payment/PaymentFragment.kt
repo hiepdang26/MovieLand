@@ -321,10 +321,23 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
             LOAD_PAYMENT_DATA_REQUEST_CODE -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        Toast.makeText(
-                            requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT
-                        ).show()
+                        viewModel.setTicketsBooked(
+                            showtimeId = showtimeId,
+                            tickets = selectedTickets.orEmpty(),
+                            userId = currentUserId
+                        ) { success, errorMsg ->
+                            if (success) {
+                                Toast.makeText(requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show()
+//                                parentFragmentManager.beginTransaction()
+//                                    .replace(R.id.fragmentContainerView, TicketBookedFragment()) // sửa id & args nếu cần
+//                                    .addToBackStack(null)
+//                                    .commit()
+                            } else {
+                                Toast.makeText(requireContext(), "Lỗi cập nhật vé: $errorMsg", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
+
                     Activity.RESULT_CANCELED, AutoResolveHelper.RESULT_ERROR -> {
                         Log.w("GooglePay", "Thanh toán bị hủy hoặc lỗi.")
 

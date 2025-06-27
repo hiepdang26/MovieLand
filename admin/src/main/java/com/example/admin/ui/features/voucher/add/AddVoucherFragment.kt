@@ -22,6 +22,7 @@ import java.util.Date
 class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
 
     private val viewModel: AddVoucherViewModel by viewModels()
+    private var selectedEndDate: Date? = null
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -41,6 +42,23 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
         (requireActivity() as MainActivity).hideNavigationBar()
     }
     override fun setupClickView() {
+        binding.edtEndDate.setOnClickListener {
+            val calendar = java.util.Calendar.getInstance()
+            val datePicker = android.app.DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    calendar.set(year, month, dayOfMonth, 0, 0, 0)
+                    calendar.set(java.util.Calendar.MILLISECOND, 0)
+                    selectedEndDate = calendar.time
+                    val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale("vi", "VN"))
+                    binding.edtEndDate.setText(sdf.format(selectedEndDate!!))
+                },
+                calendar.get(java.util.Calendar.YEAR),
+                calendar.get(java.util.Calendar.MONTH),
+                calendar.get(java.util.Calendar.DAY_OF_MONTH)
+            )
+            datePicker.show()
+        }
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -61,8 +79,12 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
                 Toast.makeText(requireContext(), "Vui lòng nhập mã voucher", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
+            if (selectedEndDate == null) {
+                Toast.makeText(requireContext(), "Vui lòng chọn ngày hết hạn", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val now = Date()
+            val endDate = selectedEndDate ?: now
 
             val voucher = FirestoreVoucher(
                 id = "voucher_${System.currentTimeMillis()}",
@@ -77,7 +99,7 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
                 usedCount = 0,
                 isActive = status,
                 startDate = now,
-                endDate = now, // Hoặc thêm chọn ngày nếu muốn
+                endDate = endDate,
                 createdAt = now,
                 updatedAt = now
             )
@@ -121,11 +143,34 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
         val discountTypes = listOf("Phần trăm", "Cố định")
         val adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item_white,
             discountTypes
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerDiscountType.adapter = adapter
+
+        binding.spinnerDiscountType.adapter = adapter
+        binding.spinnerDiscountType.setSelection(0)
+
+        binding.spinnerDiscountType.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: android.widget.AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position == 0) {
+                    binding.layoutDiscountPercent.visibility = View.VISIBLE
+                    binding.layoutDiscountAmount.visibility = View.GONE
+                } else {
+                    binding.layoutDiscountPercent.visibility = View.GONE
+                    binding.layoutDiscountAmount.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {}
+        }
     }
 
 }

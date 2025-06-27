@@ -38,6 +38,9 @@ class ForgotPasswordActivity : BaseActivity<ActivityForgotPasswordBinding>() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        binding.tvHaveAccount.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun observeViewModel() {
