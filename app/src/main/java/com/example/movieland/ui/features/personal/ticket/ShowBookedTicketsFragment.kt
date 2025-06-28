@@ -49,7 +49,6 @@ class ShowBookedTicketsFragment : BaseFragment<FragmentShowBookedTicketsBinding>
 
     override fun setupObserver() {
         viewModel.filteredTickets.observe(viewLifecycleOwner) { tickets ->
-            // Group tickets by bookingId
             val groups = tickets.filter { !it.bookingId.isNullOrEmpty() }.groupBy { it.bookingId }
                 .map { (bookingId, tickets) -> BookingGroup(bookingId ?: "", tickets) }
 

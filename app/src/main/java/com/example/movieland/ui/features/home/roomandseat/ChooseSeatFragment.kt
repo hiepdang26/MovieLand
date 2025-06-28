@@ -72,7 +72,6 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
             }
         }
 
-
         binding.recyclerViewSeats.apply {
             layoutManager = GridLayoutManager(requireContext(), 8)
             adapter = seatAdapter
