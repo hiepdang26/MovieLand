@@ -12,8 +12,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
+import com.example.movieland.data.firebase.model.ticket.SelectedCombo
 import com.example.movieland.databinding.FragmentChooseComboBinding
 import com.example.movieland.ui.features.home.payment.PaymentFragment
 import com.google.firebase.auth.FirebaseAuth
@@ -115,7 +117,16 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
                     dialog.dismiss()
                     isProceedToPayment = true
                     val selectedCombos = getSelectedCombos()
-
+                    selectedTickets?.forEach { ticket ->
+                        ticket.combos = selectedCombos.map {
+                            SelectedCombo(
+                                comboId = it.comboId,
+                                name = it.comboName,
+                                quantity = it.quantity,
+                                price = it.comboPrice
+                            )
+                        }
+                    }
                     val bundle = Bundle().apply {
                         putInt("selectedSeatCount", selectedSeatCount)
                         putString("showtimeId", showtimeId)
@@ -123,13 +134,13 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
                         putParcelableArrayList("selectedTickets", selectedTickets)
                         putParcelableArrayList("selectedCombos", selectedCombos)
                     }
-                    Log.d("PaymentFragment", "selectedCombos: $selectedCombos")
 
                     val paymentFragment = PaymentFragment()
                     paymentFragment.arguments = bundle
 
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, paymentFragment).addToBackStack(null)
+                        .replace(R.id.fragmentContainerView, paymentFragment).addToBackStack("PaymentFragment")
+
                         .commit()
                 }.setNegativeButton("Hủy") { dialog, _ ->
                     dialog.dismiss()
@@ -187,10 +198,13 @@ class ChooseComboFragment : BaseFragment<FragmentChooseComboBinding>() {
         }
         return selected
     }
+
     override fun onResume() {
         super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
         isProceedToPayment = false
     }
+
     private fun handleBack() {
         if (!isProceedToPayment) {
             selectedTickets?.forEach { ticket ->

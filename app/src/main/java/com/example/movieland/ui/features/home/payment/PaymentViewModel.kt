@@ -180,12 +180,13 @@ class PaymentViewModel @Inject constructor(
 
     fun setTicketsBooked(
         showtimeId: String,
+        bookingId: String,
         tickets: List<FirestoreTicket>,
         userId: String,
+        price:  Double,
         callback: (Boolean, String?) -> Unit
     ) {
         val db = FirebaseFirestore.getInstance()
-        val bookingId = UUID.randomUUID().toString()
 
         db.runTransaction { transaction ->
             tickets.forEach { ticket ->
@@ -196,10 +197,19 @@ class PaymentViewModel @Inject constructor(
                         "status" to "booked",
                         "userId" to userId,
                         "bookingTime" to FieldValue.serverTimestamp(),
-                        "bookingId" to bookingId
-
+                        "bookingId" to bookingId,
+                        "price" to price,
+                        "combos" to ticket.combos.map { combo ->
+                            mapOf(
+                                "comboId" to combo.comboId,
+                                "name" to combo.name,
+                                "quantity" to combo.quantity,
+                                "price" to combo.price
+                            )
+                        }
                     )
                 )
+
             }
         }.addOnSuccessListener {
             callback(true, null)

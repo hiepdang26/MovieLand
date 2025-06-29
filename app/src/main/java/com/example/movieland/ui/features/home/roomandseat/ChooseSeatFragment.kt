@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.databinding.BottomSheetSelectedSeatsBinding
@@ -82,7 +83,11 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         setupObserver()
         setupClickView()
     }
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
 
+    }
     override fun setupInitialData() {
         roomId = arguments?.getString("roomId") ?: return
         showtimeId = arguments?.getString("showtimeId") ?: return
@@ -220,7 +225,7 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, fragment)
-                .addToBackStack(null)
+                .addToBackStack("ChooseComboFragment")
                 .commit()
 
             dialog.dismiss()

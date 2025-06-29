@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,9 @@ import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
 import com.example.movieland.databinding.FragmentPaymentBinding
 import com.example.movieland.ui.features.home.combo.ComboSelected
+import com.example.movieland.ui.features.home.movie.show.ShowMovieFragment
+import com.example.movieland.ui.features.home.payment.detail.DetailPaymentFragment
+import com.example.movieland.ui.features.personal.ticket.detail.DetailTicketFragment
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
@@ -31,6 +35,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
+import java.util.UUID
 
 @AndroidEntryPoint
 class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
@@ -60,6 +65,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
         _binding = getViewBinding(inflater, container)
         return binding.root
     }
+
     override fun setupInitialData() {
         selectedCombos = arguments?.getParcelableArrayList("selectedCombos")
         showtimeId = arguments?.getString("showtimeId") ?: ""
@@ -201,9 +207,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
             }
 
             viewModel.setTicketsBooking(
-                showtimeId = showtimeId,
-                tickets = selectedTickets.orEmpty(),
-                userId = currentUserId
+                showtimeId = showtimeId, tickets = selectedTickets.orEmpty(), userId = currentUserId
             ) { bookingSuccess, bookingError ->
                 if (bookingSuccess) {
                     isPaymentCompleted = true
@@ -212,7 +216,9 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                         else -> null
                     }
                 } else {
-                    showSeatErrorAndGoBack(bookingError ?: "Ghế đã bị người khác đặt, vui lòng chọn lại.")
+                    showSeatErrorAndGoBack(
+                        bookingError ?: "Ghế đã bị người khác đặt, vui lòng chọn lại."
+                    )
                 }
             }
         }
@@ -252,9 +258,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
         if (!isPaymentCompleted) {
             selectedTickets?.forEach { ticket ->
                 viewModel.resetTicketIfLockedByCurrentUser(
-                    showtimeId = showtimeId,
-                    ticketId = ticket.ticketId,
-                    userId = currentUserId
+                    showtimeId = showtimeId, ticketId = ticket.ticketId, userId = currentUserId
                 )
             }
         }
@@ -321,19 +325,40 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
             LOAD_PAYMENT_DATA_REQUEST_CODE -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
+                        val bookingId = UUID.randomUUID().toString()
+
                         viewModel.setTicketsBooked(
                             showtimeId = showtimeId,
+                            bookingId = bookingId,
                             tickets = selectedTickets.orEmpty(),
-                            userId = currentUserId
+                            userId = currentUserId,
+                            price = discountedPrice
                         ) { success, errorMsg ->
                             if (success) {
-                                Toast.makeText(requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show()
-//                                parentFragmentManager.beginTransaction()
-//                                    .replace(R.id.fragmentContainerView, TicketBookedFragment()) // sửa id & args nếu cần
-//                                    .addToBackStack(null)
-//                                    .commit()
+                                Toast.makeText(
+                                    requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT
+                                ).show()
+                                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.fragmentContainerView, DetailPaymentFragment().apply {
+                                        arguments = Bundle().apply {
+                                            putString("bookingId", bookingId)
+                                        }
+                                    })
+                                    .commit()
                             } else {
-                                Toast.makeText(requireContext(), "Lỗi cập nhật vé: $errorMsg", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Lỗi cập nhật vé: $errorMsg",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.fragmentContainerView, ShowMovieFragment().apply {
+                                        arguments = Bundle().apply {
+                                        }
+                                    })
+                                    .commit()
                             }
                         }
                     }
@@ -347,12 +372,21 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                             userId = currentUserId
                         ) { success, errorMsg ->
                             if (success) {
-                                Toast.makeText(requireContext(), "Đã huỷ thanh toán, ghế đã được giữ lại.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Đã huỷ thanh toán, ghế đã được giữ lại.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
-                                Toast.makeText(requireContext(), "Lỗi khi reset vé: $errorMsg", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Lỗi khi reset vé: $errorMsg",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
+
                     else -> {
                         Log.e("GooglePay", "Unknown resultCode: $resultCode")
                     }

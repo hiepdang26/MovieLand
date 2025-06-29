@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.databinding.FragmentChooseRegionAndDistrictBinding
 import com.example.movieland.ui.features.home.showtime.ShowShowtimeFragment
@@ -45,7 +46,11 @@ class ChooseRegionAndDistrictFragment : BaseFragment<FragmentChooseRegionAndDist
         _binding = getViewBinding(inflater, container)
         return binding.root
     }
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
 
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInitialData()

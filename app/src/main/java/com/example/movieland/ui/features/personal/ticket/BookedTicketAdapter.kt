@@ -1,5 +1,6 @@
 package com.example.movieland.ui.features.personal.ticket
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +9,11 @@ import com.example.movieland.databinding.ItemBookedTicketBinding
 import java.text.NumberFormat
 import java.util.Date
 import java.util.Locale
-class BookedTicketAdapter : RecyclerView.Adapter<BookedTicketAdapter.BookingGroupViewHolder>() {
+
+class BookedTicketAdapter (
+    private val onBookingGroupClick: (BookingGroup) -> Unit
+
+): RecyclerView.Adapter<BookedTicketAdapter.BookingGroupViewHolder>() {
     private var items: List<BookingGroup> = emptyList()
 
     fun submitList(newList: List<BookingGroup>) {
@@ -33,21 +38,22 @@ class BookedTicketAdapter : RecyclerView.Adapter<BookedTicketAdapter.BookingGrou
         fun bind(group: BookingGroup) {
             val firstTicket = group.tickets.firstOrNull()
             binding.txtMovieTitle.text = firstTicket?.movieName ?: ""
-            binding.txtMovieDetails.text = "${formatDate(firstTicket?.startTime)} • ${firstTicket?.roomName ?: ""}"
-
-            // Gộp các ghế
+            binding.txtMovieDetails.text =
+                "${formatDate(firstTicket?.startTime)} • ${firstTicket?.roomName ?: ""}"
             binding.txtSeatInfo.text = group.tickets.joinToString(", ") { it.seatLabel }
-
-            // Tổng tiền
             val total = group.tickets.sumOf { it.price }
             binding.txtPrice.text = formatCurrency(total)
+            binding.root.setOnClickListener {
+                onBookingGroupClick(group)
+            }
         }
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingGroupViewHolder {
-        val binding = ItemBookedTicketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemBookedTicketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BookingGroupViewHolder(binding)
     }
 

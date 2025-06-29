@@ -46,6 +46,7 @@ class SeatAdapter(
 
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
             val isLockedOrBooking = seat.ticket?.status == "locked" || seat.ticket?.status == "booking"
+            val isBooked = seat.ticket?.status == "booked"
             val isLockedByCurrentUser = isLockedOrBooking && seat.ticket?.userId == currentUserId
             val isSelectedLocally = seat.isSelected
 
@@ -53,6 +54,7 @@ class SeatAdapter(
                 SeatType.NORMAL -> {
                     itemView.setBackgroundResource(
                         when {
+                            isBooked -> R.drawable.bg_seat_booked
                             isSelectedLocally -> R.drawable.bg_seat_selected
                             isLockedOrBooking && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
                             else -> R.drawable.bg_seat_normal_selected
@@ -62,6 +64,7 @@ class SeatAdapter(
                 SeatType.VIP -> {
                     itemView.setBackgroundResource(
                         when {
+                            isBooked -> R.drawable.bg_seat_booked
                             isSelectedLocally -> R.drawable.bg_seat_selected
                             isLockedOrBooking && !isLockedByCurrentUser -> R.drawable.bg_seat_locked
                             else -> R.drawable.bg_seat_vip
@@ -71,12 +74,15 @@ class SeatAdapter(
             }
 
             itemView.setOnClickListener {
-                if (isLockedOrBooking && !isLockedByCurrentUser) {
+                if (isLockedOrBooking && !isLockedByCurrentUser ) {
                     Log.d("SeatAdapter", "Ghế ${seat.label} đang được chọn hoặc thanh toán bởi người khác")
                     Toast.makeText(itemView.context, "Ghế này đã được chọn hoặc đang thanh toán bởi người khác", Toast.LENGTH_SHORT).show()
+                }else if(isBooked){
+                    Toast.makeText(itemView.context, "Ghế này đã được người khác đặt", Toast.LENGTH_SHORT).show()
                 } else {
                     onClick()
                 }
+
             }
         }
 

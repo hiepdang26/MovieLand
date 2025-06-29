@@ -78,8 +78,11 @@ class AddTicketViewModel @Inject constructor(
                         movieName = showtime.movieName,
                         movieId = showtime.movieId,
                         showtimeId = showtime.id,
+                        showDate = showtime.date,
                         startTime = showtime.startTime,
                         endTime = showtime.endTime,
+
+                        combos = emptyList()
                     )
                 }
 
@@ -91,8 +94,6 @@ class AddTicketViewModel @Inject constructor(
             }
         }
     }
-
-
 
     private fun parseLayoutJson(json: String): List<Seat> {
         val layout = Gson().fromJson(json, LayoutWrapper::class.java)

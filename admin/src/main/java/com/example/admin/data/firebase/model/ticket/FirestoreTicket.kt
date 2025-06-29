@@ -9,20 +9,25 @@ data class FirestoreTicket(
     val price: Double = 0.0,
     val status: String = "available",
     val bookingTime: Date? = null,
+    val bookingId: String? = null,
+
     val userId: String? = null,
 
     val regionName: String = "",
-    val districtName: String = "",        // Quận 1
-    val roomName: String = "",            // Room 3
-    val screenType: String = "",          // 2D / 3D / IMAX
-    val screenCategory: String = "",      // Early, Regular, Late
+    val districtName: String = "",
+    val roomName: String = "",
+    val screenType: String = "",
+    val screenCategory: String = "",
 
     val movieName: String = "",
+    val movieImg: String = "",
     val showtimeId: String = "",
+    val showDate: Date?  = null,
     val movieId: String = "",
     val startTime: Date? = null,
     val endTime: Date? = null,
 
+    val combos: List<SelectedCombo> = emptyList()
 
 
 )

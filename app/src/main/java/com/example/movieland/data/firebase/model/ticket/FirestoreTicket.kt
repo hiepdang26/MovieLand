@@ -12,8 +12,7 @@ data class FirestoreTicket(
     val price: Double = 0.0,
     val status: String = "available",
     val bookingTime: Date? = null,
-    val bookingId: String = "",
-
+    val bookingId: String? = null,
     val userId: String? = null,
 
     val regionName: String = "",
@@ -23,8 +22,12 @@ data class FirestoreTicket(
     val screenCategory: String = "",
 
     val movieName: String = "",
+    val movieImg: String = "",
     val showtimeId: String = "",
+    val showDate: Date?  = null,
     val movieId: String = "",
     val startTime: Date? = null,
     val endTime: Date? = null,
+
+    var combos: List<SelectedCombo> = emptyList()
 ): Parcelable

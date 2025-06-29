@@ -15,6 +15,7 @@ import com.example.movieland.databinding.FragmentShowShowtimeBinding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.data.firebase.model.showtime.FirestoreShowtime
 import com.example.movieland.ui.features.home.roomandseat.ChooseSeatFragment
@@ -56,7 +57,11 @@ class ShowShowtimeFragment : BaseFragment<FragmentShowShowtimeBinding>() {
     ): FragmentShowShowtimeBinding {
         return FragmentShowShowtimeBinding.inflate(inflater, container, false)
     }
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
 
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
