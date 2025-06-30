@@ -93,7 +93,7 @@ class EditVoucherFragment : BaseFragment<FragmentEditVoucherBinding>() {
             edtDiscountAmount.setText(voucher.discountAmount?.toString() ?: "")
             edtMaxDiscount.setText(voucher.maxDiscount?.toString() ?: "")
             edtUsageLimit.setText(voucher.usageLimit.toString())
-            chkActive.isChecked = voucher.isActive
+            chkActive.isChecked = voucher.active
 
             spinnerDiscountType.setSelection(
                 when (voucher.discountType) {
@@ -102,7 +102,7 @@ class EditVoucherFragment : BaseFragment<FragmentEditVoucherBinding>() {
                 }
             )
 
-            chkActive.isChecked = voucher.isActive
+            chkActive.isChecked = voucher.active
         }
     }
 
@@ -115,7 +115,7 @@ class EditVoucherFragment : BaseFragment<FragmentEditVoucherBinding>() {
             val amount = binding.edtDiscountAmount.text.toString().toDoubleOrNull()
             val maxDiscount = binding.edtMaxDiscount.text.toString().toDoubleOrNull()
             val usageLimit = binding.edtUsageLimit.text.toString().toIntOrNull() ?: 1
-            val isActive = binding.chkActive.isChecked
+            val active = binding.chkActive.isChecked
 
             val typeIndex = binding.spinnerDiscountType.selectedItemPosition
             val type = if (typeIndex == 0) FirestoreVoucher.VoucherType.PERCENTAGE else FirestoreVoucher.VoucherType.FIXED
@@ -128,7 +128,7 @@ class EditVoucherFragment : BaseFragment<FragmentEditVoucherBinding>() {
                 "discountAmount" to amount,
                 "maxDiscount" to maxDiscount,
                 "usageLimit" to usageLimit,
-                "isActive" to isActive,
+                "active" to active,
                 "discountType" to type.name,
                 "updatedAt" to Timestamp.now()
             )

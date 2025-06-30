@@ -30,7 +30,6 @@ class FirebaseVoucherDataSource @Inject constructor(
         }
     }
 
-    // Cập nhật voucher (các trường cụ thể)
     suspend fun updateVoucher(voucherId: String, updatedFields: Map<String, Any?>): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             collection.document(voucherId).update(updatedFields).await()
@@ -40,7 +39,6 @@ class FirebaseVoucherDataSource @Inject constructor(
         }
     }
 
-    // Lấy voucher theo ID
     suspend fun getVoucherById(voucherId: String): Result<FirestoreVoucher> = withContext(Dispatchers.IO) {
         return@withContext try {
             val snapshot = collection.document(voucherId).get().await()
@@ -52,7 +50,6 @@ class FirebaseVoucherDataSource @Inject constructor(
         }
     }
 
-    // Xoá voucher theo ID
     suspend fun deleteVoucher(voucherId: String): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             collection.document(voucherId).delete().await()
@@ -62,7 +59,6 @@ class FirebaseVoucherDataSource @Inject constructor(
         }
     }
 
-    // Tải tất cả voucher
     suspend fun loadAllVouchers(): Result<List<FirestoreVoucher>> = withContext(Dispatchers.IO) {
         return@withContext try {
             val snapshot = collection.get().await()

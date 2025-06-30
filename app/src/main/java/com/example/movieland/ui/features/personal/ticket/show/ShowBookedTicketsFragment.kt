@@ -1,15 +1,18 @@
-package com.example.movieland.ui.features.personal.ticket
+package com.example.movieland.ui.features.personal.ticket.show
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.databinding.FragmentShowBookedTicketsBinding
 import com.example.movieland.ui.features.personal.ticket.detail.DetailTicketFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,15 +37,19 @@ class ShowBookedTicketsFragment : BaseFragment<FragmentShowBookedTicketsBinding>
         val userId = getCurrentUserId()
         setupRecyclerView()
         viewModel.loadBookedTickets(userId)
-        binding.edtSearch.addTextChangedListener(object : android.text.TextWatcher {
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.filterTicketsByMovieName(s?.toString().orEmpty())
             }
-            override fun afterTextChanged(s: android.text.Editable?) {}
+
+            override fun afterTextChanged(s: Editable?) {}
         })
+    }
 
-
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
     }
 
     private fun setupRecyclerView() {
@@ -55,9 +62,7 @@ class ShowBookedTicketsFragment : BaseFragment<FragmentShowBookedTicketsBinding>
             detailFragment.arguments = bundle
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, detailFragment)
-                .addToBackStack(null)
-                .commit()
+                .replace(R.id.fragmentContainerView, detailFragment).addToBackStack(null).commit()
         }
         binding.rcvTicket.adapter = adapter
     }
@@ -76,6 +81,6 @@ class ShowBookedTicketsFragment : BaseFragment<FragmentShowBookedTicketsBinding>
     }
 
     private fun getCurrentUserId(): String {
-        return com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        return FirebaseAuth.getInstance().currentUser?.uid ?: ""
     }
 }

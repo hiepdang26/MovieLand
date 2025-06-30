@@ -1,6 +1,5 @@
 package com.example.admin.ui.features.showtimes.add
 
-import android.R
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -14,11 +13,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.admin.MainActivity
+import com.example.admin.R
 import com.example.admin.data.firebase.model.FirestoreMovie
 import com.example.admin.databinding.FragmentAddShowtimeBinding
 import com.example.admin.ui.bases.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -197,27 +198,28 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
 
     private fun setupStatusSpinner() {
         val statusList = listOf("Đang hoạt động", "Đang chờ", "Hủy")
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, statusList)
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, statusList)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerStatus.adapter = adapter
         binding.spinnerStatus.setSelection(1)
     }
 
     private fun setupScreenTypeSpinner() {
-        val statusList = listOf("2D", "3D")
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, statusList)
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        val screenTypeList = listOf("2D", "3D")
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, screenTypeList)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerScreenType.adapter = adapter
         binding.spinnerScreenType.setSelection(1)
     }
 
     private fun setupScreenCategorySpinner() {
-        val statusList = listOf("Xuất chiếu sớm", "Thường", "VIP")
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, statusList)
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        val screenCategoryList = listOf("Xuất chiếu sớm", "Thường", "VIP")
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, screenCategoryList)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerScreenCategory.adapter = adapter
         binding.spinnerScreenCategory.setSelection(1)
     }
+
 
     private fun showDatePicker() {
         val now = Calendar.getInstance()
@@ -264,7 +266,19 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
             Toast.makeText(requireContext(), "Giá khung giờ chiếu phải khác 0", Toast.LENGTH_SHORT).show()
             return
         }
+        val today = Calendar.getInstance()
+        today.set(Calendar.HOUR_OF_DAY, 0)
+        today.set(Calendar.MINUTE, 0)
+        today.set(Calendar.SECOND, 0)
+        today.set(Calendar.MILLISECOND, 0)
 
+        val selectedCal = Calendar.getInstance()
+        selectedCal.time = selectedDate!!
+
+        if (selectedCal.before(today)) {
+            Toast.makeText(requireContext(), "Ngày chiếu phải từ hôm nay trở đi", Toast.LENGTH_SHORT).show()
+            return
+        }
         if (selectedDate == null) {
             Toast.makeText(requireContext(), "Vui lòng chọn ngày chiếu", Toast.LENGTH_SHORT).show()
             return
@@ -292,29 +306,42 @@ class AddShowtimeFragment : BaseFragment<FragmentAddShowtimeBinding>() {
         val endTimeFull = mergeDateAndTime(selectedDate!!, selectedEndTime!!)
         val totalSeatInt = totalSeat.toIntOrNull() ?: 0
         val seatInEachRowInt = seatInEachRow.toIntOrNull() ?: 0
-        viewModel.addShowtime(
-            roomId = roomId,
-            movieId = movieId,
-            movieName = movieName,
-            startTime = startTimeFull,
-            endTime = endTimeFull,
-            date = selectedDate!!,
-            status = selectedStatus,
-            screenType = selectedScreenType,
-            screenCategory = selectedScreenCategory,
-            price = price,
-            districtId = districtId,
-            districtName = districtName,
-            roomName = roomName,
-            totalSeat = totalSeatInt,
-            seatInEachRow = seatInEachRowInt
-        )
+        lifecycleScope.launch {
+            val existingShowtimes = viewModel.getShowtimesByRoomAndDate(roomId, selectedDate!!)
+            val isOverlap = existingShowtimes.any { showtime ->
+                val existingStart = showtime.startTime
+                val existingEnd = showtime.endTime
+                startTimeFull.before(existingEnd) && endTimeFull.after(existingStart)
+            }
+            if (isOverlap) {
+                Toast.makeText(requireContext(), "Đã có suất chiếu trùng khung giờ!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            viewModel.addShowtime(
+                districtId = districtId,
+                districtName = districtName,
+                roomId = roomId,
+                roomName = roomName,
+                movieId = movieId,
+                movieName = movieName,
+                totalSeat = totalSeatInt,
+                seatInEachRow = seatInEachRowInt,
+                startTime = startTimeFull,
+                endTime = endTimeFull,
+                date = selectedDate!!,
+                status = selectedStatus,
+                screenType = selectedScreenType,
+                screenCategory = selectedScreenCategory,
+                price = price
+            )
+        }
     }
 
     private fun setupMovieSpinner(movies: List<FirestoreMovie>) {
         val movieNames = movies.map { it.title }
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, movieNames)
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, movieNames)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerSelectMovie.adapter = adapter
 
         binding.spinnerSelectMovie.onItemSelectedListener =

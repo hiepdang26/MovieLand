@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movieland.data.firebase.model.combo.FirestoreCombo
 import com.example.movieland.databinding.ItemComboBinding
+import java.text.NumberFormat
+import java.util.Locale
 
 class ComboAdapter(
     private var combos: List<FirestoreCombo>,
@@ -37,10 +39,10 @@ class ComboAdapter(
     override fun onBindViewHolder(holder: ComboViewHolder, position: Int) {
         val combo = combos[position]
         val count = counts[combo.id] ?: 0
-
+        val formattedPrice = NumberFormat.getNumberInstance(Locale("vi", "VN")).format(combo.price)
         holder.binding.apply {
             txtName.text = combo.name
-            txtPrice.text = "${combo.price} đ"
+            txtPrice.text = "$formattedPrice đ"
             txtQuantity.text = count.toString()
 
             Glide.with(imgProduct.context)

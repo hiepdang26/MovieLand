@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/black"
     android:layout_height="match_parent"
     android:elevation="8dp">
 
@@ -12,8 +12,11 @@
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#3578FF"
-        android:paddingHorizontal="16dp">
+        android:background="#16213E"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -43,16 +46,17 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_edit_text_background"
+        android:background="@drawable/rounded_edittext_default"
         android:backgroundTint="@null"
         android:drawableStart="@drawable/icon_search"
         android:drawablePadding="10dp"
         android:drawableTint="#4B4B4B"
         android:paddingStart="20dp"
         android:stateListAnimator="@null"
-        android:text="Tìm kiếm vé..."
+        android:hint="Tìm kiếm vé..."
         android:textAlignment="textStart"
         android:textAllCaps="false"
+        android:textColorHint="#6F6F6F"
         android:textColor="#6F6F6F"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"

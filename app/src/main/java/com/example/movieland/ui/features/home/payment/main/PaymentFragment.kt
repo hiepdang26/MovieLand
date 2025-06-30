@@ -1,4 +1,4 @@
-package com.example.movieland.ui.features.home.payment
+package com.example.movieland.ui.features.home.payment.main
 
 import android.app.Activity
 import com.google.android.gms.wallet.Wallet
@@ -24,8 +24,9 @@ import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
 import com.example.movieland.databinding.FragmentPaymentBinding
 import com.example.movieland.ui.features.home.combo.ComboSelected
 import com.example.movieland.ui.features.home.movie.show.ShowMovieFragment
+import com.example.movieland.ui.features.home.payment.main.utils.GooglePayJsonFactory
+import com.example.movieland.ui.features.home.payment.main.utils.PaymentMethod
 import com.example.movieland.ui.features.home.payment.detail.DetailPaymentFragment
-import com.example.movieland.ui.features.personal.ticket.detail.DetailTicketFragment
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
@@ -49,7 +50,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     private var countDownTimer: CountDownTimer? = null
-    private val MAX_HOLD_TIME = 1 * 20 * 1000L
+    private val MAX_HOLD_TIME = 15 * 60 * 1000L
 
     private val LOAD_PAYMENT_DATA_REQUEST_CODE = 999
 
@@ -411,6 +412,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                                 Toast.makeText(
                                     requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT
                                 ).show()
+                                selectedVoucher?.let { voucher ->
+                                    viewModel.decreaseVoucherUsage(voucher.id)
+                                }
+
                                 parentFragmentManager.popBackStack(
                                     null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                                 )

@@ -25,7 +25,9 @@ class ChooseRoomForTicketViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 roomDataSource.getRoomsByDistrictId(districtId).collect { roomList ->
-                    _rooms.value = roomList
+                    val sortedRooms =
+                        roomList.sortedByDescending { it.createdAt ?: java.util.Date(0) }
+                    _rooms.value = sortedRooms
                 }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Lỗi khi tải danh sách phòng"

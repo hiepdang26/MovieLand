@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.admin.data.firebase.model.showtime.FirestoreShowtime
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.Calendar
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
@@ -84,5 +86,70 @@ class FirebaseShowtimeDataSource @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun getShowtimesByRoomAndDate(roomId: String, date: Date): List<FirestoreShowtime> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfDay = calendar.time
+
+        calendar.add(Calendar.DATE, 1)
+        val endOfDay = calendar.time
+
+        val snapshot = firestore.collection("showtimes")
+            .whereEqualTo("roomId", roomId)
+            .whereGreaterThanOrEqualTo("startTime", startOfDay)
+            .whereLessThan("startTime", endOfDay)
+            .get()
+            .await()
+
+        val list = snapshot.toObjects(FirestoreShowtime::class.java)
+
+        Log.d("ShowtimeQuery", "Showtimes found: ${list.size}")
+        list.forEachIndexed { index, showtime ->
+            Log.d(
+                "ShowtimeQuery",
+                "[$index] Movie: ${showtime.movieName} | startTime: ${showtime.startTime} | endTime: ${showtime.endTime}"
+            )
+        }
+        Log.d("ShowtimeQuery", "Room: $roomId, From: $startOfDay, To: $endOfDay")
+
+        return list
+    }
+    suspend fun getShowtimesByRoomAndDateExcludeId(roomId: String, date: Date, excludeId: String): List<FirestoreShowtime> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfDay = calendar.time
+
+        calendar.add(Calendar.DATE, 1)
+        val endOfDay = calendar.time
+
+        val snapshot = firestore.collection("showtimes")
+            .whereEqualTo("roomId", roomId)
+            .whereGreaterThanOrEqualTo("startTime", startOfDay)
+            .whereLessThan("startTime", endOfDay)
+            .get()
+            .await()
+
+        val list = snapshot.toObjects(FirestoreShowtime::class.java)
+            .filter { it.id != excludeId }
+
+        Log.d("ShowtimeQuery", "Showtimes found (exclude): ${list.size}")
+        list.forEachIndexed { index, showtime ->
+            Log.d(
+                "ShowtimeQuery",
+                "[$index] Movie: ${showtime.movieName} | startTime: ${showtime.startTime} | endTime: ${showtime.endTime} | id: ${showtime.id}"
+            )
+        }
+        return list
+    }
+
 
 }

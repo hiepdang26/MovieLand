@@ -13,7 +13,7 @@ data class FirestoreCombo(
     val districtId: String? = null,
     val districtName: String? = null,
 
-    val isAvailable: Boolean = true,
+    val available: Boolean? = null,
     val createdAt: Date = Date(),
     val updatedAt: Date = Date()
 )

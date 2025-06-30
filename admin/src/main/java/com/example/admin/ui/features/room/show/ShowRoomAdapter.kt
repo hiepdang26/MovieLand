@@ -1,5 +1,6 @@
 package com.example.admin.ui.features.room.show
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -30,10 +31,10 @@ class ShowRoomAdapter(
     }
 
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(room: FirestoreRoom) {
             binding.txtNameRoom.text = room.name
-            binding.txtTime.text = room.name // Có thể sửa thành thời gian phù hợp nếu có
-            binding.txtSeat.text = room.totalSeats.toString()
+            binding.txtSeat.text = "Tổng số ghế: ${room.totalSeats}"
 
             binding.root.setOnClickListener {
                 onRoomClick(room)

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="170dp"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/card_background"
         android:orientation="vertical"
@@ -27,28 +27,16 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <TextView
-            android:id="@+id/txt_time"
+            android:id="@+id/txt_seat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="10:00 - 12:05"
             android:textColor="#FF6B35"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txt_seat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="32 Ghế"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

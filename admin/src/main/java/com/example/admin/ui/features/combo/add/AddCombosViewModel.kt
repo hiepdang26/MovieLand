@@ -39,7 +39,7 @@ class AddCombosViewModel @Inject constructor(
         price: Double,
         districtId: String,
         districtName: String,
-        isAvailable: Boolean
+        available: Boolean
     ) {
         viewModelScope.launch {
             try {
@@ -57,7 +57,7 @@ class AddCombosViewModel @Inject constructor(
                     price = price,
                     districtId = districtId,
                     districtName = districtName,
-                    isAvailable = isAvailable,
+                    available = available,
                     createdAt = Date(),
                     updatedAt = Date()
                 )

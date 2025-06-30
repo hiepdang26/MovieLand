@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class ShowMovieViewModel @Inject constructor(
     private val getAllMovieFromFirestoreUseCase: GetAllMovieFromFirestoreUseCase
 ) : ViewModel() {
+
+    private var allMovies: List<FirestoreMovie> = emptyList()
 
     private val _movies = MutableStateFlow<List<FirestoreMovie>>(emptyList())
     val movies: StateFlow<List<FirestoreMovie>> = _movies
@@ -25,6 +26,7 @@ class ShowMovieViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 getAllMovieFromFirestoreUseCase().collect { movieList ->
+                    allMovies = movieList
                     _movies.value = movieList
                 }
             } catch (e: Exception) {
@@ -32,4 +34,16 @@ class ShowMovieViewModel @Inject constructor(
             }
         }
     }
+
+    fun searchMovies(query: String) {
+        if (query.isBlank()) {
+            _movies.value = allMovies
+        } else {
+            val filtered = allMovies.filter {
+                it.title?.contains(query, ignoreCase = true) == true
+            }
+            _movies.value = filtered
+        }
+    }
 }
+

@@ -1,5 +1,6 @@
-package com.example.movieland.ui.features.personal.ticket
+package com.example.movieland.ui.features.personal.ticket.show
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,17 +25,20 @@ class ShowBookedTicketsViewModel @Inject constructor(private val ticketDataSourc
             try {
                 val result = ticketDataSource.getBookedTicketsForUser(userId)
                 if (result.isSuccess) {
-                    _tickets.value = result.getOrNull() ?: emptyList()
-                    _filteredTickets.value = result.getOrNull() ?: emptyList()
+                    val sortedList = (result.getOrNull() ?: emptyList())
+                        .sortedByDescending { it.bookingTime?.time ?: 0L }
+                    _tickets.value = sortedList
+                    _filteredTickets.value = sortedList
                 } else {
                     val errorMsg = result.exceptionOrNull()?.message ?: "Unknown error"
-                    android.util.Log.e("ShowBookedTicketsVM", "Error getBookedTicketsForUser: $errorMsg")
+                    Log.e("ShowBookedTicketsVM", "Error getBookedTicketsForUser: $errorMsg")
                 }
             } catch (e: Exception) {
-                android.util.Log.e("ShowBookedTicketsVM", "Exception getBookedTicketsForUser: ${e.message}", e)
+                Log.e("ShowBookedTicketsVM", "Exception getBookedTicketsForUser: ${e.message}", e)
             }
         }
     }
+
 
     fun filterTicketsByMovieName(query: String) {
         val current = _tickets.value ?: emptyList()

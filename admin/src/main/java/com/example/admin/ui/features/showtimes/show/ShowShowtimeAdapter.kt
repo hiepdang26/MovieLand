@@ -1,5 +1,6 @@
 package com.example.admin.ui.features.showtimes.show
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -30,17 +31,33 @@ class ShowShowtimeAdapter(
     inner class ShowtimeViewHolder(private val binding: ItemShowtimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        private val fullDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
         fun bind(showtime: FirestoreShowtime) {
             val start = showtime.startTime?.let { dateFormat.format(it) } ?: "--:--"
             val end = showtime.endTime?.let { dateFormat.format(it) } ?: "--:--"
             binding.txtTime.text = "$start - $end"
-            binding.txtDate.text = showtime.date?.toString() ?: ""
-            binding.txtStatus.text = showtime.status
 
+            binding.txtDate.text = showtime.date?.let { fullDateFormat.format(it) } ?: ""
+
+            binding.txtStatus.text = when (showtime.status) {
+                "pending" -> "Đang chờ"
+                "active" -> "Đang hoạt động"
+                "cancel", "cancelled" -> "Đã hủy"
+                else -> showtime.status
+            }
+
+            val color = when (showtime.status) {
+                "pending" -> Color.YELLOW
+                "active" -> Color.GREEN
+                "cancel", "cancelled" -> Color.RED
+                else -> Color.GRAY
+            }
+            binding.txtStatus.setTextColor(color)
             itemView.setOnClickListener {
                 onItemClick(showtime.id)
             }
         }
     }
+
 }

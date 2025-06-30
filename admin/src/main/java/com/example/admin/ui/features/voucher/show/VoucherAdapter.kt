@@ -1,6 +1,7 @@
 package com.example.admin.ui.features.voucher.show
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,19 @@ class VoucherAdapter(
                 FirestoreVoucher.VoucherType.FIXED -> "Giảm ${voucher.discountAmount?.toInt()}đ"
             }
             txtValidTime.text = "Từ $startDateStr đến $endDateStr"
+            txtActive.text = when (voucher.active) {
+                true -> "Đang hoạt động"
+                false -> "Ngưng hoạt động"
+                null -> "Không xác định"
 
+            }
+
+            val color = when (voucher.active) {
+                true -> Color.GREEN
+                false -> Color.RED
+                else -> Color.GRAY
+            }
+            txtActive.setTextColor(color)
             root.setOnClickListener {
                 onItemClick(voucher)
             }

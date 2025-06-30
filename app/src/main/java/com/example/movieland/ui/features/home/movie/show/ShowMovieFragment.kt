@@ -1,6 +1,8 @@
 package com.example.movieland.ui.features.home.movie.show
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,8 +36,20 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
         setupInitialData()
         setupRecyclerView()
         setupObserver()
-    }
+        setupSearchListener()
 
+    }
+    private fun setupSearchListener() {
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val searchText = s?.toString()?.trim() ?: ""
+                viewModel.searchMovies(searchText)
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+    }
     override fun onResume() {
         super.onResume()
         (requireActivity() as MainActivity).showNavigationBar()

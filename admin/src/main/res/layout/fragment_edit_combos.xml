@@ -162,10 +162,11 @@
         <Spinner
             android:id="@+id/spinnerStatus"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="20dp"
             android:background="@drawable/rounded_edittext_default"
-            android:padding="15dp"
             android:entries="@array/combo_status_array" />
 
         <TextView

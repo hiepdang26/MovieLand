@@ -39,12 +39,13 @@ class ShowShowtimeViewModel @Inject constructor(
             val result = showtimeDataSource.getShowtimesByDistrictAndMovie(districtId, movieId)
             _isLoading.value = false
             result.onSuccess { list ->
-                _showtimes.value = list
+                _showtimes.value = list.filter { it.status.equals("active", ignoreCase = true) }
             }.onFailure {
                 Log.e("ShowShowtimeVM", "Lỗi load showtimes: ${it.message}", it)
             }
         }
     }
+
 
     private val _filteredShowtimes = MutableStateFlow<List<FirestoreShowtime>>(emptyList())
     val filteredShowtimes: StateFlow<List<FirestoreShowtime>> = _filteredShowtimes

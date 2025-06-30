@@ -25,12 +25,15 @@ class ShowShowtimeViewModel @Inject constructor(
         viewModelScope.launch {
             val result = showtimeDataSource.getAllShowtimesByRoomId(roomId)
             if (result.isSuccess) {
-                _showtimes.value = result.getOrDefault(emptyList())
+                val showtimeList = result.getOrDefault(emptyList())
+                val sortedList = showtimeList.sortedByDescending { it.createdAt }
+                _showtimes.value = sortedList
             } else {
                 _error.value = result.exceptionOrNull()?.message ?: "Lỗi không xác định khi tải suất chiếu"
             }
         }
     }
+
 
     fun clearError() {
         _error.value = null

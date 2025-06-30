@@ -167,11 +167,16 @@ class PersonalInformationFragment : BaseFragment<FragmentPersonalInformationBind
 
     private val genderOptions = listOf("Nam", "Nữ")
     private fun setupGenderSpinner() {
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, genderOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.item_spinner_gender,
+            genderOptions
+        )
+        adapter.setDropDownViewResource(R.layout.item_spinner_gender)
+
         binding.spinnerGender.adapter = adapter
     }
+
 
 
 }

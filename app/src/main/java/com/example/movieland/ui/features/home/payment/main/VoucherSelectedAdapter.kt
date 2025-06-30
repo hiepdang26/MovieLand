@@ -1,4 +1,4 @@
-package com.example.movieland.ui.features.home.payment
+package com.example.movieland.ui.features.home.payment.main
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import com.example.movieland.R
 import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
 import com.example.movieland.databinding.ItemVoucherSelectedBinding
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -22,10 +23,8 @@ class VoucherSelectedAdapter(
     inner class VoucherViewHolder(val binding: ItemVoucherSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(voucher: FirestoreVoucher, isSelected: Boolean) {
-            // Hiện txtEndDate chắc chắn
             binding.txtEndDate.visibility = View.VISIBLE
 
-            // Format số tiền kiểu VN
             fun formatCurrency(amount: Int): String {
                 val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
                 return formatter.format(amount) + " đ"
@@ -47,7 +46,6 @@ class VoucherSelectedAdapter(
                 }
             }
 
-            // Tính hết hạn: Luôn cho phép dùng đến 23:59:59 ngày endDate (theo Asia/Ho_Chi_Minh)
             val now = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))
             val endCal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh")).apply {
                 time = voucher.endDate
@@ -58,13 +56,18 @@ class VoucherSelectedAdapter(
             }
             val isExpired = now.after(endCal)
 
-            // Set trạng thái hết hạn hoặc ngày hết hạn
-            if (isExpired) {
+            val usageLeft = voucher.usageLimit ?: 0
+
+            if (usageLeft < 1) {
+                binding.txtEndDate.text = "Hết lượt sử dụng"
+                binding.root.isEnabled = false
+                binding.root.alpha = 0.5f
+            } else if (isExpired) {
                 binding.txtEndDate.text = "Đã hết hạn"
                 binding.root.isEnabled = false
                 binding.root.alpha = 0.5f
             } else {
-                val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", Locale("vi", "VN")).apply {
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("vi", "VN")).apply {
                     timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh")
                 }
                 binding.txtEndDate.text = "HSD: ${sdf.format(voucher.endDate)}"
@@ -72,7 +75,7 @@ class VoucherSelectedAdapter(
                 binding.root.alpha = 1f
             }
 
-            // Trạng thái được chọn
+
             binding.root.isSelected = isSelected
             binding.root.background = if (isSelected) {
                 binding.root.context.getDrawable(R.drawable.bg_voucher_selected)
@@ -80,7 +83,6 @@ class VoucherSelectedAdapter(
                 null
             }
 
-            // Xử lý click
             binding.root.setOnClickListener {
                 if (isExpired) return@setOnClickListener
                 val oldSelected = selectedPosition

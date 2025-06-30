@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.MainActivity
 import com.example.admin.R
@@ -48,7 +49,6 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Khởi tạo adapter với danh sách rỗng
         adapter = ChooseRoomForTicketAdapter(emptyList()) { room ->
             val fragment = ChooseShowtimeForTicketFragment().apply {
                 arguments = Bundle().apply {
@@ -62,8 +62,7 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
                 .commit()
         }
 
-        // 2. Gán layout manager và adapter cho RecyclerView
-        binding.rcvRoom.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcvRoom.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcvRoom.adapter = adapter
 
         setupInitialData()
@@ -82,7 +81,6 @@ class ChooseRoomForTicketFragment : BaseFragment<FragmentChooseRoomForTicketBind
     override fun setupObserver() {
         lifecycleScope.launch {
             viewModel.rooms.collectLatest { rooms ->
-                // 3. Cập nhật dữ liệu cho adapter, không tạo adapter mới
                 adapter.submitList(rooms)
             }
         }

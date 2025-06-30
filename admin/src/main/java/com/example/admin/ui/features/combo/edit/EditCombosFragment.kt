@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.admin.MainActivity
+import com.example.admin.R
 import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.FragmentEditCombosBinding
 import com.example.admin.ui.bases.BaseFragment
@@ -65,12 +66,12 @@ class EditCombosFragment : BaseFragment<FragmentEditCombosBinding>() {
                     binding.edtDescription.setText(it.description)
                     binding.edtPrice.setText(it.price.toString())
                     currentImageUrl = it.imageUrl
+                    binding.spinnerStatus.setSelection(if (it.available == true) 0 else 1)
 
                     if (selectedImageUri == null && currentImageUrl.isNotBlank()) {
                         Glide.with(requireContext()).load(currentImageUrl).into(binding.imgPoster)
                     }
 
-                    binding.spinnerStatus.setSelection(if (it.isAvailable) 0 else 1)
                 }
             }
         }
@@ -159,7 +160,7 @@ class EditCombosFragment : BaseFragment<FragmentEditCombosBinding>() {
                         "name" to name,
                         "description" to desc,
                         "price" to price,
-                        "isAvailable" to status,
+                        "available" to status,
                         "imageUrl" to imageUrl,
                         "updatedAt" to com.google.firebase.Timestamp.now()
                     )
@@ -172,8 +173,8 @@ class EditCombosFragment : BaseFragment<FragmentEditCombosBinding>() {
 
     private fun setupStatusSpinner() {
         val statusOptions = listOf("Đang hoạt động", "Ngưng hoạt động")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, statusOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, statusOptions)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerStatus.adapter = adapter
     }
 

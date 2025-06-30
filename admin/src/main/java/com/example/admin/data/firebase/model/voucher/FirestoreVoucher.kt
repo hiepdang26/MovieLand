@@ -19,7 +19,7 @@ data class FirestoreVoucher(
     val startDate: Date = Date(),
     val endDate: Date = Date(),
 
-    val isActive: Boolean = true,
+    val active: Boolean = true,
 
     val createdAt: Date = Date(),
     val updatedAt: Date = Date()

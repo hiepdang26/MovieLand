@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#303030"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -39,7 +39,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Title with arrow -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +51,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="Jab Harry Met Sejal"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -61,7 +60,6 @@
                     android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:tint="@color/black"
                     android:src="@drawable/icon_right_arrow"
                     android:contentDescription="Arrow right" />
 
@@ -73,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="7th July • 10:30PM • Elite Premium"
-                android:textColor="#666666"
+                android:textColor="#C2C2C2"
                 android:textSize="12sp" />
 
             <!-- Price section -->
@@ -88,7 +86,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="C1,C2"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -99,7 +97,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="₹300"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 

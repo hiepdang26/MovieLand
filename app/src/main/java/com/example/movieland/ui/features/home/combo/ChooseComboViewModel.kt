@@ -30,8 +30,9 @@ class ChooseComboViewModel @Inject constructor(
         viewModelScope.launch {
             val result = firebaseComboDataSource.loadCombosByDistrict(districtId)
             result.onSuccess { combos ->
-                _comboList.value = combos
-                _comboCounts.value = combos.associate { it.id to 0 }
+                val availableCombos = combos.filter { it.available == true }
+                _comboList.value = availableCombos
+                _comboCounts.value = availableCombos.associate { it.id to 0 }
             }
         }
     }

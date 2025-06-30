@@ -14,11 +14,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.admin.MainActivity
+import com.example.admin.R
 import com.example.admin.data.firebase.model.FirestoreMovie
 import com.example.admin.databinding.FragmentEditShowtimeBinding
 import com.example.admin.ui.bases.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -189,8 +191,8 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
     private fun updateMovieSpinnerSelection() {
         val movieNames = moviesList.map { it.title }
         val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, movieNames)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter(requireContext(), R.layout.item_spinner_custom, movieNames)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerSelectMovie.adapter = adapter
 
         val currentIndex = moviesList.indexOfFirst { it.id.toString().trim() == movieId.trim() }
@@ -207,7 +209,6 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
                     movieId = selectedMovie.id.toString()
                     movieName = selectedMovie.title
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     movieId = ""
                     movieName = ""
@@ -224,8 +225,8 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
 
         val statusList = listOf("Đang hoạt động", "Đang chờ", "Đã hủy")
         val statusAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, statusList)
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter(requireContext(), R.layout.item_spinner_custom, statusList)
+        statusAdapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerStatus.adapter = statusAdapter
 
         binding.spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -251,8 +252,8 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
 
         val screenTypeList = listOf("2D", "3D")
         val screenTypeAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, screenTypeList)
-        screenTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter(requireContext(), R.layout.item_spinner_custom, screenTypeList)
+        screenTypeAdapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerScreenType.adapter = screenTypeAdapter
 
         binding.spinnerScreenType.onItemSelectedListener =
@@ -278,8 +279,8 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
 
         val screenCategoryList = listOf("Xuất chiếu thường", "Xuất chiếu sớm", "Vip")
         val screenCategoryAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, screenCategoryList)
-        screenCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter(requireContext(), R.layout.item_spinner_custom, screenCategoryList)
+        screenCategoryAdapter.setDropDownViewResource(R.layout.item_spinner_custom)
         binding.spinnerScreenCategory.adapter = screenCategoryAdapter
 
         binding.spinnerScreenCategory.onItemSelectedListener =
@@ -327,8 +328,7 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
         price = priceText.toDoubleOrNull() ?: 0.0
 
         if (price == 0.0) {
-            Toast.makeText(requireContext(), "Giá khung giờ chiếu phải khác 0", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(requireContext(), "Giá khung giờ chiếu phải khác 0", Toast.LENGTH_SHORT).show()
             return
         }
         if (movieId.isBlank()) {
@@ -344,8 +344,7 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
             return
         }
         if (selectedEndTime == null) {
-            Toast.makeText(requireContext(), "Vui lòng chọn giờ kết thúc", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(requireContext(), "Vui lòng chọn giờ kết thúc", Toast.LENGTH_SHORT).show()
             return
         }
         if (selectedEndTime!!.before(selectedStartTime)) {
@@ -355,31 +354,59 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
             return
         }
 
+        // KIỂM TRA NGÀY PHẢI >= HÔM NAY
+        val today = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val selectedCal = Calendar.getInstance().apply { time = selectedDate!! }
+        if (selectedCal.before(today)) {
+            Toast.makeText(requireContext(), "Ngày chiếu phải từ hôm nay trở đi", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val startTimeFull = mergeDateAndTime(selectedDate!!, selectedStartTime!!)
         val endTimeFull = mergeDateAndTime(selectedDate!!, selectedEndTime!!)
 
-        val updatedShowtime = viewModel.showtimeDetail.value?.copy(
-            movieName = movieName,
-            movieId = movieId,
-            startTime = startTimeFull,
-            endTime = endTimeFull,
-            date = selectedDate,
-            status = selectedStatus,
-            screenType = selectedScreenType,
-            screenCategory = selectedScreenCategory,
-            price = price,
-            updatedAt = Date(),
-            roomId = roomId,
-            roomName = roomName,
-            districtName = districtName,
-            totalSeat = totalSeat,
-            seatInEachRow = seatInEachRow
-        )
+        // KIỂM TRA TRÙNG GIỜ
+        lifecycleScope.launch {
+            val existingShowtimes = viewModel.getShowtimesByRoomAndDateExcludeId(roomId, selectedDate!!, showtimeId)
+            val isOverlap = existingShowtimes.any { showtime ->
+                val existingStart = showtime.startTime
+                val existingEnd = showtime.endTime
+                startTimeFull.before(existingEnd) && endTimeFull.after(existingStart)
+            }
+            if (isOverlap) {
+                Toast.makeText(requireContext(), "Đã có suất chiếu trùng khung giờ!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
 
-        if (updatedShowtime != null) {
-            viewModel.updateShowtime(showtimeId, updatedShowtime)
+            val updatedShowtime = viewModel.showtimeDetail.value?.copy(
+                movieName = movieName,
+                movieId = movieId,
+                startTime = startTimeFull,
+                endTime = endTimeFull,
+                date = selectedDate,
+                status = selectedStatus,
+                screenType = selectedScreenType,
+                screenCategory = selectedScreenCategory,
+                price = price,
+                updatedAt = Date(),
+                roomId = roomId,
+                roomName = roomName,
+                districtName = districtName,
+                totalSeat = totalSeat,
+                seatInEachRow = seatInEachRow
+            )
+
+            if (updatedShowtime != null) {
+                viewModel.updateShowtime(showtimeId, updatedShowtime)
+            }
         }
     }
+
 
     private fun showDatePicker() {
         val now = Calendar.getInstance()

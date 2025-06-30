@@ -69,6 +69,7 @@ class ShowRoomFragment : BaseFragment<FragmentShowRoomBinding>() {
             viewModel.loadRoomsByDistrictId(districtId)
         } else {
         }
+        binding.txtTitle.text = districtName
     }
 
     override fun setupObserver() {

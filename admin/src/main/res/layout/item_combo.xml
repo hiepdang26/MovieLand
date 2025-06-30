@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/card_background"
         android:orientation="horizontal"
@@ -25,8 +25,8 @@
 
             <ImageView
                 android:id="@+id/img_product"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
               />
 
         </androidx.cardview.widget.CardView>
@@ -34,7 +34,7 @@
         <!-- Product Info Container -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_marginStart="12dp"
@@ -52,19 +52,21 @@
                 android:ellipsize="end" />
 
             <TextView
-                android:id="@+id/txt_online_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Giá online:"
-                android:textColor="#B0B0B0"
-                android:textSize="12sp" />
-
-            <TextView
                 android:id="@+id/txt_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:text="199.000 đ"
+                android:textStyle="bold"
+                android:layout_marginVertical="10dp"
+                android:textColor="#E6FF00"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txt_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text=""
                 android:textColor="#FF6B35"
                 android:textSize="14sp"
                 android:textStyle="bold" />

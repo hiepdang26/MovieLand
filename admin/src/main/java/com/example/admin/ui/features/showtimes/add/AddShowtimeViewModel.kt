@@ -87,5 +87,8 @@ class AddShowtimeViewModel @Inject constructor(
     fun resetSaveResult() {
         _saveResult.value = null
     }
+    suspend fun getShowtimesByRoomAndDate(roomId: String, date: Date): List<FirestoreShowtime> {
+        return showtimeDataSource.getShowtimesByRoomAndDate(roomId, date)
+    }
 }
 

@@ -86,6 +86,10 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
             val now = Date()
             val endDate = selectedEndDate ?: now
 
+            if (endDate <= now) {
+                Toast.makeText(requireContext(), "Ngày hết hạn phải lớn hơn ngày hôm nay", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val voucher = FirestoreVoucher(
                 id = "voucher_${System.currentTimeMillis()}",
                 code = code,
@@ -97,7 +101,7 @@ class AddVoucherFragment : BaseFragment<FragmentAddVoucherBinding>() {
                 minTicketValue = minValue,
                 usageLimit = usageLimit,
                 usedCount = 0,
-                isActive = status,
+                active = status,
                 startDate = now,
                 endDate = endDate,
                 createdAt = now,

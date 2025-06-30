@@ -1,4 +1,4 @@
-package com.example.movieland.ui.features.home.payment
+package com.example.movieland.ui.features.home.payment.main.utils
 
 import org.json.JSONArray
 import org.json.JSONObject

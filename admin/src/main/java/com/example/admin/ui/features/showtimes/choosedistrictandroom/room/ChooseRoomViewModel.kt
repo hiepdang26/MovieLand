@@ -25,13 +25,15 @@ class ChooseRoomViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 roomDataSource.getRoomsByDistrictId(districtId).collect { roomList ->
-                    _rooms.value = roomList
+                    val sortedList = roomList.sortedByDescending { it.createdAt }
+                    _rooms.value = sortedList
                 }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Lỗi khi tải danh sách phòng"
             }
         }
     }
+
 
     fun clearError() {
         _error.value = null

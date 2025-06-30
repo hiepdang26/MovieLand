@@ -48,8 +48,6 @@
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="bold" />
-
-            <!-- Giá trị giảm giá -->
             <TextView
                 android:id="@+id/txtDiscount"
                 android:layout_width="wrap_content"
@@ -60,13 +58,12 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Thời gian còn lại -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/txtValidTime"
@@ -76,7 +73,15 @@
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtActive"
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
 
             </LinearLayout>

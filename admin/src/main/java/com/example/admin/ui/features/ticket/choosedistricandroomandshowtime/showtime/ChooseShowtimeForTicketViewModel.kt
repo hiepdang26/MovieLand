@@ -3,6 +3,7 @@ package com.example.admin.ui.features.ticket.choosedistricandroomandshowtime.sho
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.admin.data.firebase.model.showtime.FirestoreShowtime
+import com.example.admin.ui.features.showtimes.show.model.MovieWithShowtimes
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +44,12 @@ class ChooseShowtimeForTicketViewModel @Inject constructor(
         }
     }
 
+    fun groupShowtimesByMovie(showtimes: List<FirestoreShowtime>): List<MovieWithShowtimes> {
+        return showtimes.groupBy { it.movieName }
+            .map { (movieName, showtimes) ->
+                MovieWithShowtimes(movieName, showtimes.sortedBy { it.startTime })
+            }
+    }
 
 
     fun clearError() {

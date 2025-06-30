@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.admin.ui.bases.BaseFragment
+import com.example.movieland.MainActivity
 import com.example.movieland.R
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.databinding.FragmentDetailTicketBinding
@@ -56,13 +57,15 @@ class DetailTicketFragment : BaseFragment<FragmentDetailTicketBinding>() {
         binding.txtGenre.text = "${ticket.screenType} • ${ticket.screenCategory}"
         binding.txtAddress.text = "${ticket.roomName} | ${ticket.regionName} - ${ticket.districtName}"
         binding.txtSeat.text = tickets.joinToString(", ") { it.seatLabel }
-        binding.txtRow.text = ""
         binding.txtDate.text = formatDate(ticket.showDate)
         binding.txtTime.text = formatTime(ticket.startTime)
         binding.txtTicketCode.text = ticket.ticketId ?: ""
         binding.txtPriceTicket.text = formatCurrency(tickets.sumOf { it.price })
     }
-
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideNavigationBar()
+    }
 
     override fun setupObserver() {
     }

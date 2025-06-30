@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Maylene and the Sons of Disaster, Islander"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -78,7 +78,7 @@
                     android:id="@+id/txt_genre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Seaver Way Queens, New York"
+                    android:text=""
                     android:textColor="#CCCCCC"
                     android:textSize="14sp" />
 
@@ -112,7 +112,7 @@
                 android:id="@+id/txt_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zeppelinfeld in Nuremberg"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -145,7 +145,7 @@
                     android:id="@+id/txt_seat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tribune C"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -156,27 +156,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Hàng"
-                    android:textColor="#CCCCCC"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/txt_row"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:orientation="vertical"/>
 
         </LinearLayout>
 
@@ -207,7 +187,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Jul 21, 2024"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -233,7 +213,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="07:00 PM"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -268,7 +248,7 @@
                     android:id="@+id/txt_ticket_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BLK2173874123"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -310,7 +290,7 @@
                     android:id="@+id/txt_price_ticket"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="300.000đ"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />

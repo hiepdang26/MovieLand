@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,5 +98,12 @@ class EditShowtimeViewModel @Inject constructor(
             "updatedAt" to updatedAt
         )
     }
+
+    suspend fun getShowtimesByRoomAndDateExcludeId(
+        roomId: String, date: Date, excludeId: String
+    ): List<FirestoreShowtime> {
+        return showtimeDataSource.getShowtimesByRoomAndDateExcludeId(roomId, date, excludeId)
+    }
+
 
 }

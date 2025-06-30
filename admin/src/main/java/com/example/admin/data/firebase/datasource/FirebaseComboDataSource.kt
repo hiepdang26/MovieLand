@@ -11,9 +11,6 @@ class FirebaseComboDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    /**
-     * Load tất cả combo theo districtId (có thể lọc region nếu cần).
-     */
     suspend fun loadCombosByDistrict(districtId: String): Result<List<FirestoreCombo>> = withContext(Dispatchers.IO) {
         return@withContext try {
             val snapshot = firestore.collection("combos")
@@ -27,9 +24,6 @@ class FirebaseComboDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Thêm mới combo (tạo id mới nếu chưa có).
-     */
     suspend fun addCombo(combo: FirestoreCombo): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             val comboId = if (combo.id.isBlank()) {
@@ -37,18 +31,14 @@ class FirebaseComboDataSource @Inject constructor(
             } else {
                 combo.id
             }
-
-            val comboWithId = combo.copy(id = comboId)
-            firestore.collection("combos").document(comboId).set(comboWithId).await()
+            firestore.collection("combos").document(comboId).set(combo).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    /**
-     * Lấy thông tin combo theo id.
-     */
+
     suspend fun getComboById(comboId: String): Result<FirestoreCombo> = withContext(Dispatchers.IO) {
         return@withContext try {
             val snapshot = firestore.collection("combos").document(comboId).get().await()
@@ -60,9 +50,7 @@ class FirebaseComboDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Xoá combo theo id.
-     */
+
     suspend fun deleteCombo(comboId: String): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             firestore.collection("combos").document(comboId).delete().await()
@@ -72,9 +60,6 @@ class FirebaseComboDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Cập nhật thông tin combo (chỉ cập nhật các trường được chỉ định).
-     */
     suspend fun updateCombo(comboId: String, updatedFields: Map<String, Any?>): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
             firestore.collection("combos").document(comboId).update(updatedFields).await()

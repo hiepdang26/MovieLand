@@ -1,10 +1,9 @@
-package com.example.movieland.ui.features.home.payment
+package com.example.movieland.ui.features.home.payment.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.movieland.data.firebase.model.combo.FirestoreCombo
 import com.example.movieland.databinding.ItemComboSelectedBinding
 import com.example.movieland.ui.features.home.combo.ComboSelected
 

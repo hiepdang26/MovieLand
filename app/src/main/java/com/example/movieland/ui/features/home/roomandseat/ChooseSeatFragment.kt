@@ -115,8 +115,7 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.tickets.collectLatest { tickets ->
-                val now = System.currentTimeMillis()
-                val MAX_HOLD_TIME = 1 * 20 * 1000L
+                val MAX_HOLD_TIME = 15 * 60 * 1000L
                 viewModel.autoReleaseExpiredTickets(tickets, MAX_HOLD_TIME)
 
                 if (!::seatLayout.isInitialized || seatLayout.seats.isEmpty()) return@collectLatest

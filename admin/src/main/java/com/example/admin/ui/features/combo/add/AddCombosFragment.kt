@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.example.admin.MainActivity
+import com.example.admin.R
 import com.example.admin.data.firebase.model.combo.FirestoreCombo
 import com.example.admin.databinding.FragmentAddCombosBinding
 import com.example.admin.ui.bases.BaseFragment
@@ -25,8 +26,6 @@ import java.util.Date
 class AddCombosFragment : BaseFragment<FragmentAddCombosBinding>() {
 
     private val viewModel: AddCombosViewModel by viewModels()
-    private lateinit var spinnerDistrictAdapter: ArrayAdapter<String>
-    private val districtMap = mutableMapOf<String, String>()
     private var selectedImageUri: Uri? = null
     private var districtId: String = ""
     private var districtName: String = ""
@@ -56,6 +55,7 @@ class AddCombosFragment : BaseFragment<FragmentAddCombosBinding>() {
     }
 
     override fun setupInitialData() {
+        setupStatusSpinner()
         districtId = arguments?.getString("districtId").toString()
         districtName = arguments?.getString("districtName").toString()
         binding.edtDistrictName.text = districtName
@@ -100,9 +100,9 @@ class AddCombosFragment : BaseFragment<FragmentAddCombosBinding>() {
             val name = binding.edtName.text.toString().trim()
             val description = binding.edtDescription.text.toString().trim()
             val price = binding.edtPrice.text.toString().toDoubleOrNull()
-            val isAvailable = when (binding.spinnerStatus.selectedItem.toString()) {
-                "Hiện" -> true
-                "Ẩn" -> false
+            val available = when (binding.spinnerStatus.selectedItem.toString()) {
+                "Đang hoạt động" -> true
+                "Ngưng hoạt động" -> false
                 else -> true
             }
             if (name.isEmpty() || description.isEmpty() || price == null) {
@@ -122,9 +122,16 @@ class AddCombosFragment : BaseFragment<FragmentAddCombosBinding>() {
                 price = price,
                 districtId = districtId,
                 districtName = districtName ?: "",
-                isAvailable = isAvailable
+                available = available
             )
         }
 
     }
+    private fun setupStatusSpinner() {
+        val statusOptions = listOf("Đang hoạt động", "Ngưng hoạt động")
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_custom, statusOptions)
+        adapter.setDropDownViewResource(R.layout.item_spinner_custom)
+        binding.spinnerStatus.adapter = adapter
+    }
+
 }

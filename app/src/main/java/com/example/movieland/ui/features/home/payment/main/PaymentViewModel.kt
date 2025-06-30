@@ -1,4 +1,4 @@
-package com.example.movieland.ui.features.home.payment
+package com.example.movieland.ui.features.home.payment.main
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,15 +8,12 @@ import com.example.movieland.data.firebase.datasource.FirebaseVoucherDataSource
 import com.example.movieland.data.firebase.model.showtime.FirestoreShowtime
 import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 import com.example.movieland.data.firebase.model.voucher.FirestoreVoucher
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,10 +46,12 @@ class PaymentViewModel @Inject constructor(
         viewModelScope.launch {
             val result = voucherDataSource.loadAllVouchers()
             if (result.isSuccess) {
-                _vouchers.value = result.getOrNull() ?: emptyList()
+                val vouchers = result.getOrNull() ?: emptyList()
+                _vouchers.value = vouchers.filter { it.active == true }
             }
         }
     }
+
 
     fun updateTicketStatus(
         showtimeId: String, ticketId: String, status: String, userId: String? = null
@@ -234,6 +233,16 @@ class PaymentViewModel @Inject constructor(
                         "bookingTime" to null
                     )
                 )
+            }
+        }
+    }
+    fun decreaseVoucherUsage(voucherId: String) {
+        viewModelScope.launch {
+            try {
+                val voucherRef = firestore.collection("vouchers").document(voucherId)
+                voucherRef.update("usageLimit", com.google.firebase.firestore.FieldValue.increment(-1))
+            } catch (e: Exception) {
+                Log.e("PaymentViewModel", "Lỗi giảm usageLimit voucher", e)
             }
         }
     }

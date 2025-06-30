@@ -67,17 +67,15 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
 
                 spinnerAdapter = ArrayAdapter(
                     requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
+                   R.layout.item_spinner_custom,
                     districtNames
                 )
                 binding.spinnerDistrict.adapter = spinnerAdapter
             }
         }
 
-        // Quan sát danh sách combo
         lifecycleScope.launch {
             viewModel.combos.collectLatest { combos ->
-                Log.d("ShowCombosFragment", "✅ Combo count: ${combos.size}")
                 comboAdapter = ComboAdapter(combos) { combo ->
                     openEditComboFragment(combo)
                 }
@@ -85,7 +83,6 @@ class ShowCombosFragment : BaseFragment<FragmentShowCombosBinding>() {
             }
         }
 
-        // Quan sát lỗi
         lifecycleScope.launch {
             viewModel.error.collectLatest { errorMsg ->
                 errorMsg?.let {
