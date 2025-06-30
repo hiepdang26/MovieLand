@@ -104,5 +104,23 @@ class ChooseSeatViewModel @Inject constructor(
                 Log.e("ChooseSeatViewModel", "Failed to update ticket $ticketId", e)
             }
     }
+    fun autoReleaseExpiredTickets(tickets: List<FirestoreTicket>, maxHoldTime: Long) {
+        val now = System.currentTimeMillis()
+        tickets.forEach { ticket ->
+            if (ticket.status == "locked" && ticket.bookingTime != null) {
+                val bookingTimeMillis = ticket.bookingTime.time
+                if (now - bookingTimeMillis > maxHoldTime) {
+                    updateTicketStatus(
+                        showtimeId = ticket.showtimeId,
+                        ticketId = ticket.ticketId,
+                        status = "available",
+                        userId = null
+                    )
+                    Log.d("ChooseSeatFragment", "Reset vé hết hạn: ${ticket.seatLabel}")
+                }
+            }
+        }
+    }
+
 
 }

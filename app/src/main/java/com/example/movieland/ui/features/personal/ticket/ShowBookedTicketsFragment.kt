@@ -27,6 +27,7 @@ class ShowBookedTicketsFragment : BaseFragment<FragmentShowBookedTicketsBinding>
         super.onViewCreated(view, savedInstanceState)
         setupInitialData()
         setupObserver()
+        setupClickView()
     }
 
     override fun setupInitialData() {

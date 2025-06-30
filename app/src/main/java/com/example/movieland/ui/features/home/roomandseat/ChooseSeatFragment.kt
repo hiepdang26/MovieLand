@@ -115,6 +115,10 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.tickets.collectLatest { tickets ->
+                val now = System.currentTimeMillis()
+                val MAX_HOLD_TIME = 1 * 20 * 1000L
+                viewModel.autoReleaseExpiredTickets(tickets, MAX_HOLD_TIME)
+
                 if (!::seatLayout.isInitialized || seatLayout.seats.isEmpty()) return@collectLatest
 
                 val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
@@ -139,7 +143,7 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         if (!::seatLayout.isInitialized || seatLayout.seats.isEmpty()) return
 
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        val selectedSeatLabels = selectedSeats.map { it.label }.toSet() // dùng label để so sánh
+        val selectedSeatLabels = selectedSeats.map { it.label }.toSet()
 
         seatLayout.seats.forEach { seat ->
             val matchedTicket = tickets.find { it.seatLabel == seat.label }

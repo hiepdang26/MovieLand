@@ -479,22 +479,37 @@
                 android:layout_height="wrap_content"
                 android:text="195.000 đ"
                 android:textColor="#E53E3E"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnPayment"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/rounded_purple_button"
-            android:paddingHorizontal="32dp"
-            android:text="Thanh toán"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+           <TextView
+               android:id="@+id/txtTimer"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textColor="#FF0000"
+               android:textSize="16sp"
+               android:layout_marginBottom="12dp"
+              />
+           <Button
+               android:id="@+id/btnPayment"
+               android:layout_width="wrap_content"
+               android:layout_height="48dp"
+               android:layout_marginStart="16dp"
+               android:background="@drawable/rounded_purple_button"
+               android:paddingHorizontal="32dp"
+               android:text="Thanh toán"
+               android:textAllCaps="false"
+               android:textColor="@color/white"
+               android:textSize="16sp"
+               android:textStyle="bold" />
+
+       </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

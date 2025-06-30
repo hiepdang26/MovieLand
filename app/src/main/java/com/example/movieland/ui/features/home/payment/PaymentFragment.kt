@@ -6,6 +6,7 @@ import com.google.android.gms.wallet.WalletConstants
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,9 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
     private var selectedTickets: ArrayList<FirestoreTicket>? = null
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
+    private var countDownTimer: CountDownTimer? = null
+    private val MAX_HOLD_TIME = 1 * 20 * 1000L
+
     private val LOAD_PAYMENT_DATA_REQUEST_CODE = 999
 
     private var selectedVoucher: FirestoreVoucher? = null
@@ -74,8 +78,65 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
         binding.txtPrice.text = formatPrice(discountedPrice)
         selectedTickets = arguments?.getParcelableArrayList("selectedTickets")
         binding.txtSeatName.text = selectedTickets?.joinToString(", ") { it.seatLabel }
+
+        val now = System.currentTimeMillis()
+        val bookingTimes = selectedTickets?.mapNotNull { it.bookingTime?.time } ?: listOf(now)
+        val minBookingTime = bookingTimes.minOrNull() ?: now
+        val remainMillis = MAX_HOLD_TIME - (now - minBookingTime)
+
+        if (remainMillis <= 0) {
+            selectedTickets?.forEach { ticket ->
+                viewModel.updateTicketStatus(
+                    showtimeId = ticket.showtimeId,
+                    ticketId = ticket.ticketId,
+                    status = "available",
+                    userId = null
+                )
+            }
+            showExpiredDialog()
+            parentFragmentManager.popBackStack("ChooseSeatFragment", 0)
+            return
+        } else {
+            startCountDown(remainMillis)
+        }
+
         viewModel.loadShowtimes(showtimeId)
         viewModel.loadVouchers()
+    }
+
+    private fun startCountDown(remainMillis: Long) {
+        countDownTimer?.cancel()
+        countDownTimer = object : CountDownTimer(remainMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = (millisUntilFinished / 1000) / 60
+                val seconds = (millisUntilFinished / 1000) % 60
+                binding.txtTimer.text = String.format("%02d:%02d", minutes, seconds)
+            }
+
+            override fun onFinish() {
+                selectedTickets?.forEach { ticket ->
+                    viewModel.resetTicketIfLockedAndNotBooked(
+                        showtimeId = ticket.showtimeId,
+                        ticketId = ticket.ticketId,
+                        userId = currentUserId
+                    )
+                }
+                showExpiredDialog()
+                parentFragmentManager.popBackStack("ChooseSeatFragment", 0)
+            }
+
+        }.start()
+    }
+
+    private fun showExpiredDialog() {
+        AlertDialog.Builder(requireContext()).setTitle("Hết thời gian giữ ghế")
+            .setMessage("Bạn đã giữ ghế quá 15 phút. Vui lòng chọn lại!").setCancelable(false)
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, ShowMovieFragment()).commit()
+            }.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,6 +260,14 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                 }
             })
         binding.btnPayment.setOnClickListener {
+            if (selectedTickets.isNullOrEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Các ghế bạn chọn đã được người khác giữ hoặc thanh toán trước đó. Vui lòng chọn lại ghế.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
             if (selectedPaymentMethod == null) {
                 Toast.makeText(
                     requireContext(), "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT
@@ -249,19 +318,23 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
         AlertDialog.Builder(requireContext()).setTitle("Không thể thanh toán").setMessage(message)
             .setPositiveButton("Chọn lại ghế") { dialog, _ ->
                 dialog.dismiss()
-                parentFragmentManager.popBackStack("ChooseSeatFragment", 0)
+                if (isAdded && parentFragmentManager != null) {
+                    parentFragmentManager.popBackStack("ChooseSeatFragment", 0)
+                }
             }.show()
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
-        if (!isPaymentCompleted) {
-            selectedTickets?.forEach { ticket ->
-                viewModel.resetTicketIfLockedByCurrentUser(
-                    showtimeId = showtimeId, ticketId = ticket.ticketId, userId = currentUserId
-                )
-            }
+        Log.d("PaymentFragment", "onDestroy")
+        countDownTimer?.cancel()
+        selectedTickets?.forEach { ticket ->
+            viewModel.resetTicketIfLockedByCurrentUser(
+                showtimeId = showtimeId, ticketId = ticket.ticketId, userId = currentUserId
+            )
         }
+
     }
 
 
@@ -338,27 +411,28 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                                 Toast.makeText(
                                     requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT
                                 ).show()
-                                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                                parentFragmentManager.beginTransaction()
-                                    .replace(R.id.fragmentContainerView, DetailPaymentFragment().apply {
+                                parentFragmentManager.popBackStack(
+                                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                                )
+                                parentFragmentManager.beginTransaction().replace(
+                                    R.id.fragmentContainerView, DetailPaymentFragment().apply {
                                         arguments = Bundle().apply {
                                             putString("bookingId", bookingId)
                                         }
-                                    })
-                                    .commit()
+                                    }).commit()
                             } else {
                                 Toast.makeText(
                                     requireContext(),
                                     "Lỗi cập nhật vé: $errorMsg",
                                     Toast.LENGTH_LONG
                                 ).show()
-                                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                parentFragmentManager.popBackStack(
+                                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                                )
                                 parentFragmentManager.beginTransaction()
                                     .replace(R.id.fragmentContainerView, ShowMovieFragment().apply {
-                                        arguments = Bundle().apply {
-                                        }
-                                    })
-                                    .commit()
+                                        arguments = Bundle().apply {}
+                                    }).commit()
                             }
                         }
                     }

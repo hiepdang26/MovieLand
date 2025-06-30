@@ -86,6 +86,7 @@ class PaymentViewModel @Inject constructor(
             val snapshot = transaction.get(docRef)
             val status = snapshot.getString("status")
             val currentUser = snapshot.getString("userId")
+            Log.d("resetTicket", "Ticket status=$status, userId=$currentUser, cur=$userId")
             if (status == "locked" && currentUser == userId) {
                 transaction.update(docRef, mapOf(
                     "status" to "available",
@@ -218,6 +219,24 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
+    fun resetTicketIfLockedAndNotBooked(showtimeId: String, ticketId: String, userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("showtimes").document(showtimeId).collection("tickets").document(ticketId)
+
+        docRef.get().addOnSuccessListener { snapshot ->
+            val status = snapshot.getString("status")
+            val ticketUserId = snapshot.getString("userId")
+            if (status == "locked" && ticketUserId == userId) {
+                docRef.update(
+                    mapOf(
+                        "status" to "available",
+                        "userId" to null,
+                        "bookingTime" to null
+                    )
+                )
+            }
+        }
+    }
 
 
 }
