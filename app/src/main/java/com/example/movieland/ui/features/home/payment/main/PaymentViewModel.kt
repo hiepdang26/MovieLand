@@ -183,22 +183,31 @@ class PaymentViewModel @Inject constructor(
         bookingId: String,
         tickets: List<FirestoreTicket>,
         userId: String,
-        price:  Double,
+        price: Double,
         callback: (Boolean, String?) -> Unit
     ) {
         val db = FirebaseFirestore.getInstance()
+        val numberOfTickets = tickets.size
+        val pricePerTicket = if (numberOfTickets > 0) price / numberOfTickets else 0.0
 
         db.runTransaction { transaction ->
-            tickets.forEach { ticket ->
+            tickets.forEachIndexed { index, ticket ->
                 val docRef = db.collection("showtimes").document(showtimeId)
                     .collection("tickets").document(ticket.ticketId)
+
+                val ticketPrice = if (index == numberOfTickets - 1) {
+                    price - pricePerTicket * (numberOfTickets - 1)
+                } else {
+                    pricePerTicket
+                }
+
                 transaction.update(
                     docRef, mapOf(
                         "status" to "booked",
                         "userId" to userId,
                         "bookingTime" to FieldValue.serverTimestamp(),
                         "bookingId" to bookingId,
-                        "price" to price,
+                        "price" to ticketPrice,
                         "combos" to ticket.combos.map { combo ->
                             mapOf(
                                 "comboId" to combo.comboId,
@@ -209,7 +218,6 @@ class PaymentViewModel @Inject constructor(
                         }
                     )
                 )
-
             }
         }.addOnSuccessListener {
             callback(true, null)
@@ -217,6 +225,7 @@ class PaymentViewModel @Inject constructor(
             callback(false, e.message)
         }
     }
+
 
     fun resetTicketIfLockedAndNotBooked(showtimeId: String, ticketId: String, userId: String) {
         val db = FirebaseFirestore.getInstance()
@@ -240,7 +249,14 @@ class PaymentViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val voucherRef = firestore.collection("vouchers").document(voucherId)
-                voucherRef.update("usageLimit", com.google.firebase.firestore.FieldValue.increment(-1))
+                voucherRef.update("usageLimit", FieldValue.increment(-1))
+                    .addOnSuccessListener {
+                        Log.d("PaymentViewModel", "Giảm usageLimit thành công")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("PaymentViewModel", "Lỗi giảm usageLimit voucher", e)
+                    }
+
             } catch (e: Exception) {
                 Log.e("PaymentViewModel", "Lỗi giảm usageLimit voucher", e)
             }

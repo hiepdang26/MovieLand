@@ -22,8 +22,10 @@ class ShowVoucherViewModel @Inject constructor(
         viewModelScope.launch {
             val result = dataSource.loadAllVouchers()
             if (result.isSuccess) {
-                _vouchers.value = result.getOrNull() ?: emptyList()
+                val allVouchers = result.getOrNull() ?: emptyList()
+                _vouchers.value = allVouchers.filter { it.active == true }
             }
         }
     }
+
 }

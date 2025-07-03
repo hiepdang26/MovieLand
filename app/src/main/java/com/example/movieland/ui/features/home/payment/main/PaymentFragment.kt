@@ -400,7 +400,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         val bookingId = UUID.randomUUID().toString()
-
                         viewModel.setTicketsBooked(
                             showtimeId = showtimeId,
                             bookingId = bookingId,
@@ -412,6 +411,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                                 Toast.makeText(
                                     requireContext(), "Thanh toán thành công", Toast.LENGTH_SHORT
                                 ).show()
+
                                 selectedVoucher?.let { voucher ->
                                     viewModel.decreaseVoucherUsage(voucher.id)
                                 }

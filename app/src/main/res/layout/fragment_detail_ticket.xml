@@ -64,8 +64,8 @@
 
                 <ImageView
                     android:id="@+id/img_movie"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
                     android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
 
@@ -276,6 +276,23 @@
 
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Combo"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_combo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -295,6 +312,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Giá vé"
+                    android:layout_gravity="end"
+
                     android:textColor="#CCCCCC"
                     android:textSize="14sp" />
 
@@ -302,8 +321,8 @@
                     android:id="@+id/txt_price_ticket"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="300.000đ"
-                    android:textColor="@android:color/white"
+                    android:textColor="#FFE500"
+                    android:layout_gravity="end"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

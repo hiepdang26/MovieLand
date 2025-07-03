@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class UpComingFragment : BaseFragment<FragmentUpComingBinding>() {
 
-    private val accessToken: String = "BuildConfig.ACCESS_TOKEN"
+    private val accessToken: String = BuildConfig.ACCESS_TOKEN
     private lateinit var upComingMovieAdapter: UpComingMovieAdapter
     private val viewModel: UpComingViewModel by viewModels()
 

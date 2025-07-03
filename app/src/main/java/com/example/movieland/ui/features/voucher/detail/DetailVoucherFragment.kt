@@ -68,12 +68,13 @@ class DetailVoucherFragment : BaseFragment<FragmentDetailVoucherBinding>() {
             txtVoucherCode.text = "Mã: ${voucher.code}"
             txtDiscountInfo.text = when (voucher.discountType) {
                 FirestoreVoucher.VoucherType.PERCENTAGE ->
-                    "Giảm ${voucher.discountPercent?.toInt()}% - Tối đa ₫${voucher.maxDiscount?.toInt()}"
+                    "Giảm ${voucher.discountPercent?.toInt()}% - Tối đa ${voucher.maxDiscount?.formatVnd() ?: ""}"
                 FirestoreVoucher.VoucherType.FIXED ->
-                    "Giảm ₫${voucher.discountAmount?.toInt()} - Tối đa ₫${voucher.maxDiscount?.toInt()}"
+                    "Giảm ${voucher.discountAmount?.formatVnd() ?: ""}"
             }
 
-            txtMinValue.text = "Đơn tối thiểu ₫${voucher.minTicketValue.toInt()}"
+            txtMinValue.text = "Đơn tối thiểu ${voucher.minTicketValue.formatVnd()}"
+
             txtExpiryDate.text = "Hiệu lực từ: ${voucher.startDate.formatDate()}"
             txtDiscountType.text = when (voucher.discountType) {
                 FirestoreVoucher.VoucherType.PERCENTAGE -> "Phần trăm"
@@ -104,6 +105,10 @@ class DetailVoucherFragment : BaseFragment<FragmentDetailVoucherBinding>() {
     fun Date.formatFullDate(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return sdf.format(this)
+    }
+    fun Number.formatVnd(): String {
+        val formatter = java.text.NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
+        return formatter.format(this).replace("₫", "đ")
     }
 
 }
