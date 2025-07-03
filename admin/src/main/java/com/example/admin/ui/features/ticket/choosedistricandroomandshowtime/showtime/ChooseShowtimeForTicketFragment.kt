@@ -31,10 +31,8 @@ class ChooseShowtimeForTicketFragment : BaseFragment<FragmentChooseShowtimeForTi
     private lateinit var adapter: MovieWithShowtimesAdapter
     private var roomId: String = ""
 
-
     private var filterDate: Date? = null
     private var currentShowtimes: List<FirestoreShowtime> = emptyList()
-
 
     override fun getViewBinding(
         inflater: LayoutInflater, container: ViewGroup?
@@ -49,6 +47,22 @@ class ChooseShowtimeForTicketFragment : BaseFragment<FragmentChooseShowtimeForTi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = MovieWithShowtimesAdapter(emptyList()) { showtimeId ->
+            val fragment = ShowTicketFragment().apply {
+                arguments = Bundle().apply {
+                    putString("showtimeId", showtimeId)
+                    putString("roomId", roomId)
+                }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        binding.rcvShowtime.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcvShowtime.adapter = adapter
+
         setupInitialData()
         setupObserver()
         setupClickView()
@@ -63,19 +77,8 @@ class ChooseShowtimeForTicketFragment : BaseFragment<FragmentChooseShowtimeForTi
     override fun setupObserver() {
         lifecycleScope.launch {
             viewModel.showtimes.collectLatest { showtimes ->
-                val grouped = viewModel.groupShowtimesByMovie(showtimes)
-                adapter = MovieWithShowtimesAdapter(grouped) { showtimeId ->
-                    val fragment = ShowTicketFragment().apply {
-                        arguments = Bundle().apply {
-                            putString("showtimeId", showtimeId)
-                            putString("roomId", roomId)
-                        }
-                    }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment).addToBackStack(null).commit()
-                }
-                binding.rcvShowtime.layoutManager = LinearLayoutManager(requireContext())
-                binding.rcvShowtime.adapter = adapter
+                currentShowtimes = showtimes
+                updateFilteredList()
             }
         }
 
@@ -87,13 +90,12 @@ class ChooseShowtimeForTicketFragment : BaseFragment<FragmentChooseShowtimeForTi
                 }
             }
         }
-
     }
+
     private fun updateFilteredList() {
         val filtered = filterDate?.let { date ->
             currentShowtimes.filter { showtime ->
-                val isSameDay = showtime.startTime?.let { sameDay(it, date) } == true
-                isSameDay
+                showtime.startTime?.let { sameDay(it, date) } == true
             }
         } ?: currentShowtimes
 
@@ -101,39 +103,39 @@ class ChooseShowtimeForTicketFragment : BaseFragment<FragmentChooseShowtimeForTi
         adapter.submitList(grouped)
     }
 
-
     private fun sameDay(date1: Date, date2: Date): Boolean {
         val cal1 = Calendar.getInstance().apply { time = date1 }
         val cal2 = Calendar.getInstance().apply { time = date2 }
-        val result = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                 cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)
-        return result
     }
+
     private fun groupShowtimesByMovie(showtimes: List<FirestoreShowtime>): List<MovieWithShowtimes> {
-        return showtimes.groupBy { it.movieName }.map { (movieName, showtimeList) ->
-            MovieWithShowtimes(movieName, showtimeList)
-        }
+        return showtimes.groupBy { it.movieName }
+            .map { (movieName, showtimeList) ->
+                MovieWithShowtimes(movieName, showtimeList)
+            }
     }
 
     override fun setupClickView() {
-
         binding.btnFilter.setOnClickListener {
             val now = Calendar.getInstance()
             DatePickerDialog(
-                requireContext(), { _, year, month, dayOfMonth ->
+                requireContext(),
+                { _, year, month, dayOfMonth ->
                     val cal = Calendar.getInstance()
                     cal.set(year, month, dayOfMonth, 0, 0, 0)
                     cal.set(Calendar.MILLISECOND, 0)
                     filterDate = cal.time
                     updateFilteredList()
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)
+                },
+                now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
     }
-
-
 }
+
