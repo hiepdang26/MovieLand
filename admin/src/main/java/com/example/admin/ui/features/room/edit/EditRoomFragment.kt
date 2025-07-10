@@ -102,10 +102,15 @@ class EditRoomFragment : BaseFragment<FragmentEditRoomBinding>() {
             viewModel.deleteResult.collect { result ->
                 result?.let {
                     if (it.isSuccess) {
-                        Toast.makeText(requireContext(), "Xóa phòng thành công", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Xóa phòng thành công", Toast.LENGTH_SHORT)
+                            .show()
                         parentFragmentManager.popBackStack()
                     } else {
-                        Toast.makeText(requireContext(), "Lỗi khi xóa phòng: ${it.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Lỗi khi xóa phòng: ${it.exceptionOrNull()?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     viewModel.resetDeleteResult()
                 }
@@ -115,17 +120,14 @@ class EditRoomFragment : BaseFragment<FragmentEditRoomBinding>() {
 
     override fun setupClickView() {
         binding.btnDelete.setOnClickListener {
-            androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Xác nhận")
+            androidx.appcompat.app.AlertDialog.Builder(requireContext()).setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn xóa phòng này không?")
                 .setPositiveButton("Xóa") { dialog, _ ->
                     viewModel.deleteRoom(roomId)
                     dialog.dismiss()
-                }
-                .setNegativeButton("Hủy") { dialog, _ ->
+                }.setNegativeButton("Hủy") { dialog, _ ->
                     dialog.dismiss()
-                }
-                .show()
+                }.show()
         }
 
         binding.btnEditLayout.setOnClickListener {

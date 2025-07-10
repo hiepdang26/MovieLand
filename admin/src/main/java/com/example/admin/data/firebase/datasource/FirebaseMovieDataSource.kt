@@ -14,8 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class FirebaseMovieDataSource @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    @ApplicationContext private val appContext: Context
+    private val firestore: FirebaseFirestore, @ApplicationContext private val appContext: Context
 
 ) {
 
@@ -27,7 +26,6 @@ class FirebaseMovieDataSource @Inject constructor(
             } else {
                 firestore.collection("movies").document(movie.id)
             }
-
             val movieToSave = if (movie.id.isBlank()) {
                 movie.copy(id = docRef.id)
             } else {
@@ -44,14 +42,12 @@ class FirebaseMovieDataSource @Inject constructor(
 
     fun getAllMovies(): Flow<List<FirestoreMovie>> = callbackFlow {
         try {
-            val listener = firestore.collection("movies")
-                .orderBy("createdAt")
+            val listener = firestore.collection("movies").orderBy("createdAt")
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) {
                         close(error)
                         return@addSnapshotListener
                     }
-
                     val result = snapshot?.toObjects(FirestoreMovie::class.java) ?: emptyList()
                     val wasSent = trySend(result).isSuccess
                     if (!wasSent) {
@@ -67,25 +63,27 @@ class FirebaseMovieDataSource @Inject constructor(
         }
     }
 
-    suspend fun getMovieById(movieId: String): Result<FirestoreMovie> = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val snapshot = firestore.collection("movies").document(movieId).get().await()
-            val movie = snapshot.toObject(FirestoreMovie::class.java)
-                ?: return@withContext Result.failure(Exception("Không tìm thấy phim với ID: $movieId"))
-            Result.success(movie)
-        } catch (e: Exception) {
-            Result.failure(e)
+    suspend fun getMovieById(movieId: String): Result<FirestoreMovie> =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                val snapshot = firestore.collection("movies").document(movieId).get().await()
+                val movie = snapshot.toObject(FirestoreMovie::class.java)
+                    ?: return@withContext Result.failure(Exception("Không tìm thấy phim với ID: $movieId"))
+                Result.success(movie)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
-    }
 
-    suspend fun updateMovie(movieId: String, updatedData: Map<String, Any>): Result<Unit> = withContext(Dispatchers.IO) {
-        return@withContext try {
-            firestore.collection("movies").document(movieId).update(updatedData).await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+    suspend fun updateMovie(movieId: String, updatedData: Map<String, Any>): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                firestore.collection("movies").document(movieId).update(updatedData).await()
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
-    }
 
     suspend fun deleteMovie(movieId: String): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {

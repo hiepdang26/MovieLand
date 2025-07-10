@@ -219,6 +219,8 @@ class PaymentViewModel @Inject constructor(
                     )
                 )
             }
+            val showtimeRef = db.collection("showtimes").document(showtimeId)
+            transaction.update(showtimeRef, "availableSeats", FieldValue.increment(-numberOfTickets.toLong()))
         }.addOnSuccessListener {
             callback(true, null)
         }.addOnFailureListener { e ->

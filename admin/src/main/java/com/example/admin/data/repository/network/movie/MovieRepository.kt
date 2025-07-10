@@ -8,7 +8,12 @@ import com.example.admin.data.model.apimovie.trailer.GetTrailerMovieResponse
 interface MovieRepository {
     suspend fun getNowPlayingMovie(accessToken: String): com.example.admin.data.resource.Result<NowPlayingMovieResponse>
     suspend fun getUpcomingMovie(accessToken: String): com.example.admin.data.resource.Result<UpcomingMovieResponse>
-    suspend fun getDetailMovie(accessToken: String, movieId: Int): com.example.admin.data.resource.Result<DetailMovieResponse>
-    suspend fun getTrailerMovie(accessToken: String, movieId: Int): com.example.admin.data.resource.Result<GetTrailerMovieResponse>
+    suspend fun getDetailMovie(
+        accessToken: String, movieId: Int
+    ): com.example.admin.data.resource.Result<DetailMovieResponse>
+
+    suspend fun getTrailerMovie(
+        accessToken: String, movieId: Int
+    ): com.example.admin.data.resource.Result<GetTrailerMovieResponse>
 
 }

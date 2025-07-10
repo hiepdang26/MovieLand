@@ -26,8 +26,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
     private lateinit var movieAdapter: ShowMovieAdapter
 
     override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?
     ): FragmentShowMovieBinding {
         return FragmentShowMovieBinding.inflate(inflater, container, false)
     }
@@ -48,23 +47,20 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
     override fun setupClickView() {
         binding.btnAddMovie.setOnClickListener {
             binding.btnAddMovie.setOnClickListener {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Chọn cách thêm phim")
+                AlertDialog.Builder(requireContext()).setTitle("Chọn cách thêm phim")
                     .setItems(arrayOf("Thêm thủ công", "Thêm từ API")) { dialog, which ->
                         when (which) {
                             0 -> parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView, AddRawMovieFragment())
-                                .addToBackStack(null)
-                                .commit()
+                                .addToBackStack(null).commit()
+
                             1 -> parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView, ApiMovieFragment())
-                                .addToBackStack(null)
-                                .commit()
+                                .addToBackStack(null).commit()
                         }
-                    }
-                    .show()
+                    }.show()
+                }
             }
-        }
 
     }
 
@@ -106,9 +102,7 @@ class ShowMovieFragment : BaseFragment<FragmentShowMovieBinding>() {
             }
         }
 
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainerView, fragment)
-            .addToBackStack(null)
-            .commit()
+        parentFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, fragment)
+            .addToBackStack(null).commit()
     }
 }

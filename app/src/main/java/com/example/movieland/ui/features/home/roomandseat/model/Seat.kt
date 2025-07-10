@@ -4,13 +4,13 @@ import com.example.movieland.data.firebase.model.ticket.FirestoreTicket
 
 data class Seat(
     var row: Int,
-    var position: Int,   // ví dụ vị trí trong hàng: 1,2,3...
+    var position: Int,
     val column: Int,
     val label: String,
     var type: SeatType = SeatType.NORMAL,
     var isSelected: Boolean = false,
     val isDummy: Boolean = false,
-    var ticket: FirestoreTicket? = null  // thêm dòng này
+    var ticket: FirestoreTicket? = null
 
 ) {
     enum class SeatType {

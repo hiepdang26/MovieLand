@@ -105,7 +105,6 @@ class EditDistrictFragment : BaseFragment<FragmentEditDistrictBinding>() {
         binding.btnSaveDistrict.setOnClickListener {
             val newName = binding.edtDistrictName.text.toString().trim()
 
-            // Vì không cho chỉnh region, nên giữ nguyên regionId và regionName truyền vào
             if (regionId != null && districtId != null) {
                 viewModel.updateDistrict(regionId!!, districtId!!, newName, regionName ?: "")
             }

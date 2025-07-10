@@ -118,8 +118,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             }
         }
 
-
-
         viewModel.detailMovieResponse.observe(viewLifecycleOwner) { detail ->
             binding.progressBar.visibility= View.GONE
 

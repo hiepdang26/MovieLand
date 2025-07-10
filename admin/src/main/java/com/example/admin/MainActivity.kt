@@ -37,6 +37,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         chipNavigationBar = findViewById<ChipNavigationBar>(R.id.bottom_nav_menu)
         setupBottomNavigation()
+        chipNavigationBar.setItemSelected(R.id.navigation_movie, true)
+        openFragment(ShowMovieFragment())
     }
 
     private fun setupBottomNavigation() {

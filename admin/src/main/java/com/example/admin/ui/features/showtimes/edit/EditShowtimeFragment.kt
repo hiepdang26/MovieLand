@@ -354,7 +354,6 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
             return
         }
 
-        // KIỂM TRA NGÀY PHẢI >= HÔM NAY
         val today = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
@@ -370,7 +369,6 @@ class EditShowtimeFragment : BaseFragment<FragmentEditShowtimeBinding>() {
         val startTimeFull = mergeDateAndTime(selectedDate!!, selectedStartTime!!)
         val endTimeFull = mergeDateAndTime(selectedDate!!, selectedEndTime!!)
 
-        // KIỂM TRA TRÙNG GIỜ
         lifecycleScope.launch {
             val existingShowtimes = viewModel.getShowtimesByRoomAndDateExcludeId(roomId, selectedDate!!, showtimeId)
             val isOverlap = existingShowtimes.any { showtime ->

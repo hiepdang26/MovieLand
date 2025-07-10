@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.admin.data.firebase.model.district.FirestoreDistrict
 import com.example.admin.databinding.ItemDistrictBinding
 
-class DistrictAdapter : ListAdapter<FirestoreDistrict, DistrictAdapter.DistrictViewHolder>(DiffCallback()) {
+class DistrictAdapter :
+    ListAdapter<FirestoreDistrict, DistrictAdapter.DistrictViewHolder>(DiffCallback()) {
 
     var onItemClick: ((FirestoreDistrict) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DistrictViewHolder {
-        val binding = ItemDistrictBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemDistrictBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DistrictViewHolder(binding)
     }
 
@@ -22,7 +24,8 @@ class DistrictAdapter : ListAdapter<FirestoreDistrict, DistrictAdapter.DistrictV
         holder.bind(district)
     }
 
-    inner class DistrictViewHolder(private val binding: ItemDistrictBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class DistrictViewHolder(private val binding: ItemDistrictBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
                 onItemClick?.invoke(getItem(adapterPosition))
@@ -36,7 +39,10 @@ class DistrictAdapter : ListAdapter<FirestoreDistrict, DistrictAdapter.DistrictV
     }
 
     class DiffCallback : DiffUtil.ItemCallback<FirestoreDistrict>() {
-        override fun areItemsTheSame(oldItem: FirestoreDistrict, newItem: FirestoreDistrict) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: FirestoreDistrict, newItem: FirestoreDistrict) = oldItem == newItem
+        override fun areItemsTheSame(oldItem: FirestoreDistrict, newItem: FirestoreDistrict) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: FirestoreDistrict, newItem: FirestoreDistrict) =
+            oldItem == newItem
     }
 }

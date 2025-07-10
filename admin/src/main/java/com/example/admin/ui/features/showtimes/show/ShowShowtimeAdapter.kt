@@ -12,7 +12,7 @@ import java.util.Locale
 
 class ShowShowtimeAdapter(
     private val showtimes: List<FirestoreShowtime>,
-    private val onItemClick: (String) -> Unit // truyền showtimeId khi click
+    private val onItemClick: (String) -> Unit
 
 ) : RecyclerView.Adapter<ShowShowtimeAdapter.ShowtimeViewHolder>() {
 

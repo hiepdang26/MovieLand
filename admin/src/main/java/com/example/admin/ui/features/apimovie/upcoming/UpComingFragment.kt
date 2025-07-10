@@ -86,6 +86,5 @@ class UpComingFragment : BaseFragment<FragmentUpComingBinding>() {
     }
 
     override fun setupClickView() {
-        TODO("Not yet implemented")
     }
 }

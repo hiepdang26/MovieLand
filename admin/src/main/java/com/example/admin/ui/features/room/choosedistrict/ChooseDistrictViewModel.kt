@@ -20,7 +20,7 @@ class ChooseDistrictViewModel @Inject constructor(
 
     fun loadDistricts() {
         viewModelScope.launch {
-            districtDataSource.getAllDistricts() // lấy tất cả districts, ko filter regionId
+            districtDataSource.getAllDistricts()
                 .collect { list ->
                     _districts.value = list
                 }

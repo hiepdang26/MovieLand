@@ -44,13 +44,6 @@ class ChooseShowtimeForTicketViewModel @Inject constructor(
         }
     }
 
-    fun groupShowtimesByMovie(showtimes: List<FirestoreShowtime>): List<MovieWithShowtimes> {
-        return showtimes.groupBy { it.movieName }
-            .map { (movieName, showtimes) ->
-                MovieWithShowtimes(movieName, showtimes.sortedBy { it.startTime })
-            }
-    }
-
 
     fun clearError() {
         _error.value = null

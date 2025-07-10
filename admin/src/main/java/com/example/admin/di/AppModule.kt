@@ -28,7 +28,7 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .hostnameVerifier { _, _ -> true } // ⚠️ CHỈ DÙNG KHI DEBUG
+            .hostnameVerifier { _, _ -> true }
             .build()
     }
 
@@ -86,7 +86,6 @@ object AppModule {
             context = context,
             cloudName = "dhk8ckbfd",
             uploadPreset = "ml_default"
-
         )
     }
 }

@@ -56,9 +56,8 @@ class ShowShowtimeViewModel @Inject constructor(
             showtime.date?.toInstant()?.atZone(ZoneId.of("Asia/Ho_Chi_Minh"))?.toLocalDate() == date
         }
 
-        _filteredShowtimes.value = filtered // nếu vẫn cần list chung
+        _filteredShowtimes.value = filtered
 
-        // Phân loại 2D và 3D
         _showtimes2D.value = filtered.filter { it.screenType.equals("2D", ignoreCase = true) }
         _showtimes3D.value = filtered.filter { it.screenType.equals("3D", ignoreCase = true) }
     }

@@ -33,9 +33,9 @@ class FirebaseRoomDataSource @Inject constructor(
     suspend fun getTicketsByShowtime(showtimeId: String): Result<List<FirestoreTicket>> = withContext(Dispatchers.IO) {
         try {
             val snapshot = firestore
-                .collection("showtimes") // collection
-                .document(showtimeId)    // document (phải là ID cụ thể!)
-                .collection("tickets")   // subcollection
+                .collection("showtimes")
+                .document(showtimeId)
+                .collection("tickets")
                 .get()
                 .await()
 

@@ -27,7 +27,6 @@ class FirebaseRegionDataSource @Inject constructor(
             } else {
                 firestore.collection("regions").document(region.id)
             }
-            // Nếu tạo mới, gán lại id cho đối tượng trước khi lưu
             val regionToSave = if (region.id.isBlank()) {
                 region.copy(id = docRef.id)
             } else {

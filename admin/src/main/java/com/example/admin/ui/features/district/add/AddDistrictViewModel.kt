@@ -25,7 +25,7 @@ class AddDistrictViewModel @Inject constructor(
         }
 
         val newDistrict = FirestoreDistrict(
-            id = "",           // Firestore tự tạo id khi thêm
+            id = "",
             name = districtName,
             regionId = regionId,
             regionName = regionName

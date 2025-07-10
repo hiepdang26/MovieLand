@@ -426,11 +426,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>() {
                                         }
                                     }).commit()
                             } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Lỗi cập nhật vé: $errorMsg",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                Log.d("PaymentFragment", "onActivityResult: \"Lỗi cập nhật vé: $errorMsg\",")
                                 parentFragmentManager.popBackStack(
                                     null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                                 )

@@ -89,7 +89,7 @@ class EditMovieFragment : BaseFragment<FragmentEditMovieBinding>() {
         viewModel.deleteResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
                 Toast.makeText(requireContext(), "✅ Đã xóa phim", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack() // Quay lại màn trước (ShowMovie)
+                parentFragmentManager.popBackStack()
             }.onFailure {
                 Toast.makeText(requireContext(), "❌ Xóa thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
             }

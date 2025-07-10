@@ -56,9 +56,6 @@ class FirebaseTicketDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Lấy danh sách tất cả vé trong một suất chiếu.
-     */
     suspend fun getTickets(showtimeId: String): Result<List<FirestoreTicket>> =
         withContext(Dispatchers.IO) {
             return@withContext try {

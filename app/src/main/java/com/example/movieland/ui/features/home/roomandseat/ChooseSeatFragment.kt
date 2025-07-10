@@ -86,7 +86,6 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
     override fun onResume() {
         super.onResume()
         (requireActivity() as MainActivity).hideNavigationBar()
-
     }
     override fun setupInitialData() {
         roomId = arguments?.getString("roomId") ?: return
@@ -149,7 +148,6 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
             seat.ticket = matchedTicket
 
             val isLockedByUser = matchedTicket?.status == "locked" && matchedTicket.userId == currentUserId
-            val isLockedByOthers = matchedTicket?.status == "locked" && matchedTicket.userId != currentUserId
 
             seat.isSelected = isLockedByUser || selectedSeatLabels.contains(seat.label)
         }
@@ -187,7 +185,6 @@ class ChooseSeatFragment : BaseFragment<FragmentChooseSeatBinding>() {
         }
         (binding.recyclerViewSeats.layoutManager as? GridLayoutManager)?.spanCount = seatLayout.columns
     }
-
 
 
     private fun showSelectedSeatsDialog() {

@@ -6,7 +6,7 @@ data class FirestoreMovie(
     val title: String = "",
     val overview: String = "",
     val posterPath: String = "",
-    val trailerKey: String = "", // đổi từ trailerUrl
+    val trailerKey: String = "",
     val runtime: Int = 0,
     val releaseDate: String = "",
     val genres: List<String> = emptyList(),
